@@ -52,7 +52,16 @@ module img_cap_top(
       fail <= `ASSERT_H;
     else if (rd_addr0 == 29'd502)
       pass <= `ASSERT_H;
-
+  
+  /* Assign the test pattern to the write data signal */
+  assign wr_data0 = TST_PATT;
+      
+  /* Instantiate In-System Sources and Probes */
+  ISSP ISSP_inst(
+    .source_clk(CLOCK_125_p),
+    .source({wr_en_in0, rd_en_in0, reset}),
+    .probe({pass, fail})
+  );
   
   /* Declare the required internal signals */
   wire  [31:0]  wr_data0, rd_data0, wr_data1, rd_data1, wr_data2, rd_data2,

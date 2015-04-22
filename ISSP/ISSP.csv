@@ -1,0 +1,18 @@
+# system info ISSP on 2015.04.22.10:47:51
+system_info:
+name,value
+DEVICE,5CGXFC5C6F27C7
+DEVICE_FAMILY,Cyclone V
+GENERATION_ID,1429724870
+#
+#
+# Files generated for ISSP on 2015.04.22.10:47:51
+files:
+filepath,kind,attributes,module,is_top
+simulation/ISSP.v,VERILOG,,ISSP,true
+simulation/submodules/altsource_probe.v,VERILOG,,altsource_probe,false
+#
+# Map from instance-path to kind of module
+instances:
+instancePath,module
+ISSP.in_system_sources_probes_0,altsource_probe
