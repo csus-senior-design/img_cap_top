@@ -49,9 +49,9 @@ module img_cap_top(
     if (reset == `ASSERT_L) begin
       fail <= `DEASSERT_H;
       pass <= `DEASSERT_H;
-    end else if (rd_data0[23:0] != TST_PATT && rd_data_valid == `ASSERT_H)
+    end else if (valid_rd_data[23:0] != TST_PATT)
       fail <= `ASSERT_H;
-    else if (rd_addr0 == 29'd502)
+    else if (rd_addr0 == 29'd7)
       pass <= `ASSERT_H;
   
   /* Assign the test pattern to the write data signal */
