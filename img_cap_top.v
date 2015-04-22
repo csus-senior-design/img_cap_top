@@ -27,10 +27,10 @@ Description:
 module img_cap_top(
   input CLOCK_50_B5B, CLOCK_50_B7A, CLOCK_125_p,// reset,
   output  [9:0]   mem_ca,
-  output          mem_ck,
-  output          mem_ck_n,
-  output          mem_cke,
-  output          mem_cs_n,
+  output  [0:0]   mem_ck,
+  output  [0:0]   mem_ck_n,
+  output  [0:0]   mem_cke,
+  output  [0:0]   mem_cs_n,
   output  [3:0]   mem_dm,
   inout   [31:0]  mem_dq,
   inout   [3:0]   mem_dqs,
@@ -39,7 +39,7 @@ module img_cap_top(
 );
 
   /* Declare the required test signals */
-  parameter     TST_PATT = 32'hFFFFFFFF;
+  parameter     TST_PATT = 24'hFFFFFF;
   wire          wr_en_in0, rd_en_in0;
   reg           pass, fail;
   
@@ -48,7 +48,7 @@ module img_cap_top(
     if (reset == `ASSERT_L) begin
       fail <= `DEASSERT_H;
       pass <= `DEASSERT_H;
-    end else if (rd_data0 != TST_PATT && rd_data_valid == `ASSERT_H)
+    end else if (rd_data0[23:0] != TST_PATT && rd_data_valid == `ASSERT_H)
       fail <= `ASSERT_H;
     else if (rd_addr0 == 29'd502)
       pass <= `ASSERT_H;
