@@ -54,7 +54,6 @@ set_global_assignment -name EDA_OUTPUT_DATA_FORMAT "VERILOG HDL" -section_id eda
 # CLOCK
 #============================================================
 set_instance_assignment -name IO_STANDARD LVDS -to CLOCK_125_p
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to CLOCK_50_B5B
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to CLOCK_50_B6A
 set_instance_assignment -name IO_STANDARD "2.5 V" -to CLOCK_50_B7A
 set_instance_assignment -name IO_STANDARD "2.5 V" -to CLOCK_50_B8A
@@ -68,8 +67,6 @@ set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to CPU_RESET_n
 # DDR2LP
 #============================================================
 set_instance_assignment -name IO_STANDARD "1.2-V HSUL" -to mem_cke[1]
-set_instance_assignment -name IO_STANDARD "DIFFERENTIAL 1.2-V HSUL" -to mem_ck_n -tag __fpga_lpddr2_p0
-set_instance_assignment -name IO_STANDARD "DIFFERENTIAL 1.2-V HSUL" -to mem_ck -tag __fpga_lpddr2_p0
 set_instance_assignment -name IO_STANDARD "1.2-V HSUL" -to mem_cs_n[1]
 set_instance_assignment -name IO_STANDARD "1.2 V" -to oct_rzqin
 

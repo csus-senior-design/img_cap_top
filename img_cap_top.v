@@ -42,6 +42,7 @@ module img_cap_top(
   parameter     TST_PATT = 24'hFFFFFF;
   wire          wr_en_in0, rd_en_in0;
   reg           pass, fail;
+  reg   [31:0]  valid_rd_data;
   
   /* Test block for determining pass or failure */
   always @(posedge CLOCK_125_p)
@@ -55,6 +56,10 @@ module img_cap_top(
   
   /* Assign the test pattern to the write data signal */
   assign wr_data0 = TST_PATT;
+  
+  /* Latch the read data when it's valid */
+  always @(posedge rd_data_valid)
+    valid_rd_data <= rd_data0;
       
   /* Instantiate In-System Sources and Probes */
   ISSP ISSP_inst(
