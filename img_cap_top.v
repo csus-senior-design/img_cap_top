@@ -42,24 +42,29 @@ module img_cap_top(
   parameter     TST_PATT = 24'hFFFFFF;
   wire          wr_en_in0, rd_en_in0;
   reg           pass, fail;
-  reg   [31:0]  valid_rd_data;
+  reg   [31:0]  valid_rd_data, rd_cnt;
   
   /* Test block for determining pass or failure */
   always @(posedge CLOCK_125_p)
     if (reset == `ASSERT_L) begin
       fail <= `DEASSERT_H;
       pass <= `DEASSERT_H;
-    end else if (valid_rd_data[23:0] != TST_PATT)
+    end else if (valid_rd_data[23:0] != TST_PATT && rd_cnt != 0)
       fail <= `ASSERT_H;
-    else if (rd_addr0 == 29'd7)
+    else if (rd_addr0 == 29'd7 && rd_cnt == 6)
       pass <= `ASSERT_H;
   
   /* Assign the test pattern to the write data signal */
   assign wr_data0 = TST_PATT;
   
   /* Latch the read data when it's valid */
-  always @(posedge rd_data_valid)
-    valid_rd_data <= rd_data0;
+  always @(negedge rd_data_valid or negedge reset)
+    if (reset == `ASSERT_L)
+      rd_cnt <= 32'h0;
+    else begin
+      valid_rd_data <= rd_data0;
+      rd_cnt <= rd_cnt + 1;
+    end
       
   /* Instantiate In-System Sources and Probes */
   ISSP ISSP_inst(
