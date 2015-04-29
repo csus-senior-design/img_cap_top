@@ -82,11 +82,10 @@ module img_cap_top(
   wire          rd_data_valid;
   
   /* Instantiate the required subsystems */
-  frame_buf_alt frame_buf0
+  frame_buf_alt
     #(
       .BUF_SIZE(5)
-    )
-    (
+    ) frame_buf0 (
       .wr_clk(CLOCK_125_p),
       .rd_clk(CLOCK_125_p),
       .reset(reset),
