@@ -124,7 +124,7 @@ module img_cap_top(
       .rd_en2(),
       .rd_en3(),
       .reset(reset),
-      .rd_data_valid(rd_data_valid),
+      .rd_data_valid0(rd_data_valid),
       .wr_rdy0(wr_rdy0),
       .rd_rdy0(rd_rdy0),
       .rd_data0(rd_data0),
