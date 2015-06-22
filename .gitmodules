@@ -4,3 +4,6 @@
 [submodule "ram_int_4p"]
 	path = ram_int_4p
 	url = https://github.com/csus-senior-design/ram_int_4p.git
+[submodule "ov_7670"]
+	path = ov_7670
+	url = https://github.com/csus-senior-design/ov_7670.git
