@@ -10,7 +10,7 @@ Stereoscopic Image Capture Top Level Module
 Authors: Padraic Hagerty (guitarisrockin@hotmail.com)
 
 Description:
-  The final top level design for the stereoscopic image capture system.
+  This is the final top level design for the stereoscopic image capture system.
 */
 
 `ifndef ASSERT_L
@@ -25,7 +25,10 @@ Description:
 `timescale 1 ps / 1 ps
 
 module img_cap_top(
-  input CLOCK_50_B5B, CLOCK_50_B7A, CLOCK_125_p,// reset,
+  input           CLOCK_50_B5B,
+                  CLOCK_50_B7A,
+                  CLOCK_125_p,
+                  //reset,
   output  [9:0]   mem_ca,
   output  [0:0]   mem_ck,
   output  [0:0]   mem_ck_n,
@@ -58,7 +61,7 @@ module img_cap_top(
   assign wr_data0 = TST_PATT;
   
   /* Latch the read data when it's valid */
-  always @(negedge rd_data_valid or negedge reset)
+  always @(posedge CLOCK_125_p)
     if (reset == `ASSERT_L)
       rd_cnt <= 32'h0;
     else begin
@@ -73,7 +76,7 @@ module img_cap_top(
     .probe({pass, fail})
   );
   
-  /* Declare the required internal signals */
+  /* Declare the required interconnections */
   wire  [31:0]  wr_data0, rd_data0, wr_data1, rd_data1, wr_data2, rd_data2,
                 wr_data3, rd_data3;
   wire  [23:0]  wr_addr0, rd_addr0, wr_addr1, rd_addr1, wr_addr2, rd_addr2,
