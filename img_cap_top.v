@@ -18,7 +18,6 @@ Description:
 module img_cap_top (
 	input					CLOCK_50_B5B,
 							CLOCK_50_B7A,
-							CLOCK_125_p,
 							//reset,
 	output	[9:0]		mem_ca,
 	output	[0:0]		mem_ck,
@@ -41,12 +40,15 @@ module img_cap_top (
 
 	/* Declare the required test signals */
 	parameter		TST_PATT = 24'hFFFFFF;
-	wire				wr_en_in0, rd_en_in0;
-	reg 				pass, fail;
-	reg	[31:0]	valid_rd_data, rd_cnt;
+	wire				wr_en_in0,
+						rd_en_in0;
+	reg 				pass,
+						fail;
+	reg	[31:0]	valid_rd_data,
+						rd_cnt;
   
 	/* Test block for determining pass or failure */
-	always @(posedge CLOCK_125_p)
+	always @(posedge clk_33m)
 		if (~reset) begin
 			fail <= DEASSERT_H;
 			pass <= DEASSERT_H;
@@ -59,10 +61,10 @@ module img_cap_top (
 	assign wr_data0 = TST_PATT;
   
 	/* Latch the read data when it's valid */
-	always @(posedge CLOCK_125_p)
+	always @(posedge clk_33m)
 		if (~reset)
 			rd_cnt <= 32'h0;
-		else begin
+		else if (rd_data_valid) begin
 			valid_rd_data <= rd_data0;
 			rd_cnt <= rd_cnt + 1;
 		end
@@ -70,7 +72,7 @@ module img_cap_top (
 	/* Instantiate In-System Sources and Probes */
 	wire reset;
 	ISSP ISSP_inst(
-		.source_clk(CLOCK_125_p),
+		.source_clk(clk_33m),
 		.source({wr_en_in0, rd_en_in0, reset}),
 		.probe({pass, fail})
 	);
@@ -96,15 +98,30 @@ module img_cap_top (
 						rd_rdy0,
 						wr_en0,
 						rd_en0;
+						
 	wire				rd_data_valid;
 	
-  /* Instantiate the required subsystems */
+	wire				full;
+	
+	wire				clk_33m;
+	wire				pll_locked;
+	
+	/* Instantiate the required subsystems */
+  
+  	/* Instantiate extra PLL */
+	PLL pll_inst(
+		.refclk(CLOCK_50_B7A),
+		.rst(1'b0),
+		.outclk_0(clk_33m),
+		.locked(pll_locked)
+	);
+	
 	frame_buf_alt
 	#(
 		.BUF_SIZE(5)
 	) frame_buf0 (
-		.wr_clk(CLOCK_125_p),
-		.rd_clk(CLOCK_125_p),
+		.wr_clk(clk_33m),
+		.rd_clk(clk_33m),
 		.reset(reset),
 		.wr_en_in(wr_en_in0),
 		.rd_en_in(rd_en_in0),
@@ -112,12 +129,12 @@ module img_cap_top (
 		.rd_rdy(rd_rdy0),
 		.wr_en(wr_en0),
 		.rd_en(rd_en0),
+		.full(full),
 		.wr_addr(wr_addr0),
 		.rd_addr(rd_addr0)
 	);
 	
-	ram_int_4p mem_int
-	(
+	ram_int_4p mem_int (
 		.wr_addr0(wr_addr0),
 		.rd_addr0(rd_addr0),
 		.wr_addr1(),
@@ -130,8 +147,8 @@ module img_cap_top (
 		.wr_data1(),
 		.wr_data2(),
 		.wr_data3(),
-		.CLOCK_50_B5B(CLOCK_50_B5B),
-		.CLOCK_50_B7A(CLOCK_50_B7A),
+		.clk_50m(CLOCK_50_B5B),
+		.clk(clk_33m),
 		.wr_en0(wr_en0),
 		.wr_en1(),
 		.wr_en2(),

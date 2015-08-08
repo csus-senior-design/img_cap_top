@@ -1,5 +1,5 @@
 //IP Functional Simulation Model
-//VERSION_BEGIN 14.1 cbx_mgl 2015:01:19:16:18:34:SJ cbx_simgen 2015:01:19:16:14:35:SJ  VERSION_END
+//VERSION_BEGIN 15.0 cbx_mgl 2015:04:22:18:06:50:SJ cbx_simgen 2015:04:22:18:04:08:SJ  VERSION_END
 // synthesis VERILOG_INPUT_VERSION VERILOG_2001
 // altera message_off 10463
 
@@ -227,7 +227,7 @@ module  PLL
 		pll_altera_pll_altera_pll_i_639.n_cnt_odd_div_duty_en = "false",
 		pll_altera_pll_altera_pll_i_639.number_of_clocks = 1,
 		pll_altera_pll_altera_pll_i_639.operation_mode = "direct",
-		pll_altera_pll_altera_pll_i_639.output_clock_frequency0 = "330.000000 MHz",
+		pll_altera_pll_altera_pll_i_639.output_clock_frequency0 = "33.000000 MHz",
 		pll_altera_pll_altera_pll_i_639.output_clock_frequency1 = "0 MHz",
 		pll_altera_pll_altera_pll_i_639.output_clock_frequency10 = "0 MHz",
 		pll_altera_pll_altera_pll_i_639.output_clock_frequency11 = "0 MHz",
