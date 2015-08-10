@@ -17,8 +17,12 @@ Description:
 
 module img_cap_top (
 	input					CLOCK_50_B5B,
+							CLOCK_50_B6A,
 							CLOCK_50_B7A,
+							CLOCK_50_B8A,
 							//reset,
+	output	[9:0]		LEDR,
+	output	[7:0]		LEDG,
 	output	[9:0]		mem_ca,
 	output	[0:0]		mem_ck,
 	output	[0:0]		mem_ck_n,
@@ -30,6 +34,10 @@ module img_cap_top (
 	inout		[3:0]		mem_dqs_n,
 	input					oct_rzqin
 );
+
+	/* Pull down the LEDs */
+	assign LEDR = 10'h0;
+	assign LEDG = 8'h0;
 
 	/* Declare assertion parameters */
 	localparam
@@ -52,9 +60,9 @@ module img_cap_top (
 		if (~reset) begin
 			fail <= DEASSERT_H;
 			pass <= DEASSERT_H;
-		end else if (valid_rd_data[23:0] != TST_PATT && rd_cnt != 0)
+		end else if ((valid_rd_data[23:0] != TST_PATT && rd_cnt != 0) || rd_cnt > 6)
 			fail <= ASSERT_H;
-		else if (rd_addr0 == 29'd7 && rd_cnt == 6)
+		else if (rd_addr0 == 29'd2 && rd_cnt == 6)
 			pass <= ASSERT_H;
   
 	/* Assign the test pattern to the write data signal */
@@ -110,7 +118,7 @@ module img_cap_top (
   
   	/* Instantiate extra PLL */
 	PLL pll_inst(
-		.refclk(CLOCK_50_B7A),
+		.refclk(CLOCK_50_B6A),
 		.rst(1'b0),
 		.outclk_0(clk_33m),
 		.locked(pll_locked)

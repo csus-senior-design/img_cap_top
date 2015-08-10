@@ -215,7 +215,7 @@ module  PLL
 		pll_altera_pll_altera_pll_i_639.duty_cycle7 = 50,
 		pll_altera_pll_altera_pll_i_639.duty_cycle8 = 50,
 		pll_altera_pll_altera_pll_i_639.duty_cycle9 = 50,
-		pll_altera_pll_altera_pll_i_639.fractional_vco_multiplier = "false",
+		pll_altera_pll_altera_pll_i_639.fractional_vco_multiplier = "true",
 		pll_altera_pll_altera_pll_i_639.m_cnt_bypass_en = "false",
 		pll_altera_pll_altera_pll_i_639.m_cnt_hi_div = 1,
 		pll_altera_pll_altera_pll_i_639.m_cnt_lo_div = 1,

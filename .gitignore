@@ -21,3 +21,5 @@ LPDDR2x32_4p_p0_summary.csv
 cr_ie_info.json
 output_files/*
 POF.cdf
+*.pin
+*.sld
