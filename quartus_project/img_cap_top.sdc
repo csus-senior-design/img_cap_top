@@ -17,11 +17,6 @@ create_clock -period 20 [get_ports CLOCK_50_B6A]
 #**************************************************************
 derive_pll_clocks
 
-#set_false_path -from [get_clocks CLOCK_50_B6A] -to [get_clocks {lpddr2x32_4p_inst|lpddr2x32_4p_inst|pll0|pll_config_clk}]
-#set_false_path -from [get_clocks CLOCK_50_B6A] -to [get_clocks {lpddr2x32_4p_inst|lpddr2x32_4p_inst|pll0|pll_afi_half_clk}]
-#set_false_path -from [get_clocks CLOCK_50_B6A] -to [get_clocks {lpddr2x32_4p_inst|lpddr2x32_4p_inst|pll0|pll_avl_clk}]
-#set_false_path -from [get_clocks CLOCK_50_B6A] -to [get_clocks {lpddr2x32_4p_inst|lpddr2x32_4p_inst|pll0|pll_afi_clk}]
-
 
 #**************************************************************
 # Set Clock Latency
@@ -62,7 +57,22 @@ derive_clock_uncertainty
 #**************************************************************
 # Set Multicycle Path
 #**************************************************************
+set_multicycle_path -setup -from mem_int|global_reset_n -to mem_int|lpddr2x32_4p_inst|lpddr2x32_4p_inst|p0|umemphy|hphy_inst~FF_85 2
+set_multicycle_path -hold -from mem_int|global_reset_n -to mem_int|lpddr2x32_4p_inst|lpddr2x32_4p_inst|p0|umemphy|hphy_inst~FF_85 1
+set_multicycle_path -setup -from mem_int|global_reset_n -to mem_int|lpddr2x32_4p_inst|lpddr2x32_4p_inst|p0|umemphy|hphy_inst~FF_86 3
+set_multicycle_path -hold -from mem_int|global_reset_n -to mem_int|lpddr2x32_4p_inst|lpddr2x32_4p_inst|p0|umemphy|hphy_inst~FF_86 2
+set_multicycle_path -setup -from mem_int|global_reset_n -to mem_int|lpddr2x32_4p_inst|lpddr2x32_4p_inst|p0|umemphy|hphy_inst~FF_87 2
+set_multicycle_path -hold -from mem_int|global_reset_n -to mem_int|lpddr2x32_4p_inst|lpddr2x32_4p_inst|p0|umemphy|hphy_inst~FF_87 1
 
+set_multicycle_path -setup -from mem_int|soft_reset_n -to mem_int|lpddr2x32_4p_inst|lpddr2x32_4p_inst|p0|umemphy|hphy_inst~FF_70 2
+set_multicycle_path -hold -from mem_int|soft_reset_n -to mem_int|lpddr2x32_4p_inst|lpddr2x32_4p_inst|p0|umemphy|hphy_inst~FF_70 1
+set_multicycle_path -setup -from mem_int|soft_reset_n -to mem_int|lpddr2x32_4p_inst|lpddr2x32_4p_inst|p0|umemphy|hphy_inst~FF_71 2
+set_multicycle_path -hold -from mem_int|soft_reset_n -to mem_int|lpddr2x32_4p_inst|lpddr2x32_4p_inst|p0|umemphy|hphy_inst~FF_71 1
+set_multicycle_path -setup -from mem_int|soft_reset_n -to mem_int|lpddr2x32_4p_inst|lpddr2x32_4p_inst|p0|umemphy|hphy_inst~FF_72 2
+set_multicycle_path -hold -from mem_int|soft_reset_n -to mem_int|lpddr2x32_4p_inst|lpddr2x32_4p_inst|p0|umemphy|hphy_inst~FF_72 1
+
+set_multicycle_path -setup -from mem_int|lpddr2x32_4p_inst|lpddr2x32_4p_inst|p0|umemphy|hphy_inst~FF_39 -to mem_int|local_cal_success_fl 2
+set_multicycle_path -hold -from mem_int|lpddr2x32_4p_inst|lpddr2x32_4p_inst|p0|umemphy|hphy_inst~FF_39 -to mem_int|local_cal_success_fl 1
 
 
 #**************************************************************

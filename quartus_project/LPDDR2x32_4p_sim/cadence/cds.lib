@@ -9,6 +9,8 @@ DEFINE ncinternal                       $CDS_ROOT/tools/inca/files/NCINTERNAL/
 DEFINE ncmodels                         $CDS_ROOT/tools/inca/files/NCMODELS/         
 DEFINE cds_assertions                   $CDS_ROOT/tools/inca/files/CDS_ASSERTIONS/   
 DEFINE work                             ./libraries/work/                            
+DEFINE error_adapter_0                  ./libraries/error_adapter_0/                 
+DEFINE avalon_st_adapter                ./libraries/avalon_st_adapter/               
 DEFINE crosser                          ./libraries/crosser/                         
 DEFINE rsp_mux                          ./libraries/rsp_mux/                         
 DEFINE rsp_demux                        ./libraries/rsp_demux/                       

@@ -288,11 +288,7 @@ set_instance_assignment -name OUTPUT_TERMINATION "SERIES 34 OHM WITH CALIBRATION
 set_instance_assignment -name D5_DELAY 4 -to mem_dqs_n[3] -tag __LPDDR2x32_4p_p0
 set_instance_assignment -name D6_DELAY 0 -to mem_dqs_n[3] -tag __LPDDR2x32_4p_p0
 set_instance_assignment -name D5_DELAY 4 -to mem_ck -tag __LPDDR2x32_4p_p0
-set_instance_assignment -name IO_STANDARD "DIFFERENTIAL 1.2-V HSUL" -to mem_ck -tag __LPDDR2x32_4p_p0
-set_instance_assignment -name OUTPUT_TERMINATION "SERIES 34 OHM WITH CALIBRATION" -to mem_ck -tag __LPDDR2x32_4p_p0
 set_instance_assignment -name D5_DELAY 4 -to mem_ck_n -tag __LPDDR2x32_4p_p0
-set_instance_assignment -name IO_STANDARD "DIFFERENTIAL 1.2-V HSUL" -to mem_ck_n -tag __LPDDR2x32_4p_p0
-set_instance_assignment -name OUTPUT_TERMINATION "SERIES 34 OHM WITH CALIBRATION" -to mem_ck_n -tag __LPDDR2x32_4p_p0
 set_instance_assignment -name IO_STANDARD "1.2-V HSUL" -to mem_ca[0] -tag __LPDDR2x32_4p_p0
 set_instance_assignment -name OUTPUT_TERMINATION "SERIES 34 OHM WITH CALIBRATION" -to mem_ca[0] -tag __LPDDR2x32_4p_p0
 set_instance_assignment -name IO_STANDARD "1.2-V HSUL" -to mem_ca[1] -tag __LPDDR2x32_4p_p0
@@ -313,10 +309,6 @@ set_instance_assignment -name IO_STANDARD "1.2-V HSUL" -to mem_ca[8] -tag __LPDD
 set_instance_assignment -name OUTPUT_TERMINATION "SERIES 34 OHM WITH CALIBRATION" -to mem_ca[8] -tag __LPDDR2x32_4p_p0
 set_instance_assignment -name IO_STANDARD "1.2-V HSUL" -to mem_ca[9] -tag __LPDDR2x32_4p_p0
 set_instance_assignment -name OUTPUT_TERMINATION "SERIES 34 OHM WITH CALIBRATION" -to mem_ca[9] -tag __LPDDR2x32_4p_p0
-set_instance_assignment -name IO_STANDARD "1.2-V HSUL" -to mem_cke -tag __LPDDR2x32_4p_p0
-set_instance_assignment -name OUTPUT_TERMINATION "SERIES 34 OHM WITH CALIBRATION" -to mem_cke -tag __LPDDR2x32_4p_p0
-set_instance_assignment -name IO_STANDARD "1.2-V HSUL" -to mem_cs_n -tag __LPDDR2x32_4p_p0
-set_instance_assignment -name OUTPUT_TERMINATION "SERIES 34 OHM WITH CALIBRATION" -to mem_cs_n -tag __LPDDR2x32_4p_p0
 set_instance_assignment -name IO_STANDARD "1.2-V HSUL" -to mem_dm[0] -tag __LPDDR2x32_4p_p0
 set_instance_assignment -name OUTPUT_TERMINATION "SERIES 34 OHM WITH CALIBRATION" -to mem_dm[0] -tag __LPDDR2x32_4p_p0
 set_instance_assignment -name IO_STANDARD "1.2-V HSUL" -to mem_dm[1] -tag __LPDDR2x32_4p_p0
@@ -405,8 +397,6 @@ set_instance_assignment -name ENABLE_BENEFICIAL_SKEW_OPTIMIZATION_FOR_NON_GLOBAL
 set_instance_assignment -name PLL_COMPENSATION_MODE DIRECT -to mem_int|lpddr2x32_4p_inst|lpddr2x32_4p_inst|pll0|fbout -tag __LPDDR2x32_4p_p0
 set_global_assignment -name USE_DLL_FREQUENCY_FOR_DQS_DELAY_CHAIN ON
 set_global_assignment -name UNIPHY_SEQUENCER_DQS_CONFIG_ENABLE ON
-set_global_assignment -name OPTIMIZE_MULTI_CORNER_TIMING ON
-set_global_assignment -name ECO_REGENERATE_REPORT ON
 set_global_assignment -name ENABLE_SIGNALTAP ON
 set_global_assignment -name USE_SIGNALTAP_FILE stp1.stp
 set_global_assignment -name SLD_NODE_CREATOR_ID 110 -section_id auto_signaltap_0
@@ -602,7 +592,24 @@ set_instance_assignment -name POST_FIT_CONNECT_TO_SLD_NODE_ENTITY_PORT crc[26] -
 set_instance_assignment -name POST_FIT_CONNECT_TO_SLD_NODE_ENTITY_PORT crc[27] -to auto_signaltap_0|vcc -section_id auto_signaltap_0
 set_instance_assignment -name POST_FIT_CONNECT_TO_SLD_NODE_ENTITY_PORT crc[30] -to auto_signaltap_0|vcc -section_id auto_signaltap_0
 set_global_assignment -name SLD_NODE_PARAMETER_ASSIGNMENT "SLD_SAMPLE_DEPTH=512" -section_id auto_signaltap_0
-set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
+set_instance_assignment -name D5_DELAY 4 -to mem_ck[0] -tag __LPDDR2x32_4p_p0
+set_instance_assignment -name IO_STANDARD "DIFFERENTIAL 1.2-V HSUL" -to mem_ck[0] -tag __LPDDR2x32_4p_p0
+set_instance_assignment -name OUTPUT_TERMINATION "SERIES 34 OHM WITH CALIBRATION" -to mem_ck[0] -tag __LPDDR2x32_4p_p0
+set_instance_assignment -name D5_DELAY 4 -to mem_ck_n[0] -tag __LPDDR2x32_4p_p0
+set_instance_assignment -name IO_STANDARD "DIFFERENTIAL 1.2-V HSUL" -to mem_ck_n[0] -tag __LPDDR2x32_4p_p0
+set_instance_assignment -name OUTPUT_TERMINATION "SERIES 34 OHM WITH CALIBRATION" -to mem_ck_n[0] -tag __LPDDR2x32_4p_p0
+set_instance_assignment -name IO_STANDARD "1.2-V HSUL" -to mem_cke[0] -tag __LPDDR2x32_4p_p0
+set_instance_assignment -name OUTPUT_TERMINATION "SERIES 34 OHM WITH CALIBRATION" -to mem_cke[0] -tag __LPDDR2x32_4p_p0
+set_instance_assignment -name IO_STANDARD "1.2-V HSUL" -to mem_cs_n[0] -tag __LPDDR2x32_4p_p0
+set_instance_assignment -name OUTPUT_TERMINATION "SERIES 34 OHM WITH CALIBRATION" -to mem_cs_n[0] -tag __LPDDR2x32_4p_p0
+set_instance_assignment -name PACKAGE_SKEW_COMPENSATION OFF -to mem_cke[0] -tag __LPDDR2x32_4p_p0
+set_instance_assignment -name PACKAGE_SKEW_COMPENSATION OFF -to mem_cs_n[0] -tag __LPDDR2x32_4p_p0
+set_instance_assignment -name PACKAGE_SKEW_COMPENSATION OFF -to mem_ck[0] -tag __LPDDR2x32_4p_p0
+set_instance_assignment -name PACKAGE_SKEW_COMPENSATION OFF -to mem_ck_n[0] -tag __LPDDR2x32_4p_p0
+set_global_assignment -name OPTIMIZE_MULTI_CORNER_TIMING ON
+set_global_assignment -name ECO_REGENERATE_REPORT ON
+set_global_assignment -name QIP_FILE LPDDR2x32_4p.qip
+set_global_assignment -name CDF_FILE SOF.cdf
 set_global_assignment -name SDC_FILE img_cap_top.sdc
 set_global_assignment -name VERILOG_FILE ../frame_buf_alt/frame_buf_alt.v
 set_global_assignment -name VERILOG_FILE ../ov_7670/ov_sccb/ov_sccb.v
@@ -612,11 +619,12 @@ set_global_assignment -name VERILOG_FILE ../ram_int_4p/ram_int_4p.v
 set_global_assignment -name VERILOG_FILE ../img_cap_top.v
 set_global_assignment -name QIP_FILE ISSP/synthesis/ISSP.qip
 set_global_assignment -name SOURCE_FILE C5G_LPDDR2_Settings.qprs
-set_global_assignment -name QIP_FILE LPDDR2x32_4p.qip
 set_global_assignment -name SIP_FILE LPDDR2x32_4p.sip
 set_global_assignment -name QIP_FILE PLL.qip
 set_global_assignment -name SIP_FILE PLL.sip
 set_global_assignment -name SIGNALTAP_FILE stp1.stp
 set_global_assignment -name SOURCE_FILE Spf1.spf
-set_global_assignment -name CDF_FILE output_files/SOF.cdf
+set_global_assignment -name PHYSICAL_SYNTHESIS_COMBO_LOGIC ON
+set_global_assignment -name PHYSICAL_SYNTHESIS_REGISTER_DUPLICATION ON
 set_global_assignment -name SLD_FILE db/stp1_auto_stripped.stp
+set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

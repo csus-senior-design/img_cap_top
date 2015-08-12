@@ -12,7 +12,7 @@
 # or its authorized distributors. Please refer to the applicable 
 # agreement for further details.
 
-# ACDS 14.1 190 win32 2015.04.22.10:11:43
+# ACDS 15.0 145 win32 2015.08.10.13:22:36
 
 # ----------------------------------------
 # vcs - auto-generated simulation script
@@ -21,7 +21,7 @@
 # initialize variables
 TOP_LEVEL_NAME="LPDDR2x32_4p"
 QSYS_SIMDIR="./../../"
-QUARTUS_INSTALL_DIR="C:/altera/14.1/quartus/"
+QUARTUS_INSTALL_DIR="C:/altera/15.0/quartus/"
 SKIP_FILE_COPY=0
 SKIP_ELAB=0
 SKIP_SIM=0
@@ -53,9 +53,9 @@ fi
 # ----------------------------------------
 # copy RAM/ROM files to simulation directory
 if [ $SKIP_FILE_COPY -eq 0 ]; then
-  cp -f $QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_sequencer_mem.hex ./
   cp -f $QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_AC_ROM.hex ./
   cp -f $QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_inst_ROM.hex ./
+  cp -f $QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_sequencer_mem.hex ./
 fi
 
 vcs -lca -timescale=1ps/1ps -sverilog +verilog2001ext+.v -ntb_opts dtm $ELAB_OPTIONS $USER_DEFINED_ELAB_OPTIONS \
@@ -71,6 +71,8 @@ vcs -lca -timescale=1ps/1ps -sverilog +verilog2001ext+.v -ntb_opts dtm $ELAB_OPT
   -v $QUARTUS_INSTALL_DIR/eda/sim_lib/cyclonev_hssi_atoms.v \
   -v $QUARTUS_INSTALL_DIR/eda/sim_lib/synopsys/cyclonev_pcie_hip_atoms_ncrypt.v \
   -v $QUARTUS_INSTALL_DIR/eda/sim_lib/cyclonev_pcie_hip_atoms.v \
+  $QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_mm_interconnect_1_avalon_st_adapter_error_adapter_0.sv \
+  $QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_mm_interconnect_1_avalon_st_adapter.v \
   $QSYS_SIMDIR/LPDDR2x32_4p/altera_avalon_st_handshake_clock_crosser.v \
   $QSYS_SIMDIR/LPDDR2x32_4p/altera_avalon_st_clock_crosser.v \
   $QSYS_SIMDIR/LPDDR2x32_4p/altera_avalon_st_pipeline_base.v \
@@ -119,6 +121,8 @@ vcs -lca -timescale=1ps/1ps -sverilog +verilog2001ext+.v -ntb_opts dtm $ELAB_OPT
   $QSYS_SIMDIR/LPDDR2x32_4p/altera_merlin_traffic_limiter.sv \
   $QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_irq_mapper.sv \
   $QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0.v \
+  $QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_avalon_st_adapter.v \
+  $QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_avalon_st_adapter_error_adapter_0.sv \
   $QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_cmd_demux.sv \
   $QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_cmd_demux_001.sv \
   $QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_cmd_demux_002.sv \

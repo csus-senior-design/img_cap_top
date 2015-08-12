@@ -1,5 +1,5 @@
 set_global_assignment -entity "LPDDR2x32_4p" -library "lib_LPDDR2x32_4p" -name IP_TOOL_NAME "altera_mem_if_lpddr2_emif"
-set_global_assignment -entity "LPDDR2x32_4p" -library "lib_LPDDR2x32_4p" -name IP_TOOL_VERSION "14.1"
+set_global_assignment -entity "LPDDR2x32_4p" -library "lib_LPDDR2x32_4p" -name IP_TOOL_VERSION "15.0"
 set_global_assignment -entity "LPDDR2x32_4p" -library "lib_LPDDR2x32_4p" -name IP_TOOL_ENV "mwpim"
 set_global_assignment -library "lib_LPDDR2x32_4p" -name SPD_FILE [file join $::quartus(sip_path) "LPDDR2x32_4p.spd"]
 
@@ -9,6 +9,8 @@ set_global_assignment -library "lib_LPDDR2x32_4p" -name MISC_FILE [file join $::
 set_global_assignment -library "lib_LPDDR2x32_4p" -name MISC_FILE [file join $::quartus(sip_path) "LPDDR2x32_4p_sim/LPDDR2x32_4p/altera_reset_synchronizer.v"]
 set_global_assignment -library "lib_LPDDR2x32_4p" -name MISC_FILE [file join $::quartus(sip_path) "LPDDR2x32_4p_sim/LPDDR2x32_4p/altera_reset_controller.sdc"]
 set_global_assignment -library "lib_LPDDR2x32_4p" -name MISC_FILE [file join $::quartus(sip_path) "LPDDR2x32_4p_sim/LPDDR2x32_4p/LPDDR2x32_4p_mm_interconnect_1.v"]
+set_global_assignment -library "lib_LPDDR2x32_4p" -name MISC_FILE [file join $::quartus(sip_path) "LPDDR2x32_4p_sim/LPDDR2x32_4p/LPDDR2x32_4p_mm_interconnect_1_avalon_st_adapter.v"]
+set_global_assignment -library "lib_LPDDR2x32_4p" -name MISC_FILE [file join $::quartus(sip_path) "LPDDR2x32_4p_sim/LPDDR2x32_4p/LPDDR2x32_4p_mm_interconnect_1_avalon_st_adapter_error_adapter_0.sv"]
 set_global_assignment -library "lib_LPDDR2x32_4p" -name MISC_FILE [file join $::quartus(sip_path) "LPDDR2x32_4p_sim/LPDDR2x32_4p/altera_avalon_st_handshake_clock_crosser.v"]
 set_global_assignment -library "lib_LPDDR2x32_4p" -name MISC_FILE [file join $::quartus(sip_path) "LPDDR2x32_4p_sim/LPDDR2x32_4p/altera_avalon_st_clock_crosser.v"]
 set_global_assignment -library "lib_LPDDR2x32_4p" -name MISC_FILE [file join $::quartus(sip_path) "LPDDR2x32_4p_sim/LPDDR2x32_4p/altera_avalon_st_pipeline_base.v"]
@@ -59,6 +61,8 @@ set_global_assignment -library "lib_LPDDR2x32_4p" -name MISC_FILE [file join $::
 set_global_assignment -library "lib_LPDDR2x32_4p" -name MISC_FILE [file join $::quartus(sip_path) "LPDDR2x32_4p_sim/LPDDR2x32_4p/altera_merlin_traffic_limiter.sv"]
 set_global_assignment -library "lib_LPDDR2x32_4p" -name MISC_FILE [file join $::quartus(sip_path) "LPDDR2x32_4p_sim/LPDDR2x32_4p/LPDDR2x32_4p_s0_irq_mapper.sv"]
 set_global_assignment -library "lib_LPDDR2x32_4p" -name MISC_FILE [file join $::quartus(sip_path) "LPDDR2x32_4p_sim/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0.v"]
+set_global_assignment -library "lib_LPDDR2x32_4p" -name MISC_FILE [file join $::quartus(sip_path) "LPDDR2x32_4p_sim/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_avalon_st_adapter.v"]
+set_global_assignment -library "lib_LPDDR2x32_4p" -name MISC_FILE [file join $::quartus(sip_path) "LPDDR2x32_4p_sim/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_avalon_st_adapter_error_adapter_0.sv"]
 set_global_assignment -library "lib_LPDDR2x32_4p" -name MISC_FILE [file join $::quartus(sip_path) "LPDDR2x32_4p_sim/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_cmd_demux.sv"]
 set_global_assignment -library "lib_LPDDR2x32_4p" -name MISC_FILE [file join $::quartus(sip_path) "LPDDR2x32_4p_sim/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_cmd_demux_001.sv"]
 set_global_assignment -library "lib_LPDDR2x32_4p" -name MISC_FILE [file join $::quartus(sip_path) "LPDDR2x32_4p_sim/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_cmd_demux_002.sv"]
@@ -90,9 +94,9 @@ set_global_assignment -library "lib_LPDDR2x32_4p" -name MISC_FILE [file join $::
 set_global_assignment -library "lib_LPDDR2x32_4p" -name MISC_FILE [file join $::quartus(sip_path) "LPDDR2x32_4p_sim/LPDDR2x32_4p/sequencer_scc_sv_phase_decode.v"]
 set_global_assignment -library "lib_LPDDR2x32_4p" -name MISC_FILE [file join $::quartus(sip_path) "LPDDR2x32_4p_sim/LPDDR2x32_4p/sequencer_scc_sv_wrapper.sv"]
 set_global_assignment -library "lib_LPDDR2x32_4p" -name MISC_FILE [file join $::quartus(sip_path) "LPDDR2x32_4p_sim/LPDDR2x32_4p/sequencer_trk_mgr.sv"]
-set_global_assignment -library "lib_LPDDR2x32_4p" -name MISC_FILE [file join $::quartus(sip_path) "LPDDR2x32_4p_sim/LPDDR2x32_4p/LPDDR2x32_4p_s0_sequencer_mem.hex"]
 set_global_assignment -library "lib_LPDDR2x32_4p" -name MISC_FILE [file join $::quartus(sip_path) "LPDDR2x32_4p_sim/LPDDR2x32_4p/LPDDR2x32_4p_s0_AC_ROM.hex"]
 set_global_assignment -library "lib_LPDDR2x32_4p" -name MISC_FILE [file join $::quartus(sip_path) "LPDDR2x32_4p_sim/LPDDR2x32_4p/LPDDR2x32_4p_s0_inst_ROM.hex"]
+set_global_assignment -library "lib_LPDDR2x32_4p" -name MISC_FILE [file join $::quartus(sip_path) "LPDDR2x32_4p_sim/LPDDR2x32_4p/LPDDR2x32_4p_s0_sequencer_mem.hex"]
 set_global_assignment -library "lib_LPDDR2x32_4p" -name MISC_FILE [file join $::quartus(sip_path) "LPDDR2x32_4p_sim/LPDDR2x32_4p/LPDDR2x32_4p_p0_clock_pair_generator.v"]
 set_global_assignment -library "lib_LPDDR2x32_4p" -name MISC_FILE [file join $::quartus(sip_path) "LPDDR2x32_4p_sim/LPDDR2x32_4p/LPDDR2x32_4p_p0_acv_hard_addr_cmd_pads.v"]
 set_global_assignment -library "lib_LPDDR2x32_4p" -name MISC_FILE [file join $::quartus(sip_path) "LPDDR2x32_4p_sim/LPDDR2x32_4p/LPDDR2x32_4p_p0_acv_hard_memphy.v"]

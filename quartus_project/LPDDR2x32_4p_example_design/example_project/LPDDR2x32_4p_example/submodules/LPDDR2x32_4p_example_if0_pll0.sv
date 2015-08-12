@@ -17,7 +17,7 @@
 
 `timescale 1 ps / 1 ps
 
-(* altera_attribute = "-name IP_TOOL_NAME common; -name IP_TOOL_VERSION 14.1; -name FITTER_ADJUST_HC_SHORT_PATH_GUARDBAND 100; -name ALLOW_SYNCH_CTRL_USAGE OFF; -name AUTO_CLOCK_ENABLE_RECOGNITION OFF; -name AUTO_SHIFT_REGISTER_RECOGNITION OFF" *)
+(* altera_attribute = "-name IP_TOOL_NAME common; -name IP_TOOL_VERSION 15.0; -name FITTER_ADJUST_HC_SHORT_PATH_GUARDBAND 100; -name ALLOW_SYNCH_CTRL_USAGE OFF; -name AUTO_CLOCK_ENABLE_RECOGNITION OFF; -name AUTO_SHIFT_REGISTER_RECOGNITION OFF" *)
 
 
 module LPDDR2x32_4p_example_if0_pll0 (
@@ -57,25 +57,25 @@ localparam FAST_SIM_MODEL = ALTERA_ALT_MEM_IF_PHY_FAST_SIM_MODEL;
 parameter REF_CLK_FREQ = "50.0 MHz";
 parameter REF_CLK_PERIOD_PS = 20000;
 
-parameter PLL_AFI_CLK_FREQ_STR = "330.0 MHz";
-parameter PLL_MEM_CLK_FREQ_STR = "330.0 MHz";
-parameter PLL_WRITE_CLK_FREQ_STR = "330.0 MHz";
-parameter PLL_ADDR_CMD_CLK_FREQ_STR = "330.0 MHz";
-parameter PLL_AFI_HALF_CLK_FREQ_STR = "165.0 MHz";
-parameter PLL_NIOS_CLK_FREQ_STR = "66.0 MHz";
-parameter PLL_CONFIG_CLK_FREQ_STR = "22.0 MHz";
+parameter PLL_AFI_CLK_FREQ_STR = "252.0 MHz";
+parameter PLL_MEM_CLK_FREQ_STR = "252.0 MHz";
+parameter PLL_WRITE_CLK_FREQ_STR = "252.0 MHz";
+parameter PLL_ADDR_CMD_CLK_FREQ_STR = "252.0 MHz";
+parameter PLL_AFI_HALF_CLK_FREQ_STR = "126.0 MHz";
+parameter PLL_NIOS_CLK_FREQ_STR = "63.0 MHz";
+parameter PLL_CONFIG_CLK_FREQ_STR = "21.0 MHz";
 parameter PLL_P2C_READ_CLK_FREQ_STR = "";
 parameter PLL_C2P_WRITE_CLK_FREQ_STR = "";
 parameter PLL_HR_CLK_FREQ_STR = "";
 parameter PLL_DR_CLK_FREQ_STR = "";
 
-parameter PLL_AFI_CLK_FREQ_SIM_STR = "3030 ps";
-parameter PLL_MEM_CLK_FREQ_SIM_STR = "3030 ps";
-parameter PLL_WRITE_CLK_FREQ_SIM_STR = "3030 ps";
-parameter PLL_ADDR_CMD_CLK_FREQ_SIM_STR = "3030 ps";
-parameter PLL_AFI_HALF_CLK_FREQ_SIM_STR = "6060 ps";
-parameter PLL_NIOS_CLK_FREQ_SIM_STR = "15150 ps";
-parameter PLL_CONFIG_CLK_FREQ_SIM_STR = "45450 ps";
+parameter PLL_AFI_CLK_FREQ_SIM_STR = "3968 ps";
+parameter PLL_MEM_CLK_FREQ_SIM_STR = "3968 ps";
+parameter PLL_WRITE_CLK_FREQ_SIM_STR = "3968 ps";
+parameter PLL_ADDR_CMD_CLK_FREQ_SIM_STR = "3968 ps";
+parameter PLL_AFI_HALF_CLK_FREQ_SIM_STR = "7936 ps";
+parameter PLL_NIOS_CLK_FREQ_SIM_STR = "15872 ps";
+parameter PLL_CONFIG_CLK_FREQ_SIM_STR = "47616 ps";
 parameter PLL_P2C_READ_CLK_FREQ_SIM_STR = "0 ps";
 parameter PLL_C2P_WRITE_CLK_FREQ_SIM_STR = "0 ps";
 parameter PLL_HR_CLK_FREQ_SIM_STR = "0 ps";
@@ -84,15 +84,15 @@ parameter PLL_DR_CLK_FREQ_SIM_STR = "0 ps";
 parameter AFI_CLK_PHASE      = "0 ps";
 parameter AFI_PHY_CLK_PHASE  = "0 ps";
 parameter MEM_CLK_PHASE      = "0 ps";
-parameter WRITE_CLK_PHASE    = "2272 ps";
-parameter ADDR_CMD_CLK_PHASE = "2272 ps";
+parameter WRITE_CLK_PHASE    = "2976 ps";
+parameter ADDR_CMD_CLK_PHASE = "2976 ps";
 parameter AFI_HALF_CLK_PHASE = "0 ps";
-parameter AVL_CLK_PHASE      = "14962 ps";
+parameter AVL_CLK_PHASE      = "15674 ps";
 parameter CONFIG_CLK_PHASE   = "0 ps";
 
 parameter MEM_CLK_PHASE_SIM       = "0 ps";
-parameter WRITE_CLK_PHASE_SIM     = "2273 ps";
-parameter ADDR_CMD_CLK_PHASE_SIM  = "2273 ps";
+parameter WRITE_CLK_PHASE_SIM     = "2976 ps";
+parameter ADDR_CMD_CLK_PHASE_SIM  = "2976 ps";
 
 
 parameter ABSTRACT_REAL_COMPARE_TEST = "false";

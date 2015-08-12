@@ -56,7 +56,7 @@ module img_cap_top (
 						rd_cnt;
   
 	/* Test block for determining pass or failure */
-	always @(posedge clk_33m)
+	always @(posedge clk_25_2m)
 		if (~reset) begin
 			fail <= DEASSERT_H;
 			pass <= DEASSERT_H;
@@ -69,7 +69,7 @@ module img_cap_top (
 	assign wr_data0 = TST_PATT;
   
 	/* Latch the read data when it's valid */
-	always @(posedge clk_33m)
+	always @(posedge clk_25_2m)
 		if (~reset)
 			rd_cnt <= 32'h0;
 		else if (rd_data_valid) begin
@@ -80,7 +80,7 @@ module img_cap_top (
 	/* Instantiate In-System Sources and Probes */
 	wire reset;
 	ISSP ISSP_inst(
-		.source_clk(clk_33m),
+		.source_clk(clk_25_2m),
 		.source({wr_en_in0, rd_en_in0, reset}),
 		.probe({pass, fail})
 	);
@@ -111,16 +111,16 @@ module img_cap_top (
 	
 	wire				full;
 	
-	wire				clk_33m;
+	wire				clk_25_2m;
 	wire				pll_locked;
 	
 	/* Instantiate the required subsystems */
   
   	/* Instantiate extra PLL */
-	PLL pll_inst(
+	PLL pll_inst (
 		.refclk(CLOCK_50_B6A),
 		.rst(1'b0),
-		.outclk_0(clk_33m),
+		.outclk_0(clk_25_2m),
 		.locked(pll_locked)
 	);
 	
@@ -128,8 +128,8 @@ module img_cap_top (
 	#(
 		.BUF_SIZE(5)
 	) frame_buf0 (
-		.wr_clk(clk_33m),
-		.rd_clk(clk_33m),
+		.wr_clk(clk_25_2m),
+		.rd_clk(clk_25_2m),
 		.reset(reset),
 		.wr_en_in(wr_en_in0),
 		.rd_en_in(rd_en_in0),
@@ -156,7 +156,7 @@ module img_cap_top (
 		.wr_data2(),
 		.wr_data3(),
 		.clk_50m(CLOCK_50_B5B),
-		.clk(clk_33m),
+		.clk(clk_25_2m),
 		.wr_en0(wr_en0),
 		.wr_en1(),
 		.wr_en2(),

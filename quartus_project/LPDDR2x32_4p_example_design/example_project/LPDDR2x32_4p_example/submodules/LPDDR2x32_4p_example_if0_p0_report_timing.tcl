@@ -249,6 +249,12 @@ foreach inst $instances {
 	# DQS_phase offset
 	set dqs_phase [ LPDDR2x32_4p_example_if0_p0_get_dqs_phase $dqs_pins ]
 
+	set fitter_run [LPDDR2x32_4p_example_if0_p0_get_io_interface_type [lindex [lindex $pins(q_groups) 0] 0]]
+	if {$fitter_run == ""} {
+		post_message -type critical_warning "Fitter (quartus_fit) failed or was not run. Run the Fitter (quartus_fit) successfully before running ReportDDR"
+		continue
+	}
+
 	# Get the interface type (HPAD or VPAD)
 	set interface_type [LPDDR2x32_4p_example_if0_p0_get_io_interface_type $all_dq_pins]
 

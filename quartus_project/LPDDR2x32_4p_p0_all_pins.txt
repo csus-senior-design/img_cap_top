@@ -10,10 +10,10 @@ DQS: {mem_dqs[0]} {mem_dqs[1]} {mem_dqs[2]} {mem_dqs[3]}
 DQSn: {mem_dqs_n[0]} {mem_dqs_n[1]} {mem_dqs_n[2]} {mem_dqs_n[3]}
 DQ: {{mem_dq[0]} {mem_dq[1]} {mem_dq[2]} {mem_dq[3]} {mem_dq[4]} {mem_dq[5]} {mem_dq[6]} {mem_dq[7]}} {{mem_dq[8]} {mem_dq[9]} {mem_dq[10]} {mem_dq[11]} {mem_dq[12]} {mem_dq[13]} {mem_dq[14]} {mem_dq[15]}} {{mem_dq[16]} {mem_dq[17]} {mem_dq[18]} {mem_dq[19]} {mem_dq[20]} {mem_dq[21]} {mem_dq[22]} {mem_dq[23]}} {{mem_dq[24]} {mem_dq[25]} {mem_dq[26]} {mem_dq[27]} {mem_dq[28]} {mem_dq[29]} {mem_dq[30]} {mem_dq[31]}}
 DM {mem_dm[0]} {mem_dm[1]} {mem_dm[2]} {mem_dm[3]}
-CK: mem_ck
-CKn: mem_ck_n
+CK: {mem_ck[0]}
+CKn: {mem_ck_n[0]}
 ADD: {mem_ca[0]} {mem_ca[1]} {mem_ca[2]} {mem_ca[3]} {mem_ca[4]} {mem_ca[5]} {mem_ca[6]} {mem_ca[7]} {mem_ca[8]} {mem_ca[9]}
-CMD: mem_cke mem_cs_n
+CMD: {mem_cke[0]} {mem_cs_n[0]}
 REF CLK: CLOCK_50_B5B
 PLL AFI: mem_int|lpddr2x32_4p_inst|lpddr2x32_4p_inst|pll0|pll1~PLL_OUTPUT_COUNTER|divclk
 PLL CK: mem_int|lpddr2x32_4p_inst|lpddr2x32_4p_inst|pll0|pll2_phy~PLL_OUTPUT_COUNTER|divclk

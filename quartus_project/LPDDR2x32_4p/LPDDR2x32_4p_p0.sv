@@ -14,7 +14,7 @@
 
 `timescale 1 ps / 1 ps
 
-(* altera_attribute = "-name IP_TOOL_NAME altera_mem_if_lpddr2_hard_phy_core; -name IP_TOOL_VERSION 14.1; -name FITTER_ADJUST_HC_SHORT_PATH_GUARDBAND 100" *)
+(* altera_attribute = "-name IP_TOOL_NAME altera_mem_if_lpddr2_hard_phy_core; -name IP_TOOL_VERSION 15.0; -name FITTER_ADJUST_HC_SHORT_PATH_GUARDBAND 100" *)
 module LPDDR2x32_4p_p0 (
     global_reset_n,
     soft_reset_n,
@@ -194,7 +194,7 @@ parameter CALIB_REG_WIDTH = 8;
 
 
 parameter TB_PROTOCOL       = "LPDDR2";
-parameter TB_MEM_CLK_FREQ   = "330.0";
+parameter TB_MEM_CLK_FREQ   = "252.0";
 parameter TB_RATE           = "FULL";
 parameter TB_MEM_DQ_WIDTH   = "32";
 parameter TB_MEM_DQS_WIDTH  = "4";

@@ -12,7 +12,7 @@
 # or its authorized distributors. Please refer to the applicable 
 # agreement for further details.
 
-# ACDS 14.1 190 win32 2015.04.22.10:11:43
+# ACDS 15.0 145 win32 2015.08.10.13:22:37
 
 # ----------------------------------------
 # Auto-generated simulation script
@@ -34,7 +34,7 @@ if ![info exists QSYS_SIMDIR] {
 }
 
 if ![info exists QUARTUS_INSTALL_DIR] { 
-  set QUARTUS_INSTALL_DIR "C:/altera/14.1/quartus/"
+  set QUARTUS_INSTALL_DIR "C:/altera/15.0/quartus/"
 }
 
 # ----------------------------------------
@@ -60,9 +60,9 @@ if { [ string match "Active" $Aldec ] } {
 # Copy ROM/RAM files to simulation directory
 alias file_copy {
   echo "\[exec\] file_copy"
-  file copy -force $QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_sequencer_mem.hex ./
   file copy -force $QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_AC_ROM.hex ./
   file copy -force $QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_inst_ROM.hex ./
+  file copy -force $QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_sequencer_mem.hex ./
 }
 
 # ----------------------------------------
@@ -87,6 +87,10 @@ ensure_lib                       ./libraries/cyclonev_hssi_ver
 vmap       cyclonev_hssi_ver     ./libraries/cyclonev_hssi_ver    
 ensure_lib                       ./libraries/cyclonev_pcie_hip_ver
 vmap       cyclonev_pcie_hip_ver ./libraries/cyclonev_pcie_hip_ver
+ensure_lib                                  ./libraries/error_adapter_0                 
+vmap       error_adapter_0                  ./libraries/error_adapter_0                 
+ensure_lib                                  ./libraries/avalon_st_adapter               
+vmap       avalon_st_adapter                ./libraries/avalon_st_adapter               
 ensure_lib                                  ./libraries/crosser                         
 vmap       crosser                          ./libraries/crosser                         
 ensure_lib                                  ./libraries/rsp_mux                         
@@ -154,141 +158,145 @@ vmap       LPDDR2x32_4p                     ./libraries/LPDDR2x32_4p
 # Compile device library files
 alias dev_com {
   echo "\[exec\] dev_com"
-  vlog  "$QUARTUS_INSTALL_DIR/eda/sim_lib/altera_primitives.v"                    -work altera_ver           
-  vlog  "$QUARTUS_INSTALL_DIR/eda/sim_lib/220model.v"                             -work lpm_ver              
-  vlog  "$QUARTUS_INSTALL_DIR/eda/sim_lib/sgate.v"                                -work sgate_ver            
-  vlog  "$QUARTUS_INSTALL_DIR/eda/sim_lib/altera_mf.v"                            -work altera_mf_ver        
-  vlog  "$QUARTUS_INSTALL_DIR/eda/sim_lib/altera_lnsim.sv"                        -work altera_lnsim_ver     
-  vlog  "$QUARTUS_INSTALL_DIR/eda/sim_lib/aldec/cyclonev_atoms_ncrypt.v"          -work cyclonev_ver         
-  vlog  "$QUARTUS_INSTALL_DIR/eda/sim_lib/aldec/cyclonev_hmi_atoms_ncrypt.v"      -work cyclonev_ver         
-  vlog  "$QUARTUS_INSTALL_DIR/eda/sim_lib/cyclonev_atoms.v"                       -work cyclonev_ver         
-  vlog  "$QUARTUS_INSTALL_DIR/eda/sim_lib/aldec/cyclonev_hssi_atoms_ncrypt.v"     -work cyclonev_hssi_ver    
-  vlog  "$QUARTUS_INSTALL_DIR/eda/sim_lib/cyclonev_hssi_atoms.v"                  -work cyclonev_hssi_ver    
-  vlog  "$QUARTUS_INSTALL_DIR/eda/sim_lib/aldec/cyclonev_pcie_hip_atoms_ncrypt.v" -work cyclonev_pcie_hip_ver
-  vlog  "$QUARTUS_INSTALL_DIR/eda/sim_lib/cyclonev_pcie_hip_atoms.v"              -work cyclonev_pcie_hip_ver
+  vlog -v2k5 "$QUARTUS_INSTALL_DIR/eda/sim_lib/altera_primitives.v"                    -work altera_ver           
+  vlog -v2k5 "$QUARTUS_INSTALL_DIR/eda/sim_lib/220model.v"                             -work lpm_ver              
+  vlog -v2k5 "$QUARTUS_INSTALL_DIR/eda/sim_lib/sgate.v"                                -work sgate_ver            
+  vlog -v2k5 "$QUARTUS_INSTALL_DIR/eda/sim_lib/altera_mf.v"                            -work altera_mf_ver        
+  vlog       "$QUARTUS_INSTALL_DIR/eda/sim_lib/altera_lnsim.sv"                        -work altera_lnsim_ver     
+  vlog -v2k5 "$QUARTUS_INSTALL_DIR/eda/sim_lib/aldec/cyclonev_atoms_ncrypt.v"          -work cyclonev_ver         
+  vlog -v2k5 "$QUARTUS_INSTALL_DIR/eda/sim_lib/aldec/cyclonev_hmi_atoms_ncrypt.v"      -work cyclonev_ver         
+  vlog -v2k5 "$QUARTUS_INSTALL_DIR/eda/sim_lib/cyclonev_atoms.v"                       -work cyclonev_ver         
+  vlog -v2k5 "$QUARTUS_INSTALL_DIR/eda/sim_lib/aldec/cyclonev_hssi_atoms_ncrypt.v"     -work cyclonev_hssi_ver    
+  vlog -v2k5 "$QUARTUS_INSTALL_DIR/eda/sim_lib/cyclonev_hssi_atoms.v"                  -work cyclonev_hssi_ver    
+  vlog -v2k5 "$QUARTUS_INSTALL_DIR/eda/sim_lib/aldec/cyclonev_pcie_hip_atoms_ncrypt.v" -work cyclonev_pcie_hip_ver
+  vlog -v2k5 "$QUARTUS_INSTALL_DIR/eda/sim_lib/cyclonev_pcie_hip_atoms.v"              -work cyclonev_pcie_hip_ver
 }
 
 # ----------------------------------------
 # Compile the design files in correct order
 alias com {
   echo "\[exec\] com"
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/altera_avalon_st_handshake_clock_crosser.v"               -work crosser                         
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/altera_avalon_st_clock_crosser.v"                         -work crosser                         
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/altera_avalon_st_pipeline_base.v"                         -work crosser                         
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/altera_merlin_arbitrator.sv"                              -work rsp_mux                         
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_mm_interconnect_1_rsp_mux.sv"                -work rsp_mux                         
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_mm_interconnect_1_rsp_demux.sv"              -work rsp_demux                       
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/altera_merlin_arbitrator.sv"                              -work cmd_mux                         
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_mm_interconnect_1_cmd_mux.sv"                -work cmd_mux                         
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_mm_interconnect_1_cmd_demux_001.sv"          -work cmd_demux_001                   
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_mm_interconnect_1_cmd_demux.sv"              -work cmd_demux                       
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_mm_interconnect_1_router_002.sv"             -work router_002                      
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_mm_interconnect_1_router.sv"                 -work router                          
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/altera_merlin_slave_agent.sv"                             -work s0_seq_debug_agent              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/altera_merlin_burst_uncompressor.sv"                      -work s0_seq_debug_agent              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/altera_merlin_master_agent.sv"                            -work dmaster_master_agent            
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/altera_merlin_slave_translator.sv"                        -work s0_seq_debug_translator         
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/altera_merlin_master_translator.sv"                       -work dmaster_master_translator       
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_dmaster_p2b_adapter.sv"                      -work p2b_adapter                     
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_dmaster_b2p_adapter.sv"                      -work b2p_adapter                     
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/altera_avalon_packets_to_master.v"                        -work transacto                       
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/altera_avalon_st_packets_to_bytes.v"                      -work p2b                             
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/altera_avalon_st_bytes_to_packets.v"                      -work b2p                             
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/altera_avalon_sc_fifo.v"                                  -work fifo                            
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_dmaster_timing_adt.sv"                       -work timing_adt                      
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/altera_avalon_st_jtag_interface.v"                        -work jtag_phy_embedded_in_jtag_master
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/altera_jtag_dc_streaming.v"                               -work jtag_phy_embedded_in_jtag_master
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/altera_jtag_sld_node.v"                                   -work jtag_phy_embedded_in_jtag_master
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/altera_jtag_streaming.v"                                  -work jtag_phy_embedded_in_jtag_master
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/altera_avalon_st_clock_crosser.v"                         -work jtag_phy_embedded_in_jtag_master
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/altera_avalon_st_pipeline_base.v"                         -work jtag_phy_embedded_in_jtag_master
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/altera_avalon_st_idle_remover.v"                          -work jtag_phy_embedded_in_jtag_master
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/altera_avalon_st_idle_inserter.v"                         -work jtag_phy_embedded_in_jtag_master
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/altera_avalon_st_pipeline_stage.sv"                       -work jtag_phy_embedded_in_jtag_master
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/altera_reset_controller.v"                                -work rst_controller                  
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/altera_reset_synchronizer.v"                              -work rst_controller                  
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_mm_interconnect_1.v"                         -work mm_interconnect_1               
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/altera_mem_if_simple_avalon_mm_bridge.sv"                 -work seq_bridge                      
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/altera_mem_if_dll_cyclonev.sv"                            -work dll0                            
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/altera_mem_if_oct_cyclonev.sv"                            -work oct0                            
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/altera_mem_if_hard_memory_controller_top_cyclonev.sv"     -work c0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_dmaster.v"                                   -work dmaster                         
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0.v"                                        -work s0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/altera_avalon_mm_bridge.v"                                -work s0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/altera_mem_if_sequencer_cpu_cv_sim_cpu_inst.v"            -work s0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/altera_mem_if_sequencer_cpu_cv_sim_cpu_inst_test_bench.v" -work s0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/altera_mem_if_sequencer_mem_no_ifdef_params.sv"           -work s0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/altera_mem_if_sequencer_rst.sv"                           -work s0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/altera_mem_if_simple_avalon_mm_bridge.sv"                 -work s0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/altera_merlin_arbitrator.sv"                              -work s0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/altera_merlin_burst_uncompressor.sv"                      -work s0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/altera_merlin_master_agent.sv"                            -work s0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/altera_merlin_reorder_memory.sv"                          -work s0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/altera_merlin_slave_agent.sv"                             -work s0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/altera_merlin_traffic_limiter.sv"                         -work s0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_irq_mapper.sv"                            -work s0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0.v"                      -work s0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_cmd_demux.sv"           -work s0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_cmd_demux_001.sv"       -work s0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_cmd_demux_002.sv"       -work s0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_cmd_demux_003.sv"       -work s0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_cmd_mux.sv"             -work s0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_cmd_mux_002.sv"         -work s0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_cmd_mux_003.sv"         -work s0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_router.sv"              -work s0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_router_001.sv"          -work s0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_router_002.sv"          -work s0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_router_003.sv"          -work s0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_router_004.sv"          -work s0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_router_005.sv"          -work s0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_router_007.sv"          -work s0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_router_008.sv"          -work s0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_router_009.sv"          -work s0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_router_010.sv"          -work s0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_rsp_demux_002.sv"       -work s0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_rsp_mux.sv"             -work s0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_rsp_mux_001.sv"         -work s0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_rsp_mux_002.sv"         -work s0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/sequencer_reg_file.sv"                                    -work s0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/sequencer_scc_acv_phase_decode.v"                         -work s0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/sequencer_scc_acv_wrapper.sv"                             -work s0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/sequencer_scc_mgr.sv"                                     -work s0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/sequencer_scc_reg_file.v"                                 -work s0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/sequencer_scc_siii_phase_decode.v"                        -work s0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/sequencer_scc_siii_wrapper.sv"                            -work s0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/sequencer_scc_sv_phase_decode.v"                          -work s0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/sequencer_scc_sv_wrapper.sv"                              -work s0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/sequencer_trk_mgr.sv"                                     -work s0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_p0_clock_pair_generator.v"                   -work p0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_p0_acv_hard_addr_cmd_pads.v"                 -work p0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_p0_acv_hard_memphy.v"                        -work p0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_p0_acv_ldc.v"                                -work p0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_p0_acv_hard_io_pads.v"                       -work p0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_p0_generic_ddio.v"                           -work p0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_p0_reset.v"                                  -work p0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_p0_reset_sync.v"                             -work p0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_p0_phy_csr.sv"                               -work p0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_p0_iss_probe.v"                              -work p0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_p0.sv"                                       -work p0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_p0_altdqdqs.v"                               -work p0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/altdq_dqs2_acv_connect_to_hard_phy_cyclonev_lpddr2.sv"    -work p0                              
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_pll0.sv"                                     -work pll0                            
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_0002.v"                                      -work LPDDR2x32_4p                    
-  vlog  "$QSYS_SIMDIR/LPDDR2x32_4p.v"                                                                                              
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_mm_interconnect_1_avalon_st_adapter_error_adapter_0.sv"    -work error_adapter_0                 
+  vlog -v2k5 "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_mm_interconnect_1_avalon_st_adapter.v"                     -work avalon_st_adapter               
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/altera_avalon_st_handshake_clock_crosser.v"                             -work crosser                         
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/altera_avalon_st_clock_crosser.v"                                       -work crosser                         
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/altera_avalon_st_pipeline_base.v"                                       -work crosser                         
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/altera_merlin_arbitrator.sv"                                            -work rsp_mux                         
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_mm_interconnect_1_rsp_mux.sv"                              -work rsp_mux                         
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_mm_interconnect_1_rsp_demux.sv"                            -work rsp_demux                       
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/altera_merlin_arbitrator.sv"                                            -work cmd_mux                         
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_mm_interconnect_1_cmd_mux.sv"                              -work cmd_mux                         
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_mm_interconnect_1_cmd_demux_001.sv"                        -work cmd_demux_001                   
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_mm_interconnect_1_cmd_demux.sv"                            -work cmd_demux                       
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_mm_interconnect_1_router_002.sv"                           -work router_002                      
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_mm_interconnect_1_router.sv"                               -work router                          
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/altera_merlin_slave_agent.sv"                                           -work s0_seq_debug_agent              
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/altera_merlin_burst_uncompressor.sv"                                    -work s0_seq_debug_agent              
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/altera_merlin_master_agent.sv"                                          -work dmaster_master_agent            
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/altera_merlin_slave_translator.sv"                                      -work s0_seq_debug_translator         
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/altera_merlin_master_translator.sv"                                     -work dmaster_master_translator       
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_dmaster_p2b_adapter.sv"                                    -work p2b_adapter                     
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_dmaster_b2p_adapter.sv"                                    -work b2p_adapter                     
+  vlog -v2k5 "$QSYS_SIMDIR/LPDDR2x32_4p/altera_avalon_packets_to_master.v"                                      -work transacto                       
+  vlog -v2k5 "$QSYS_SIMDIR/LPDDR2x32_4p/altera_avalon_st_packets_to_bytes.v"                                    -work p2b                             
+  vlog -v2k5 "$QSYS_SIMDIR/LPDDR2x32_4p/altera_avalon_st_bytes_to_packets.v"                                    -work b2p                             
+  vlog -v2k5 "$QSYS_SIMDIR/LPDDR2x32_4p/altera_avalon_sc_fifo.v"                                                -work fifo                            
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_dmaster_timing_adt.sv"                                     -work timing_adt                      
+  vlog -v2k5 "$QSYS_SIMDIR/LPDDR2x32_4p/altera_avalon_st_jtag_interface.v"                                      -work jtag_phy_embedded_in_jtag_master
+  vlog -v2k5 "$QSYS_SIMDIR/LPDDR2x32_4p/altera_jtag_dc_streaming.v"                                             -work jtag_phy_embedded_in_jtag_master
+  vlog -v2k5 "$QSYS_SIMDIR/LPDDR2x32_4p/altera_jtag_sld_node.v"                                                 -work jtag_phy_embedded_in_jtag_master
+  vlog -v2k5 "$QSYS_SIMDIR/LPDDR2x32_4p/altera_jtag_streaming.v"                                                -work jtag_phy_embedded_in_jtag_master
+  vlog -v2k5 "$QSYS_SIMDIR/LPDDR2x32_4p/altera_avalon_st_clock_crosser.v"                                       -work jtag_phy_embedded_in_jtag_master
+  vlog -v2k5 "$QSYS_SIMDIR/LPDDR2x32_4p/altera_avalon_st_pipeline_base.v"                                       -work jtag_phy_embedded_in_jtag_master
+  vlog -v2k5 "$QSYS_SIMDIR/LPDDR2x32_4p/altera_avalon_st_idle_remover.v"                                        -work jtag_phy_embedded_in_jtag_master
+  vlog -v2k5 "$QSYS_SIMDIR/LPDDR2x32_4p/altera_avalon_st_idle_inserter.v"                                       -work jtag_phy_embedded_in_jtag_master
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/altera_avalon_st_pipeline_stage.sv"                                     -work jtag_phy_embedded_in_jtag_master
+  vlog -v2k5 "$QSYS_SIMDIR/LPDDR2x32_4p/altera_reset_controller.v"                                              -work rst_controller                  
+  vlog -v2k5 "$QSYS_SIMDIR/LPDDR2x32_4p/altera_reset_synchronizer.v"                                            -work rst_controller                  
+  vlog -v2k5 "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_mm_interconnect_1.v"                                       -work mm_interconnect_1               
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/altera_mem_if_simple_avalon_mm_bridge.sv"                               -work seq_bridge                      
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/altera_mem_if_dll_cyclonev.sv"                                          -work dll0                            
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/altera_mem_if_oct_cyclonev.sv"                                          -work oct0                            
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/altera_mem_if_hard_memory_controller_top_cyclonev.sv"                   -work c0                              
+  vlog -v2k5 "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_dmaster.v"                                                 -work dmaster                         
+  vlog -v2k5 "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0.v"                                                      -work s0                              
+  vlog -v2k5 "$QSYS_SIMDIR/LPDDR2x32_4p/altera_avalon_mm_bridge.v"                                              -work s0                              
+  vlog -v2k5 "$QSYS_SIMDIR/LPDDR2x32_4p/altera_mem_if_sequencer_cpu_cv_sim_cpu_inst.v"                          -work s0                              
+  vlog -v2k5 "$QSYS_SIMDIR/LPDDR2x32_4p/altera_mem_if_sequencer_cpu_cv_sim_cpu_inst_test_bench.v"               -work s0                              
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/altera_mem_if_sequencer_mem_no_ifdef_params.sv"                         -work s0                              
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/altera_mem_if_sequencer_rst.sv"                                         -work s0                              
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/altera_mem_if_simple_avalon_mm_bridge.sv"                               -work s0                              
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/altera_merlin_arbitrator.sv"                                            -work s0                              
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/altera_merlin_burst_uncompressor.sv"                                    -work s0                              
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/altera_merlin_master_agent.sv"                                          -work s0                              
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/altera_merlin_reorder_memory.sv"                                        -work s0                              
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/altera_merlin_slave_agent.sv"                                           -work s0                              
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/altera_merlin_traffic_limiter.sv"                                       -work s0                              
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_irq_mapper.sv"                                          -work s0                              
+  vlog -v2k5 "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0.v"                                    -work s0                              
+  vlog -v2k5 "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_avalon_st_adapter.v"                  -work s0                              
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_avalon_st_adapter_error_adapter_0.sv" -work s0                              
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_cmd_demux.sv"                         -work s0                              
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_cmd_demux_001.sv"                     -work s0                              
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_cmd_demux_002.sv"                     -work s0                              
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_cmd_demux_003.sv"                     -work s0                              
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_cmd_mux.sv"                           -work s0                              
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_cmd_mux_002.sv"                       -work s0                              
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_cmd_mux_003.sv"                       -work s0                              
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_router.sv"                            -work s0                              
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_router_001.sv"                        -work s0                              
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_router_002.sv"                        -work s0                              
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_router_003.sv"                        -work s0                              
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_router_004.sv"                        -work s0                              
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_router_005.sv"                        -work s0                              
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_router_007.sv"                        -work s0                              
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_router_008.sv"                        -work s0                              
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_router_009.sv"                        -work s0                              
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_router_010.sv"                        -work s0                              
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_rsp_demux_002.sv"                     -work s0                              
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_rsp_mux.sv"                           -work s0                              
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_rsp_mux_001.sv"                       -work s0                              
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_mm_interconnect_0_rsp_mux_002.sv"                       -work s0                              
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/sequencer_reg_file.sv"                                                  -work s0                              
+  vlog -v2k5 "$QSYS_SIMDIR/LPDDR2x32_4p/sequencer_scc_acv_phase_decode.v"                                       -work s0                              
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/sequencer_scc_acv_wrapper.sv"                                           -work s0                              
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/sequencer_scc_mgr.sv"                                                   -work s0                              
+  vlog -v2k5 "$QSYS_SIMDIR/LPDDR2x32_4p/sequencer_scc_reg_file.v"                                               -work s0                              
+  vlog -v2k5 "$QSYS_SIMDIR/LPDDR2x32_4p/sequencer_scc_siii_phase_decode.v"                                      -work s0                              
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/sequencer_scc_siii_wrapper.sv"                                          -work s0                              
+  vlog -v2k5 "$QSYS_SIMDIR/LPDDR2x32_4p/sequencer_scc_sv_phase_decode.v"                                        -work s0                              
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/sequencer_scc_sv_wrapper.sv"                                            -work s0                              
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/sequencer_trk_mgr.sv"                                                   -work s0                              
+  vlog -v2k5 "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_p0_clock_pair_generator.v"                                 -work p0                              
+  vlog -v2k5 "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_p0_acv_hard_addr_cmd_pads.v"                               -work p0                              
+  vlog -v2k5 "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_p0_acv_hard_memphy.v"                                      -work p0                              
+  vlog -v2k5 "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_p0_acv_ldc.v"                                              -work p0                              
+  vlog -v2k5 "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_p0_acv_hard_io_pads.v"                                     -work p0                              
+  vlog -v2k5 "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_p0_generic_ddio.v"                                         -work p0                              
+  vlog -v2k5 "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_p0_reset.v"                                                -work p0                              
+  vlog -v2k5 "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_p0_reset_sync.v"                                           -work p0                              
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_p0_phy_csr.sv"                                             -work p0                              
+  vlog -v2k5 "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_p0_iss_probe.v"                                            -work p0                              
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_p0.sv"                                                     -work p0                              
+  vlog -v2k5 "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_p0_altdqdqs.v"                                             -work p0                              
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/altdq_dqs2_acv_connect_to_hard_phy_cyclonev_lpddr2.sv"                  -work p0                              
+  vlog       "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_pll0.sv"                                                   -work pll0                            
+  vlog -v2k5 "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_0002.v"                                                    -work LPDDR2x32_4p                    
+  vlog -v2k5 "$QSYS_SIMDIR/LPDDR2x32_4p.v"                                                                                                            
 }
 
 # ----------------------------------------
 # Elaborate top level design
 alias elab {
   echo "\[exec\] elab"
-  eval vsim +access +r -t ps $ELAB_OPTIONS -L work -L crosser -L rsp_mux -L rsp_demux -L cmd_mux -L cmd_demux_001 -L cmd_demux -L router_002 -L router -L s0_seq_debug_agent -L dmaster_master_agent -L s0_seq_debug_translator -L dmaster_master_translator -L p2b_adapter -L b2p_adapter -L transacto -L p2b -L b2p -L fifo -L timing_adt -L jtag_phy_embedded_in_jtag_master -L rst_controller -L mm_interconnect_1 -L seq_bridge -L dll0 -L oct0 -L c0 -L dmaster -L s0 -L p0 -L pll0 -L LPDDR2x32_4p -L altera_ver -L lpm_ver -L sgate_ver -L altera_mf_ver -L altera_lnsim_ver -L cyclonev_ver -L cyclonev_hssi_ver -L cyclonev_pcie_hip_ver $TOP_LEVEL_NAME
+  eval vsim +access +r -t ps $ELAB_OPTIONS -L work -L error_adapter_0 -L avalon_st_adapter -L crosser -L rsp_mux -L rsp_demux -L cmd_mux -L cmd_demux_001 -L cmd_demux -L router_002 -L router -L s0_seq_debug_agent -L dmaster_master_agent -L s0_seq_debug_translator -L dmaster_master_translator -L p2b_adapter -L b2p_adapter -L transacto -L p2b -L b2p -L fifo -L timing_adt -L jtag_phy_embedded_in_jtag_master -L rst_controller -L mm_interconnect_1 -L seq_bridge -L dll0 -L oct0 -L c0 -L dmaster -L s0 -L p0 -L pll0 -L LPDDR2x32_4p -L altera_ver -L lpm_ver -L sgate_ver -L altera_mf_ver -L altera_lnsim_ver -L cyclonev_ver -L cyclonev_hssi_ver -L cyclonev_pcie_hip_ver $TOP_LEVEL_NAME
 }
 
 # ----------------------------------------
 # Elaborate the top level design with -dbg -O2 option
 alias elab_debug {
   echo "\[exec\] elab_debug"
-  eval vsim -dbg -O2 +access +r -t ps $ELAB_OPTIONS -L work -L crosser -L rsp_mux -L rsp_demux -L cmd_mux -L cmd_demux_001 -L cmd_demux -L router_002 -L router -L s0_seq_debug_agent -L dmaster_master_agent -L s0_seq_debug_translator -L dmaster_master_translator -L p2b_adapter -L b2p_adapter -L transacto -L p2b -L b2p -L fifo -L timing_adt -L jtag_phy_embedded_in_jtag_master -L rst_controller -L mm_interconnect_1 -L seq_bridge -L dll0 -L oct0 -L c0 -L dmaster -L s0 -L p0 -L pll0 -L LPDDR2x32_4p -L altera_ver -L lpm_ver -L sgate_ver -L altera_mf_ver -L altera_lnsim_ver -L cyclonev_ver -L cyclonev_hssi_ver -L cyclonev_pcie_hip_ver $TOP_LEVEL_NAME
+  eval vsim -dbg -O2 +access +r -t ps $ELAB_OPTIONS -L work -L error_adapter_0 -L avalon_st_adapter -L crosser -L rsp_mux -L rsp_demux -L cmd_mux -L cmd_demux_001 -L cmd_demux -L router_002 -L router -L s0_seq_debug_agent -L dmaster_master_agent -L s0_seq_debug_translator -L dmaster_master_translator -L p2b_adapter -L b2p_adapter -L transacto -L p2b -L b2p -L fifo -L timing_adt -L jtag_phy_embedded_in_jtag_master -L rst_controller -L mm_interconnect_1 -L seq_bridge -L dll0 -L oct0 -L c0 -L dmaster -L s0 -L p0 -L pll0 -L LPDDR2x32_4p -L altera_ver -L lpm_ver -L sgate_ver -L altera_mf_ver -L altera_lnsim_ver -L cyclonev_ver -L cyclonev_hssi_ver -L cyclonev_pcie_hip_ver $TOP_LEVEL_NAME
 }
 
 # ----------------------------------------
