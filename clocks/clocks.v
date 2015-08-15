@@ -18,8 +18,8 @@ Description:
 
 module clocks #(
 	parameter
-		US = 6'd50,		// 1µs with a 50MHz clock
-		MS = 16'd50000	// 1ms with a 50MHz clock
+		US = 6'd26,		// 1.032µs with a 25.2MHz clock
+		MS = 16'd25200	// 1ms with a 25.2MHz clock
 )(
 	input		clk,			// 50MHz reference clock for PLL
 								// (don't use CLOCK_50_B5B)
@@ -43,7 +43,8 @@ module clocks #(
 		PLL pll_inst (
 			.refclk(clk),
 			.rst(1'b0),
-			.outclk_0(pll_outclk_0),
+			.outclk_0(pll_outclk_0),	// 25.2MHz for 640x480p @60Hz, 74.25MHz
+										// for 1280x720p
 			.locked(pll_locked)
 		);
 	`endif

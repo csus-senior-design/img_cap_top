@@ -90,6 +90,13 @@ module img_cap_top (
 	*)
 	output	[7:0]		LEDG,
 	
+	// Debounced push buttons
+	(*
+		chip_pin = "Y16, Y15, P12, P11",
+		altera_attribute = "-name IO_STANDARD \"1.2 V\""
+	*)
+	input	[3:0]		KEY,
+	
 	// GPIO pins for camera control and data
 	(*
 		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
@@ -110,8 +117,10 @@ module img_cap_top (
 );
 
 	/* Pull down the LEDs for now (will use in control later) */
-	assign LEDR = 10'h0;
-	assign LEDG = 8'h0;
+	assign LEDR[9:1] = 9'h0;
+	assign LEDG[7:1] = 7'h0;
+	assign LEDG[0] = pass;
+	assign LEDR[0] = fail;
 
 	/* Declare assertion parameters */
 	localparam
@@ -155,14 +164,15 @@ module img_cap_top (
 	assign HDMI_TX_CLK = clk_25_2m;
 	
 	/* Instantiate In-System Sources and Probes */
-	wire reset;
-	ISSP ISSP_inst(
+	/*ISSP ISSP_inst(
 		.source_clk(clk_25_2m),
-		.source({wr_en_in0, rd_en_in0/*, reset*/}),
+		.source({wr_en_in0, rd_en_in0, reset}),
 		.probe({pass, fail})
-	);
+	);*/
 	
 	/* Declare the required interconnections */
+	wire			reset;
+	
 	wire	[31:0]	wr_data0,
 					rd_data0,
 					wr_data1,
@@ -199,7 +209,6 @@ module img_cap_top (
 		.clk(clk_25_2m),
 		.rst(1'b0),
 		.sig_in(CPU_RESET_n),
-		.ms_tck(ms_tck),
 		.sig_out(reset)
 	);
 	
@@ -219,8 +228,8 @@ module img_cap_top (
 		.wr_clk(clk_25_2m),
 		.rd_clk(clk_25_2m),
 		.reset(reset),
-		.wr_en_in(wr_en_in0),
-		.rd_en_in(rd_en_in0),
+		.wr_en_in(KEY[1]),
+		.rd_en_in(KEY[0]),
 		.wr_rdy(wr_rdy0),
 		.rd_rdy(rd_rdy0),
 		.wr_en(wr_en0),

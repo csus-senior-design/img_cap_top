@@ -80,7 +80,7 @@ debounce #(
 	.TIME(7'h5)
 ) uut(
 	.clk(clk),
-	.rst(rst),
+	.rst(1'b0),
 	.sig_in(sig_in),
 	.ms_tck(ms_tck),
 	.sig_out(sig_out)
