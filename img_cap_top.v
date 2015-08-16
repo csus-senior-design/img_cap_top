@@ -401,4 +401,38 @@ module img_cap_top (
         .i2c_reg_data()
     );
 
+
+    // Cameras Capture Interfaces
+
+    assign CAM_XCLK = clk_25_2m;
+    assign CAM_RESET = 1'b1;    // To do: Move to controller
+    assign CAM_PWDN = 1'b0;     // To do: Move to controller
+
+    wire [18:0] CAM1_CAP_ADDRESS;
+    wire [23:0] CAM1_CAP_DATA;
+    wire CAM1_CAP_WRITE_EN;
+
+    wire [18:0] CAM2_CAP_ADDRESS;
+    wire [23:0] CAM2_CAP_DATA;
+    wire CAM2_CAP_WRITE_EN;
+
+    ov_7670_capture capture_cam1 (
+        .pclk(CAM1_PCLK),
+        .vsync(CAM1_VSYNC),
+        .href(CAM1_HREF),
+        .data(CAM1_DATA),
+        .addr(CAM1_CAP_ADDRESS),
+        .data_out(CAM1_CAP_DATA),
+        .write_en(CAM1_CAP_WRITE_EN)
+    );
+
+    ov_7670_capture capture_cam2 (
+        .pclk(CAM2_PCLK),
+        .vsync(CAM2_VSYNC),
+        .href(CAM2_HREF),
+        .data(CAM2_DATA),
+        .addr(CAM2_CAP_ADDRESS),
+        .data_out(CAM2_CAP_DATA),
+        .write_en(CAM2_CAP_WRITE_EN)
+    );
 endmodule
