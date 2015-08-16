@@ -101,7 +101,71 @@ module img_cap_top (
 	(*
 		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
 	*)
-	input		[15:0]	GPIO,
+	input	[0:0]	GPIO,	// Cam 1 PCLK
+	/*(*
+		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
+	*)
+	input	[2:2]	GPIO,	// Cam 2 PCLK*/
+	(*
+		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
+	*)
+	output	[18:18]	GPIO,	// XCLK
+	(*
+		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
+	*)
+	input	[1:1]	GPIO,	// Cam 1 data[0]
+	(*
+		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
+	*)
+	input	[9:3]	GPIO,	// Cam 1 data[7:1]
+	(*
+		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
+	*)
+	input	[15:10]	GPIO,	// Cam 2 data[5:0]
+	(*
+		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
+	*)
+	input	[17:17]	GPIO,	// Cam 2 data[6]
+	(*
+		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
+	*)
+	input	[19:19]	GPIO,	// Cam 2 data[7]
+	(*
+		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
+	*)
+	input	[20:20]	GPIO,	// Cam 1 HREF
+	(*
+		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
+	*)
+	input	[21:21]	GPIO,	// Cam 1 VSYNC
+	(*
+		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
+	*)
+	output	[22:22]	GPIO,	// Cam 1 SDIOC
+	(*
+		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
+	*)
+	inout	[23:23]	GPIO,	// Cam 1 SDIOD
+	(*
+		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
+	*)
+	input	[24:24]	GPIO,	// Cam 2 HREF
+	(*
+		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
+	*)
+	input	[25:25]	GPIO,	// Cam 2 VSYNC
+	(*
+		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
+	*)
+	output	[26:26]	GPIO,	// Cam 2 SDIOC
+	(*
+		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
+	*)
+	inout	[27:27]	GPIO,	// Cam 2 SDIOD
+	(*
+		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
+	*)
+	input	[28:28]	GPIO,	// Cam 1 & 2 RESET
 	
 	// Memory ports
 	output	[9:0]	mem_ca,
@@ -205,20 +269,29 @@ module img_cap_top (
 	
 	/* Instantiate the required subsystems */
 	
-	debounce debounce_dat_ass (
+	/*debounce debounce_dat_ass (
 		.clk(clk_25_2m),
 		.rst(1'b0),
 		.sig_in(CPU_RESET_n),
 		.sig_out(reset)
-	);
+	);*/
+	assign reset = KEY[3];
 	
-	clocks cocks (
+	
+	/*clocks cocks (
 		.clk(CLOCK_50_B6A),
 		.rst(reset),
 		.pll_locked(pll_locked),
 		.pll_outclk_0(clk_25_2m),
 		.us_tck(us_tck),
 		.ms_tck(ms_tck)
+	);*/
+	PLL pll_inst (
+		.refclk(CLOCK_50_B6A),
+		.rst(1'b0),
+		.outclk_0(clk_25_2m),	// 25.2MHz for 640x480p @60Hz, 74.25MHz
+								// for 1280x720p
+		.locked(pll_locked)
 	);
 	
 	frame_buf_alt
