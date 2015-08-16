@@ -19,42 +19,44 @@ Description:
 module img_cap_top (
 	// Clocks (obviously)
 	(*
+		chip_pin = "R20",
 		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
 	*)
-	input					CLOCK_50_B5B,
+	input			CLOCK_50_B5B,
 	(*
+		chip_pin = "N20",
 		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
 	*)
-	input					CLOCK_50_B6A,
+	input			CLOCK_50_B6A,
 	
 	// Reset (super obvious)
 	(*
 		chip_pin = "AB24",
 		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
 	*)
-	input					CPU_RESET_n,
+	input			CPU_RESET_n,
 
 	// HDMI-TX via ADV7513
 	(*
 		chip_pin = "Y25",
 		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
 	*)
-	output				HDMI_TX_CLK,
+	output			HDMI_TX_CLK,
 	(*
 		chip_pin = "Y26",
 		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
 	*)
-	output				HDMI_TX_DE,
+	output			HDMI_TX_DE,
 	(*
 		chip_pin = "U26",
 		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
 	*)
-	output				HDMI_TX_HS,
+	output			HDMI_TX_HS,
 	(*
 		chip_pin = "U25",
 		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
 	*)
-	output				HDMI_TX_VS,
+	output			HDMI_TX_VS,
 	(*
 		chip_pin = "AD25, AC25, AB25, AA24, AB26, R26, R24, P21, P26, N25, P23, P22, R25, R23, T26, T24, T23, U24, V25, V24, W26, W25, AA26, V23",
 		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
@@ -64,108 +66,125 @@ module img_cap_top (
 		chip_pin = "T12",
 		altera_attribute = "-name IO_STANDARD \"1.2 V\""
 	*)
-	input   				HDMI_TX_INT,
+	input   		HDMI_TX_INT,
 	
 	// External I2C bus for HDMI-TX
 	(*
 		chip_pin = "B7",
 		altera_attribute = "-name IO_STANDARD \"2.5 V\""
 	*)
-	inout					I2C_SCL,
+	inout			I2C_SCL,
 	(*
 		chip_pin = "G11",
 		altera_attribute = "-name IO_STANDARD \"2.5 V\""
 	*)
-	inout					I2C_SDA,
+	inout			I2C_SDA,
 	
 	// Status LEDs
 	(*
 		chip_pin = "J10, H7, K8, K10, J7, J8, G7, G6, F6, F7",
 		altera_attribute = "-name IO_STANDARD \"2.5 V\""
 	*)
-	output	[9:0]		LEDR,
+	output	[9:0]	LEDR,
 	(*
 		chip_pin = "H9, H8, B6, A5, E9, D8, K6, L7",
 		altera_attribute = "-name IO_STANDARD \"2.5 V\""
 	*)
-	output	[7:0]		LEDG,
+	output	[7:0]	LEDG,
 	
 	// Debounced push buttons
 	(*
 		chip_pin = "Y16, Y15, P12, P11",
 		altera_attribute = "-name IO_STANDARD \"1.2 V\""
 	*)
-	input	[3:0]		KEY,
+	input	[3:0]	KEY,
 	
 	// GPIO pins for camera control and data
 	(*
+		chip_pin = "T21",
 		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
 	*)
-	input	[0:0]	GPIO,	// Cam 1 PCLK
+	input			CAM1_PCLK,	// Cam 1 PCLK (GPIO[0])
 	/*(*
+		chip_pin = "K25",
 		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
 	*)
-	input	[2:2]	GPIO,	// Cam 2 PCLK*/
+	input			CAM2_PCLK,	// Cam 2 PCLK (GPIO[2])*/
 	(*
+		chip_pin = "G26",
 		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
 	*)
-	output	[18:18]	GPIO,	// XCLK
+	output			XCLK,	// XCLK (GPIO[18])
 	(*
+		chip_pin = "D26",
 		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
 	*)
-	input	[1:1]	GPIO,	// Cam 1 data[0]
+	input			CAM1_DATA_0,	// Cam 1 data[0] (GPIO[1])
 	(*
+		chip_pin = "T19, T22, P20, M21, M26, K26, E26",
 		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
 	*)
-	input	[9:3]	GPIO,	// Cam 1 data[7:1]
+	input	[7:1]	CAM1_DATA_7_1,	// Cam 1 data[7:1] (GPIO[9:3])
 	(*
+		chip_pin = "R10, R9, R8, P8, U22, U19",
 		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
 	*)
-	input	[15:10]	GPIO,	// Cam 2 data[5:0]
+	input	[5:0]	CAM2_DATA_5_0,	// Cam 2 data[5:0] (GPIO[15:10])
 	(*
+		chip_pin = "Y9",
 		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
 	*)
-	input	[17:17]	GPIO,	// Cam 2 data[6]
+	input			CAM2_DATA_6,	// Cam 2 data[6] (GPIO[17])
 	(*
+		chip_pin = "Y8",
 		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
 	*)
-	input	[19:19]	GPIO,	// Cam 2 data[7]
+	input			CAM2_DATA_7,	// Cam 2 data[7] (GPIO[19])
 	(*
+		chip_pin = "AA7",
 		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
 	*)
-	input	[20:20]	GPIO,	// Cam 1 HREF
+	input			CAM1_HREF,	// Cam 1 HREF (GPIO[20])
 	(*
+		chip_pin = "AA6",
 		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
 	*)
-	input	[21:21]	GPIO,	// Cam 1 VSYNC
+	input			CAM1_VSYNC,	// Cam 1 VSYNC (GPIO[21])
 	(*
+		chip_pin = "AD7",
 		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
 	*)
-	output	[22:22]	GPIO,	// Cam 1 SDIOC
+	output			CAM1_SDIOC,	// Cam 1 SDIOC (GPIO[22])
 	(*
+		chip_pin = "AD6",
 		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
 	*)
-	inout	[23:23]	GPIO,	// Cam 1 SDIOD
+	inout			CAM1_SDIOD,	// Cam 1 SDIOD (GPIO[23])
 	(*
+		chip_pin = "U20",
 		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
 	*)
-	input	[24:24]	GPIO,	// Cam 2 HREF
+	input			CAM2_HREF,	// Cam 2 HREF (GPIO[24])
 	(*
+		chip_pin = "V22",
 		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
 	*)
-	input	[25:25]	GPIO,	// Cam 2 VSYNC
+	input			CAM2_VSYNC,	// Cam 2 VSYNC (GPIO[25])
 	(*
+		chip_pin = "V20",
 		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
 	*)
-	output	[26:26]	GPIO,	// Cam 2 SDIOC
+	output			CAM2_SDIOC,	// Cam 2 SDIOC (GPIO[26])
 	(*
+		chip_pin = "W21",
 		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
 	*)
-	inout	[27:27]	GPIO,	// Cam 2 SDIOD
+	inout			CAM2_SDIOD,	// Cam 2 SDIOD (GPIO[27])
 	(*
+		chip_pin = "W20",
 		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
 	*)
-	input	[28:28]	GPIO,	// Cam 1 & 2 RESET
+	output			CAM_RESET,	// Cam 1 & 2 RESET (GPIO[28])
 	
 	// Memory ports
 	output	[9:0]	mem_ca,
@@ -266,33 +285,35 @@ module img_cap_top (
 					us_tck,
 					ms_tck;
 	
+	/* Assign IO pins to interconnection nets */
+	
 	
 	/* Instantiate the required subsystems */
 	
-	/*debounce debounce_dat_ass (
+	debounce debounce_dat_ass (
 		.clk(clk_25_2m),
 		.rst(1'b0),
 		.sig_in(CPU_RESET_n),
 		.sig_out(reset)
-	);*/
-	assign reset = KEY[3];
+	);
+	//assign reset = KEY[3];
 	
 	
-	/*clocks cocks (
+	clocks cocks (
 		.clk(CLOCK_50_B6A),
 		.rst(reset),
 		.pll_locked(pll_locked),
 		.pll_outclk_0(clk_25_2m),
 		.us_tck(us_tck),
 		.ms_tck(ms_tck)
-	);*/
-	PLL pll_inst (
+	);
+	/*PLL pll_inst (
 		.refclk(CLOCK_50_B6A),
 		.rst(1'b0),
 		.outclk_0(clk_25_2m),	// 25.2MHz for 640x480p @60Hz, 74.25MHz
 								// for 1280x720p
 		.locked(pll_locked)
-	);
+	);*/
 	
 	frame_buf_alt
 	#(
