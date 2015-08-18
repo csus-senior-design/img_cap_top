@@ -240,9 +240,10 @@ module img_cap_top (
 		if (~reset) begin
 			fail <= DEASSERT_H;
 			pass <= DEASSERT_H;
-		end else if ((valid_rd_data[23:0] != TST_PATT && rd_cnt != 0) || rd_cnt > 6)
+		end else if ((valid_rd_data[23:0] != TST_PATT && rd_cnt != 0) || rd_cnt > 6) begin
 			fail <= ASSERT_H;
-		else if (rd_addr0 == 29'd2 && rd_cnt == 6)
+			pass <= DEASSERT_H;
+		end else if (rd_addr0 == 29'd2 && rd_cnt == 6)
 			pass <= ASSERT_H;
 
 	/* Assign the test pattern to the write data signal */
@@ -250,7 +251,7 @@ module img_cap_top (
 
 	/* Latch the read data when it's valid */
 	always @(posedge clk_25_2m)
-		if (~reset)
+		if (~reset || pass || fail)
 			rd_cnt <= 32'h0;
 		else if (rd_data_valid) begin
 			valid_rd_data <= rd_data0;
@@ -309,7 +310,7 @@ module img_cap_top (
 
 	/* Instantiate the required subsystems */
 
-	/*debounce debounce_dat_ass (
+	/*debounce debounce (
 		.clk(clk_25_2m),
 		.rst(1'b0),
 		.sig_in(CPU_RESET_n),
@@ -318,7 +319,7 @@ module img_cap_top (
 	assign reset = KEY[3];
 
 
-	clocks cocks (
+	clocks clock_block (
 		.clk(CLOCK_50_B6A),
 		.rst(reset),
 		.pll_locked(pll_locked),
@@ -361,8 +362,8 @@ module img_cap_top (
 		.clk_50m(CLOCK_50_B5B),
 		.clk(clk_25_2m),
 		.reset(reset),
-		.avl_write_req_0(),
-		.avl_read_req_0(),
+		.avl_write_req_0(avl_write_req_0),
+		.avl_read_req_0(avl_read_req_0),
 		.avl_write_req_1(),
 		.avl_read_req_1(),
 		.avl_write_req_2(),
@@ -411,7 +412,7 @@ module img_cap_top (
 
     // Cameras Capture Interfaces
 
-    assign CAM_XCLK = clk_25_2m;
+    /*assign CAM_XCLK = clk_25_2m;
     assign CAM_RESET = 1'b1;    // To do: Move to controller
     assign CAM_PWDN = 1'b0;     // To do: Move to controller
 
@@ -441,5 +442,5 @@ module img_cap_top (
         .addr(CAM2_CAP_ADDRESS),
         .data_out(CAM2_CAP_DATA),
         .write_en(CAM2_CAP_WRITE_EN)
-    );
+    );*/
 endmodule
