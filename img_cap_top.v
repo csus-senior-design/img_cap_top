@@ -322,7 +322,7 @@ module img_cap_top (
 	clocks clock_block (
 		.clk(CLOCK_50_B6A),
 		.rst(reset),
-		.pll_locked(pll_locked),
+		//.pll_locked(pll_locked),
 		.pll_outclk_0(clk_25_2m),
 		.us_tck(us_tck),
 		.ms_tck(ms_tck)
