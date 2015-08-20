@@ -240,10 +240,10 @@ module img_cap_top (
 		if (~reset) begin
 			fail <= DEASSERT_H;
 			pass <= DEASSERT_H;
-		end else if ((valid_rd_data[23:0] != TST_PATT && rd_cnt != 0) || rd_cnt > 6) begin
+		end else if ((valid_rd_data[23:0] != TST_PATT && rd_cnt != 0) || rd_cnt > 5) begin
 			fail <= ASSERT_H;
 			pass <= DEASSERT_H;
-		end else if (rd_addr0 == 29'd2 && rd_cnt == 6)
+		end else if (rd_addr0 == 29'd2 && rd_cnt == 5)
 			pass <= ASSERT_H;
 
 	/* Assign the test pattern to the write data signal */
@@ -323,7 +323,7 @@ module img_cap_top (
 		.clk(CLOCK_50_B6A),
 		.rst(reset),
 		//.pll_locked(pll_locked),
-		.pll_outclk_0(clk_25_2m),
+		.pll_outclk_1(clk_25_2m),
 		.us_tck(us_tck),
 		.ms_tck(ms_tck)
 	);
@@ -339,8 +339,7 @@ module img_cap_top (
 	#(
 		.BUF_SIZE(5)
 	) frame_buf0 (
-		.wr_clk(clk_25_2m),
-		.rd_clk(clk_25_2m),
+		.clk(clk_25_2m),
 		.reset(reset),
 		.wr_en(KEY[1]),
 		.rd_en(KEY[0]),
