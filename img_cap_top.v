@@ -240,10 +240,10 @@ module img_cap_top (
 		if (~reset) begin
 			fail <= DEASSERT_H;
 			pass <= DEASSERT_H;
-		end else if ((valid_rd_data[23:0] != TST_PATT && rd_cnt != 0) || rd_cnt > 5) begin
+		end else if ((valid_rd_data[23:0] != TST_PATT && rd_cnt != 0) || rd_cnt > 307200) begin
 			fail <= ASSERT_H;
 			pass <= DEASSERT_H;
-		end else if (rd_addr0 == 29'd2 && rd_cnt == 5)
+		end else if (rd_addr0 == 29'd2 && rd_cnt == 307200)
 			pass <= ASSERT_H;
 
 	/* Assign the test pattern to the write data signal */
@@ -335,10 +335,7 @@ module img_cap_top (
 		.locked(pll_locked)
 	);*/
 
-	frame_buf_alt
-	#(
-		.BUF_SIZE(5)
-	) frame_buf0 (
+	frame_buf_alt frame_buf0 (
 		.clk(clk_25_2m),
 		.reset(reset),
 		.wr_en(KEY[1]),
