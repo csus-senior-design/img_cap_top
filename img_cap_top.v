@@ -340,13 +340,9 @@ module img_cap_top #(
         .locked(pll_locked)
     );*/
 
-    
-    frame_buf_alt
-    #(
-        .BUF_SIZE(5)
-    ) frame_buf0 (
-        .wr_clk(clk_25_2m),
-        .rd_clk(clk_25_2m),
+
+    frame_buf_alt frame_buf0 (
+        .clk(clk_25_2m),
         .reset(reset),
         .wr_en(KEY[1]),
         .rd_en(KEY[0]),
@@ -359,7 +355,7 @@ module img_cap_top #(
         .rd_addr(rd_addr0),
         .avl_addr(avl_addr_0)
     );
- 
+
     ram_int_4p mem_int (
         .wr_data0(wr_data0),
         .wr_data1(),
@@ -368,8 +364,8 @@ module img_cap_top #(
         .clk_50m(CLOCK_50_B5B),
         .clk(clk_25_2m),
         .reset(reset),
-        .avl_write_req_0(),
-        .avl_read_req_0(),
+        .avl_write_req_0(avl_write_req_0),
+        .avl_read_req_0(avl_read_req_0),
         .avl_write_req_1(),
         .avl_read_req_1(),
         .avl_write_req_2(),
@@ -400,7 +396,7 @@ module img_cap_top #(
         .mem_dqs(mem_dqs),
         .mem_dqs_n(mem_dqs_n),
         .oct_rzqin(oct_rzqin)
-    );    
+    );
 
 
     // Cameras Capture Interfaces
@@ -436,20 +432,20 @@ module img_cap_top #(
         .write_en(CAM2_CAP_WRITE_EN)
     );
 
-    
+
     // Top-level Control Modules
     wire cam1_pwdn;
     wire cam2_pwdn;
-    
+
     wire init_start;
     wire init_done;
-    
+
     // To do: generate a 100kHz clock signal for this
     wire clk_sccb;
-    
+
     // To do: should we change this to AND?
     assign CAM_PWDN = cam1_pwdn || cam2_pwdn;
-    
+
     sys_init #(
         .CAM1_CHIP_ADDR(CAM1_CHIP_ADDR),
         .CAM2_CHIP_ADDR(CAM2_CHIP_ADDR),
@@ -461,13 +457,13 @@ module img_cap_top #(
         .reset(reset),
         .start(init_start),
         .done(init_done),
-        
-        // SCCB for Camera 1 Initialization 
+
+        // SCCB for Camera 1 Initialization
         .cam1_pwdn(cam1_pwdn),
         .cam1_sio_d(CAM1_SDIOD),
         .cam1_sio_c(CAM1_SDIOC),
-        
-        // SCCB for Camera 2 Initialization 
+
+        // SCCB for Camera 2 Initialization
         .cam2_pwdn(cam2_pwdn),
         .cam2_sio_c(CAM2_SDIOD),
         .cam2_sio_d(CAM2_SDIOC),
@@ -479,7 +475,7 @@ module img_cap_top #(
         // Memory init done input
         .mem_init_done(ram_rdy)
     );
-    
+
     img_cap_ctrl img_cap_ctrl (
         .clk(clk_25_2m),
         .reset(reset),
