@@ -5,7 +5,7 @@
 [submodule "ram_int_4p"]
     path = ram_int_4p
     url = git@github.com:csus-senior-design/ram_int_4p.git
-    branch = master
+    branch = ram_int_4p_fst
 [submodule "ov_7670"]
     path = ov_7670
     url = git@github.com:csus-senior-design/ov_7670.git
