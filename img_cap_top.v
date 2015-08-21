@@ -7,12 +7,12 @@ Spring 2015 / Fall 2015
 -------------------------------------------------------------------------------
 
 Stereoscopic Image Capture Top Level Module
-Authors:	Padraic Hagerty (guitarisrockin@hotmail.com)
-			Greg M. Crist, Jr. (gmcrist@gmail.com)
+Authors:    Padraic Hagerty (guitarisrockin@hotmail.com)
+            Greg M. Crist, Jr. (gmcrist@gmail.com)
 
 Description:
-	This is the final top level design for the stereoscopic image capture
-	system.
+    This is the final top level design for the stereoscopic image capture
+    system.
 */
 
 `timescale 1 ns / 1 ns
@@ -216,206 +216,197 @@ module img_cap_top #(
         input           oct_rzqin
     );
 
-	/* Pull down the LEDs for now (will use in control later) */
-	assign LEDR[9:1] = 9'h0;
-	assign LEDG[7:1] = 7'h0;
-	assign LEDG[0] = pass;
-	assign LEDR[0] = fail;
+    /* Pull down the LEDs for now (will use in control later) */
+    assign LEDR[9:1] = 9'h0;
+    assign LEDG[7:1] = 7'h0;
+    assign LEDG[0] = pass;
+    assign LEDR[0] = fail;
 
-	/* Declare assertion parameters */
-	localparam
-		ASSERT_H = 1'b1,
-		DEASSERT_H = 1'b0,
-		ASSERT_L = 1'b0,
-		DEASSERT_L = 1'b1;
+    /* Declare assertion parameters */
+    localparam
+        ASSERT_H = 1'b1,
+        DEASSERT_H = 1'b0,
+        ASSERT_L = 1'b0,
+        DEASSERT_L = 1'b1;
 
-	/* Declare the required test signals */
-	parameter   	TST_PATT = 24'hFFFFFF;
-	wire        	wr_en_in0,
-					rd_en_in0;
-	reg         	pass,
-					fail;
-	reg 	[31:0]  valid_rd_data,
-					rd_cnt;
-	wire	[28:0]	wr_addr0,
-					rd_addr0;
+    /* Declare the required test signals */
+    parameter       TST_PATT = 24'hFFFFFF;
+    wire            wr_en_in0,
+                    rd_en_in0;
+    reg             pass,
+                    fail;
+    reg     [31:0]  valid_rd_data,
+                    rd_cnt;
+    wire    [28:0]  wr_addr0,
+                    rd_addr0;
 
-	/* Test block for determining pass or failure */
-	always @(posedge clk_25_2m)
-		if (~reset) begin
-			fail <= DEASSERT_H;
-			pass <= DEASSERT_H;
-		end else if ((valid_rd_data[23:0] != TST_PATT && rd_cnt != 0) || rd_cnt > 307200) begin
-			fail <= ASSERT_H;
-			pass <= DEASSERT_H;
-		end else if (rd_addr0 == 29'd2 && rd_cnt == 307200)
-			pass <= ASSERT_H;
+    /* Test block for determining pass or failure */
+    always @(posedge clk_25_2m)
+        if (~reset) begin
+            fail <= DEASSERT_H;
+            pass <= DEASSERT_H;
+        end else if ((valid_rd_data[23:0] != TST_PATT && rd_cnt != 0) || rd_cnt > 307200) begin
+            fail <= ASSERT_H;
+            pass <= DEASSERT_H;
+        end else if (rd_addr0 == 29'd2 && rd_cnt == 307200)
+            pass <= ASSERT_H;
 
-	/* Assign the test pattern to the write data signal */
-	assign wr_data0 = TST_PATT;
+    /* Assign the test pattern to the write data signal */
+    assign wr_data0 = TST_PATT;
 
-	/* Latch the read data when it's valid */
-	always @(posedge clk_25_2m)
-		if (~reset || pass || fail)
-			rd_cnt <= 32'h0;
-		else if (rd_data_valid) begin
-			valid_rd_data <= rd_data0;
-			rd_cnt <= rd_cnt + 1;
-		end
+    /* Latch the read data when it's valid */
+    always @(posedge clk_25_2m)
+        if (~reset || pass || fail)
+            rd_cnt <= 32'h0;
+        else if (rd_data_valid) begin
+            valid_rd_data <= rd_data0;
+            rd_cnt <= rd_cnt + 1;
+        end
 
-	/* Send the pixel clock to the ADV7513 */
-	assign HDMI_TX_CLK = clk_25_2m;
+    /* Send the pixel clock to the ADV7513 */
+    assign HDMI_TX_CLK = clk_25_2m;
 
-	/* Instantiate In-System Sources and Probes */
-	/*ISSP ISSP_inst(
-		.source_clk(clk_25_2m),
-		.source({wr_en_in0, rd_en_in0, reset}),
-		.probe({pass, fail})
-	);*/
+    /* Instantiate In-System Sources and Probes */
+    /*ISSP ISSP_inst(
+        .source_clk(clk_25_2m),
+        .source({wr_en_in0, rd_en_in0, reset}),
+        .probe({pass, fail})
+    );*/
 
-	/* Declare the required interconnections */
-	wire            reset;
+    /* Declare the required interconnections */
+    wire            reset;
 
-	wire    [31:0]  wr_data0,
-					rd_data0,
-					wr_data1,
-					rd_data1,
-					wr_data2,
-					rd_data2,
-					wr_data3,
-					rd_data3;
-	wire    [28:0]  avl_addr_0,
-					avl_addr_1,
-					avl_addr_2,
-					avl_addr_3;
-	wire            ram_rdy,
-					avl_ready_0,
-					avl_ready_1,
-					avl_ready_2,
-					avl_ready_3,
-					avl_write_req_0,
-					avl_write_req_1,
-					avl_write_req_2,
-					avl_write_req_3,
-					avl_read_req_0,
-					avl_read_req_1,
-					avl_read_req_2,
-					avl_read_req_3;
-	wire            rd_data_valid;
+    wire    [31:0]  wr_data0,
+                    rd_data0,
+                    wr_data1,
+                    rd_data1,
+                    wr_data2,
+                    rd_data2,
+                    wr_data3,
+                    rd_data3;
+    wire    [28:0]  avl_addr_0,
+                    avl_addr_1,
+                    avl_addr_2,
+                    avl_addr_3;
+    wire            ram_rdy,
+                    avl_ready_0,
+                    avl_ready_1,
+                    avl_ready_2,
+                    avl_ready_3,
+                    avl_write_req_0,
+                    avl_write_req_1,
+                    avl_write_req_2,
+                    avl_write_req_3,
+                    avl_read_req_0,
+                    avl_read_req_1,
+                    avl_read_req_2,
+                    avl_read_req_3;
+    wire            rd_data_valid;
 
-	wire            full;
+    wire            full;
 
-	wire            clk_25_2m,
-					pll_locked,
-					us_tck,
-					ms_tck;
+    wire            clk_25_2m,
+                    pll_locked,
+                    us_tck,
+                    ms_tck;
 
-	/* Assign IO pins to interconnection nets */
-
-
-	/* Instantiate the required subsystems */
-
-	/*debounce debounce (
-		.clk(clk_25_2m),
-		.rst(1'b0),
-		.sig_in(CPU_RESET_n),
-		.sig_out(reset)
-	);*/
-	assign reset = KEY[3];
+    /* Assign IO pins to interconnection nets */
 
 
-	clocks clock_block (
-		.clk(CLOCK_50_B6A),
-		.rst(reset),
-		//.pll_locked(pll_locked),
-		.pll_outclk_1(clk_25_2m),
-		.us_tck(us_tck),
-		.ms_tck(ms_tck)
-	);
-	/*PLL pll_inst (
-		.refclk(CLOCK_50_B6A),
-		.rst(1'b0),
-		.outclk_0(clk_25_2m),   // 25.2MHz for 640x480p @60Hz, 74.25MHz
-								// for 1280x720p
-		.locked(pll_locked)
-	);*/
+    /* Instantiate the required subsystems */
 
-	frame_buf_alt frame_buf0 (
-		.clk(clk_25_2m),
-		.reset(reset),
-		.wr_en(KEY[1]),
-		.rd_en(KEY[0]),
-		.ram_rdy(ram_rdy),
-		.avl_ready(avl_ready_0),
-		.avl_write_req(avl_write_req_0),
-		.avl_read_req(avl_read_req_0),
-		.full(full),
-		.wr_addr(wr_addr0),
-		.rd_addr(rd_addr0),
-		.avl_addr(avl_addr_0)
-	);
+    /*debounce debounce (
+        .clk(clk_25_2m),
+        .rst(1'b0),
+        .sig_in(CPU_RESET_n),
+        .sig_out(reset)
+    );*/
+    assign reset = KEY[3];
 
-	ram_int_4p mem_int (
-		.wr_data0(wr_data0),
-		.wr_data1(),
-		.wr_data2(),
-		.wr_data3(),
-		.clk_50m(CLOCK_50_B5B),
-		.clk(clk_25_2m),
-		.reset(reset),
-		.avl_write_req_0(avl_write_req_0),
-		.avl_read_req_0(avl_read_req_0),
-		.avl_write_req_1(),
-		.avl_read_req_1(),
-		.avl_write_req_2(),
-		.avl_read_req_2(),
-		.avl_write_req_3(),
-		.avl_read_req_3(),
-		.rd_data_valid0(rd_data_valid),
-		.ram_rdy(ram_rdy),
-		.avl_ready_0_fl(avl_ready_0),
-		.avl_ready_1_fl(),
-		.avl_ready_2_fl(),
-		.avl_ready_3_fl(),
-		.avl_addr_0(avl_addr_0),
-		.avl_addr_1(),
-		.avl_addr_2(),
-		.avl_addr_3(),
-		.rd_data0(rd_data0),
-		.rd_data1(),
-		.rd_data2(),
-		.rd_data3(),
-		.mem_ca(mem_ca),
-		.mem_ck(mem_ck),
-		.mem_ck_n(mem_ck_n),
-		.mem_cke(mem_cke),
-		.mem_cs_n(mem_cs_n),
-		.mem_dm(mem_dm),
-		.mem_dq(mem_dq),
-		.mem_dqs(mem_dqs),
-		.mem_dqs_n(mem_dqs_n),
-		.oct_rzqin(oct_rzqin)
-	);
 
-	img_cap_hdmi hdmi (
-		.pix_clk(clk_25_2m),
-		.reset(reset),
-		.HDMI_TX_DE(HDMI_TX_DE),
-		.HDMI_TX_HS(HDMI_TX_HS),
-		.HDMI_TX_VS(HDMI_TX_VS),
-		.I2C_SCL(I2C_SCL),
-		.I2C_SDA(I2C_SDA),
-		.i2c_reg_read(1'b0),
-		.i2c_reg_addr(8'b0),
-		.i2c_reg_data()
-	);
+    clocks clock_block (
+        .clk(CLOCK_50_B6A),
+        .rst(reset),
+        //.pll_locked(pll_locked),
+        .pll_outclk_1(clk_25_2m),
+        .us_tck(us_tck),
+        .ms_tck(ms_tck)
+    );
+    /*PLL pll_inst (
+        .refclk(CLOCK_50_B6A),
+        .rst(1'b0),
+        .outclk_0(clk_25_2m),   // 25.2MHz for 640x480p @60Hz, 74.25MHz
+                                // for 1280x720p
+        .locked(pll_locked)
+    );*/
+
+    
+    frame_buf_alt
+    #(
+        .BUF_SIZE(5)
+    ) frame_buf0 (
+        .wr_clk(clk_25_2m),
+        .rd_clk(clk_25_2m),
+        .reset(reset),
+        .wr_en(KEY[1]),
+        .rd_en(KEY[0]),
+        .ram_rdy(ram_rdy),
+        .avl_ready(avl_ready_0),
+        .avl_write_req(avl_write_req_0),
+        .avl_read_req(avl_read_req_0),
+        .full(full),
+        .wr_addr(wr_addr0),
+        .rd_addr(rd_addr0),
+        .avl_addr(avl_addr_0)
+    );
+ 
+    ram_int_4p mem_int (
+        .wr_data0(wr_data0),
+        .wr_data1(),
+        .wr_data2(),
+        .wr_data3(),
+        .clk_50m(CLOCK_50_B5B),
+        .clk(clk_25_2m),
+        .reset(reset),
+        .avl_write_req_0(),
+        .avl_read_req_0(),
+        .avl_write_req_1(),
+        .avl_read_req_1(),
+        .avl_write_req_2(),
+        .avl_read_req_2(),
+        .avl_write_req_3(),
+        .avl_read_req_3(),
+        .rd_data_valid0(rd_data_valid),
+        .ram_rdy(ram_rdy),
+        .avl_ready_0_fl(avl_ready_0),
+        .avl_ready_1_fl(),
+        .avl_ready_2_fl(),
+        .avl_ready_3_fl(),
+        .avl_addr_0(avl_addr_0),
+        .avl_addr_1(),
+        .avl_addr_2(),
+        .avl_addr_3(),
+        .rd_data0(rd_data0),
+        .rd_data1(),
+        .rd_data2(),
+        .rd_data3(),
+        .mem_ca(mem_ca),
+        .mem_ck(mem_ck),
+        .mem_ck_n(mem_ck_n),
+        .mem_cke(mem_cke),
+        .mem_cs_n(mem_cs_n),
+        .mem_dm(mem_dm),
+        .mem_dq(mem_dq),
+        .mem_dqs(mem_dqs),
+        .mem_dqs_n(mem_dqs_n),
+        .oct_rzqin(oct_rzqin)
+    );    
 
 
     // Cameras Capture Interfaces
 
     assign CAM_XCLK = clk_25_2m;
-    assign CAM_RESET = 1'b1;    // To do: Move to controller
-    assign CAM_PWDN = 1'b0;     // To do: Move to controller
+    assign CAM_RESET = reset;
 
     wire [18:0] CAM1_CAP_ADDRESS;
     wire [23:0] CAM1_CAP_DATA;

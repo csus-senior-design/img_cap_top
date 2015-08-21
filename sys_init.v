@@ -97,7 +97,7 @@ module sys_init #(
     // ADV7513 HDMI Driver Initialization
     adv7513_init #(
         .CHIP_ADDR(ADV7513_CHIP_ADDR),
-        .I2C_CLKDIV(I2C_CLKDIV)
+        .I2C_CLKDIV(ADV7513_I2C_CLKDIV)
     ) hdmi_init (
         .clk(clk),
         .reset(reset),
@@ -132,7 +132,7 @@ module sys_init #(
                 
                 s_init_wait: begin
                     state <= ( cam1_init_done &&
-                               cam_2_init_done &&
+                               cam2_init_done &&
                                hdmi_init_done &&
                                mem_init_done
                               ) ? s_init_done : s_init_wait;
