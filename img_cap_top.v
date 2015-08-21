@@ -240,7 +240,8 @@ module img_cap_top (
 		if (~reset) begin
 			fail <= DEASSERT_H;
 			pass <= DEASSERT_H;
-		end else if ((valid_rd_data[23:0] != TST_PATT && rd_cnt != 0) || rd_cnt > 307200) begin
+		end else if ((valid_rd_data[23:0] != TST_PATT && rd_cnt != 0)
+						|| rd_cnt > 307200) begin
 			fail <= ASSERT_H;
 			pass <= DEASSERT_H;
 		end else if (rd_addr0 == 29'd2 && rd_cnt == 307200)
@@ -309,15 +310,7 @@ module img_cap_top (
 
 
 	/* Instantiate the required subsystems */
-
-	/*debounce debounce (
-		.clk(clk_25_2m),
-		.rst(1'b0),
-		.sig_in(CPU_RESET_n),
-		.sig_out(reset)
-	);*/
 	assign reset = KEY[3];
-
 
 	clocks clock_block (
 		.clk(CLOCK_50_B6A),
