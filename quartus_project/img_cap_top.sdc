@@ -57,22 +57,22 @@ derive_clock_uncertainty
 #**************************************************************
 # Set Multicycle Path
 #**************************************************************
-#set_multicycle_path -setup -from mem_int|global_reset_n -to mem_int|lpddr2x32_4p_inst|lpddr2x32_4p_inst|p0|umemphy|hphy_inst~FF_85 2
-#set_multicycle_path -hold -from mem_int|global_reset_n -to mem_int|lpddr2x32_4p_inst|lpddr2x32_4p_inst|p0|umemphy|hphy_inst~FF_85 1
-#set_multicycle_path -setup -from mem_int|global_reset_n -to mem_int|lpddr2x32_4p_inst|lpddr2x32_4p_inst|p0|umemphy|hphy_inst~FF_86 3
-#set_multicycle_path -hold -from mem_int|global_reset_n -to mem_int|lpddr2x32_4p_inst|lpddr2x32_4p_inst|p0|umemphy|hphy_inst~FF_86 2
-#set_multicycle_path -setup -from mem_int|global_reset_n -to mem_int|lpddr2x32_4p_inst|lpddr2x32_4p_inst|p0|umemphy|hphy_inst~FF_87 2
-#set_multicycle_path -hold -from mem_int|global_reset_n -to mem_int|lpddr2x32_4p_inst|lpddr2x32_4p_inst|p0|umemphy|hphy_inst~FF_87 1
+set_multicycle_path -setup -from mem_int|global_reset_n -to mem_int|lpddr2x32_4p_inst|lpddr2x32_4p_inst|p0|umemphy|hphy_inst~FF_85 2
+set_multicycle_path -hold -from mem_int|global_reset_n -to mem_int|lpddr2x32_4p_inst|lpddr2x32_4p_inst|p0|umemphy|hphy_inst~FF_85 1
+set_multicycle_path -setup -from mem_int|global_reset_n -to mem_int|lpddr2x32_4p_inst|lpddr2x32_4p_inst|p0|umemphy|hphy_inst~FF_86 3
+set_multicycle_path -hold -from mem_int|global_reset_n -to mem_int|lpddr2x32_4p_inst|lpddr2x32_4p_inst|p0|umemphy|hphy_inst~FF_86 2
+set_multicycle_path -setup -from mem_int|global_reset_n -to mem_int|lpddr2x32_4p_inst|lpddr2x32_4p_inst|p0|umemphy|hphy_inst~FF_87 2
+set_multicycle_path -hold -from mem_int|global_reset_n -to mem_int|lpddr2x32_4p_inst|lpddr2x32_4p_inst|p0|umemphy|hphy_inst~FF_87 1
 
-#set_multicycle_path -setup -from mem_int|soft_reset_n -to mem_int|lpddr2x32_4p_inst|lpddr2x32_4p_inst|p0|umemphy|hphy_inst~FF_70 2
-#set_multicycle_path -hold -from mem_int|soft_reset_n -to mem_int|lpddr2x32_4p_inst|lpddr2x32_4p_inst|p0|umemphy|hphy_inst~FF_70 1
-#set_multicycle_path -setup -from mem_int|soft_reset_n -to mem_int|lpddr2x32_4p_inst|lpddr2x32_4p_inst|p0|umemphy|hphy_inst~FF_71 2
-#et_multicycle_path -hold -from mem_int|soft_reset_n -to mem_int|lpddr2x32_4p_inst|lpddr2x32_4p_inst|p0|umemphy|hphy_inst~FF_71 1
-#set_multicycle_path -setup -from mem_int|soft_reset_n -to mem_int|lpddr2x32_4p_inst|lpddr2x32_4p_inst|p0|umemphy|hphy_inst~FF_72 4
-#set_multicycle_path -hold -from mem_int|soft_reset_n -to mem_int|lpddr2x32_4p_inst|lpddr2x32_4p_inst|p0|umemphy|hphy_inst~FF_72 3
+set_multicycle_path -setup -from mem_int|soft_reset_n -to mem_int|lpddr2x32_4p_inst|lpddr2x32_4p_inst|p0|umemphy|hphy_inst~FF_70 2
+set_multicycle_path -hold -from mem_int|soft_reset_n -to mem_int|lpddr2x32_4p_inst|lpddr2x32_4p_inst|p0|umemphy|hphy_inst~FF_70 1
+set_multicycle_path -setup -from mem_int|soft_reset_n -to mem_int|lpddr2x32_4p_inst|lpddr2x32_4p_inst|p0|umemphy|hphy_inst~FF_71 2
+set_multicycle_path -hold -from mem_int|soft_reset_n -to mem_int|lpddr2x32_4p_inst|lpddr2x32_4p_inst|p0|umemphy|hphy_inst~FF_71 1
+set_multicycle_path -setup -from mem_int|soft_reset_n -to mem_int|lpddr2x32_4p_inst|lpddr2x32_4p_inst|p0|umemphy|hphy_inst~FF_72 4
+set_multicycle_path -hold -from mem_int|soft_reset_n -to mem_int|lpddr2x32_4p_inst|lpddr2x32_4p_inst|p0|umemphy|hphy_inst~FF_72 3
 
-#set_multicycle_path -setup -to mem_int|lpddr2x32_4p_inst|lpddr2x32_4p_inst|p0|umemphy|hphy_inst~FF_39 -from mem_int|local_cal_success_fl 3
-#set_multicycle_path -hold -to mem_int|lpddr2x32_4p_inst|lpddr2x32_4p_inst|p0|umemphy|hphy_inst~FF_39 -from mem_int|local_cal_success_fl 2
+#set_multicycle_path -setup -from mem_int|lpddr2x32_4p_inst|lpddr2x32_4p_inst|p0|umemphy|hphy_inst~FF_39 -to mem_int|local_cal_success_fl 2
+#set_multicycle_path -hold -from mem_int|lpddr2x32_4p_inst|lpddr2x32_4p_inst|p0|umemphy|hphy_inst~FF_39 -to mem_int|local_cal_success_fl 1
 
 
 #**************************************************************
@@ -96,6 +96,3 @@ derive_clock_uncertainty
 #**************************************************************
 # Set Load
 #**************************************************************
-
-
-
