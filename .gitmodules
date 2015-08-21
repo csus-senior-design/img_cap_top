@@ -1,16 +1,28 @@
 [submodule "frame_buf_alt"]
-	path = frame_buf_alt
-	url = git@github.com:csus-senior-design/frame_buf_alt.git
+    path = frame_buf_alt
+    url = git@github.com:csus-senior-design/frame_buf_alt.git
     branch = master
 [submodule "ram_int_4p"]
-	path = ram_int_4p
-	url = git@github.com:csus-senior-design/ram_int_4p.git
+    path = ram_int_4p
+    url = git@github.com:csus-senior-design/ram_int_4p.git
     branch = master
 [submodule "ov_7670"]
-	path = ov_7670
-	url = git@github.com:csus-senior-design/ov_7670.git
+    path = ov_7670
+    url = git@github.com:csus-senior-design/ov_7670.git
     branch = master
 [submodule "img_cap_hdmi"]
-	path = img_cap_hdmi
-	url = git@github.com:csus-senior-design/img_cap_hdmi
+    path = img_cap_hdmi
+    url = git@github.com:csus-senior-design/img_cap_hdmi
+    branch = master
+[submodule "adv7513"]
+    path = adv7513
+    url = git@github.com:csus-senior-design/adv7513.git
+    branch = master
+[submodule "videogen"]
+    path = videogen
+    url = git@github.com:csus-senior-design/videogen.git
+    branch = master
+[submodule "i2c"]
+    path = i2c
+    url = git@github.com:csus-senior-design/i2c.git
     branch = master
