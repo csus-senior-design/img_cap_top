@@ -27,7 +27,6 @@ module clocks #(
 	//output		pll_locked,
 	output		pll_outclk_0,
 	output		pll_outclk_1,
-	output		pll_outclk_2,
 	output	reg	us_tck = 1'b0,
 	output	reg	ms_tck = 1'b0
 );
@@ -45,9 +44,8 @@ module clocks #(
 		PLL pll_inst (
 			.refclk(clk),
 			.rst(1'b0),
-			.outclk_0(pll_outclk_0),	// 126MHz clock for memory interface
-			.outclk_1(pll_outclk_1),	// 25.2MHz clock for camera interface
-			.outclk_2(pll_outclk_2)		// 12.6MHz 
+			.outclk_0(pll_outclk_0),	// 50.4MHz clock for memory interface
+			.outclk_1(pll_outclk_1)		// 25.2MHz clock for camera interface
 			//.locked(pll_locked)
 		);
 	`endif
