@@ -10,10 +10,6 @@
     path = ov_7670
     url = git@github.com:csus-senior-design/ov_7670.git
     branch = master
-[submodule "img_cap_hdmi"]
-    path = img_cap_hdmi
-    url = git@github.com:csus-senior-design/img_cap_hdmi
-    branch = master
 [submodule "adv7513"]
     path = adv7513
     url = git@github.com:csus-senior-design/adv7513.git
