@@ -17,7 +17,8 @@ Description:
 module img_cap_ctrl #(
 		parameter PLACEHOLDER = 0
 	)(
-		input		clk,
+		input		clk_fst,
+					clk,
 		input		reset,
 		input		init_done,
 		output	reg	init_start,
@@ -105,6 +106,19 @@ module img_cap_ctrl #(
 		end
 	end
 	
+	// Frame buffer switching logic (50.4MHz domain)
+	always @(posedge clk_fst)
+		if (~reset) begin
+			wr_fb = 1'b0;
+			fb_sel = 1'b1;
+		end else if (full_0) begin
+			wr_fb = 1'b1;
+			fb_sel = 1'b0;
+		end else if (full_1) begin
+			wr_fb = 1'b0;
+			fb_sel = 1'b1;
+		end
+	
 	// Control logic for all clock domains
 	always @(*) begin
 		if (state == s_fb_stream) begin
@@ -124,13 +138,13 @@ module img_cap_ctrl #(
 			end
 			
 			// Frame buffer switching logic
-			if (full_0) begin
+			/*if (full_0) begin
 				wr_fb = 1'b1;
 				fb_sel = 1'b0;
 			end else if (full_1) begin
 				wr_fb = 1'b0;
 				fb_sel = 1'b1;
-			end
+			end*/
 			
 			// Frame buffer to ADV FIFO
 			if (fb_sel & ~wrfull_adv) begin
@@ -158,8 +172,6 @@ module img_cap_ctrl #(
 			wrreq_adv = DEASSERT_H;
 			rdreq_adv = DEASSERT_H;
 			rdreq_cam = DEASSERT_H;
-			wr_fb = 1'b0;
-			fb_sel = 1'b1;
 		end
 	end
 	
