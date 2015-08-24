@@ -576,6 +576,7 @@ module img_cap_top #(
     );
 
     img_cap_ctrl img_cap_ctrl (
+		.clk_fst(clk_50_4m),
         .clk(clk_25_2m),
         .reset(reset),
         .init_start(init_start),
