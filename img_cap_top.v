@@ -486,7 +486,7 @@ module img_cap_top #(
 	//=========================================================================
 	
 	FIFO cam_fifo (
-		.data(CAM1_DATA),
+		.data(CAM1_CAP_DATA),
 		.rdclk(clk_50_4m),
 		.rdreq(rdreq_cam),
 		.wrclk(clk_25_2m),
@@ -495,7 +495,7 @@ module img_cap_top #(
 		.rdempty(rdempty_cam),
 		.wrfull(wrfull_cam)
 	);
-
+	assign wrreq_cam = CAM1_CAP_WRITE_EN;
 
     //=========================================================================
 	// Camera capture interfaces (25.2MHz domain, pixels come in at 12.6MHz)
@@ -579,7 +579,22 @@ module img_cap_top #(
         .clk(clk_25_2m),
         .reset(reset),
         .init_start(init_start),
-        .init_done(init_done)
+        .init_done(init_done),
+		.full_0(full_0),
+		.full_1(full_1),
+		.wrfull_adv(wrfull_adv),
+		.wrfull_cam(wrfull_cam),
+		.rdempty_adv(rdempty_adv),
+		.rdempty_cam(rdempty_cam),
+		.HDMI_TX_DE(HDMI_TX_DE),
+		.wr_en_0(wr_en_0),
+		.wr_en_1(wr_en_1),
+		.rd_en_0(rd_en_0),
+		.rd_en_1(rd_en_1),
+		.wrreq_adv(wrreq_adv),
+		.rdreq_adv(rdreq_adv),
+		.rdreq_cam(rdreq_cam),
+		.fb_sel(fb_sel)
     );
 	
 	
