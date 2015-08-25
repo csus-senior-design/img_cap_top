@@ -286,7 +286,7 @@ module img_cap_top #(
 					rdempty_adv,
 					rdempty_cam,
 					fb_sel;
-
+	
 
     /* Instantiate the required subsystems */
     assign reset = KEY[3];
@@ -387,7 +387,9 @@ module img_cap_top #(
 	//=========================================================================
 	// FIFO between frame buffers and ADV7513
 	//=========================================================================
-
+	reg		[31:0]	valid_rd_data_0,
+					valid_rd_data_1;
+	
 	FIFO adv_fifo (
 		.data(fb_data_out),
 		.rdclk(clk_25_2m),
@@ -398,8 +400,14 @@ module img_cap_top #(
 		.rdempty(rdempty_adv),
 		.wrfull(wrfull_adv)
 	);
-	assign fb_data_out = (fb_sel) ? rd_data_1 : rd_data_0;
-
+	assign fb_data_out = (fb_sel) ? valid_rd_data_1 : valid_rd_data_0;
+	
+	always @(posedge clk_50_4m) begin
+		if (rd_data_valid_0)
+			valid_rd_data_0 <= rd_data_0;
+		if (rd_data_valid_1)
+			valid_rd_data_1 <= rd_data_1;
+	end
 
 	//=========================================================================
 	// Frame buffers and memory interface logic (50.4MHz domain)
@@ -486,7 +494,8 @@ module img_cap_top #(
 	//=========================================================================
 	
 	FIFO cam_fifo (
-		.data(CAM1_CAP_DATA),
+		//.data(CAM1_CAP_DATA),
+		.data(cam_data_tst),
 		.rdclk(clk_50_4m),
 		.rdreq(rdreq_cam),
 		.wrclk(clk_25_2m),
@@ -495,7 +504,8 @@ module img_cap_top #(
 		.rdempty(rdempty_cam),
 		.wrfull(wrfull_cam)
 	);
-	assign wrreq_cam = CAM1_CAP_WRITE_EN;
+	//assign wrreq_cam = CAM1_CAP_WRITE_EN;
+	assign wrreq_cam = cam_wr_en_tst;
 
     //=========================================================================
 	// Camera capture interfaces (25.2MHz domain, pixels come in at 12.6MHz)
@@ -588,6 +598,8 @@ module img_cap_top #(
 		.rdempty_adv(rdempty_adv),
 		.rdempty_cam(rdempty_cam),
 		.HDMI_TX_DE(HDMI_TX_DE),
+		.rd_data_valid_0(rd_data_valid_0),
+		.rd_data_valid_1(rd_data_valid_1),
 		.wr_en_0(wr_en_0),
 		.wr_en_1(wr_en_1),
 		.rd_en_0(rd_en_0),
@@ -641,5 +653,49 @@ module img_cap_top #(
             valid_rd_data <= rd_data0;
             rd_cnt <= rd_cnt + 1;
         end*/
+		
+	/* Simulated camera data */
+	reg		[1:0]	cs,
+					ns;
+	reg		[23:0]	cam_data_tst;
+	reg				cam_wr_en_tst;
+	localparam	[1:0]
+		IDLE = 0,
+		RED = 1,
+		BLUE = 2;
+		
+	always @(posedge clk_25_2m) begin
+		if (~reset) begin
+			cs <= IDLE;
+			ns <= RED;
+			cam_wr_en_tst <= 1'b0;
+		end else begin
+			cam_wr_en_tst <= 1'b0;
+			cam_data_tst <= 24'h0;
+			
+			case (cs)
+				IDLE: begin
+					if (ram_rdy)
+						cs <= ns;
+					else
+						cs <= IDLE;
+				end
+				
+				RED: begin
+					cam_data_tst <= 24'hFF0000;
+					cam_wr_en_tst <= 1'b1;
+					cs <= IDLE;
+					ns <= BLUE;
+				end
+				
+				BLUE: begin
+					cam_data_tst <= 24'hFF;
+					cam_wr_en_tst <= 1'b1;
+					cs <= IDLE;
+					ns <= RED;
+				end
+			endcase
+		end
+	end
 	
 endmodule
