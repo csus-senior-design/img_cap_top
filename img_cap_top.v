@@ -30,82 +30,82 @@ module img_cap_top #(
             chip_pin = "R20",
             altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
         *)
-        input           CLOCK_50_B5B,
+        input           	CLOCK_50_B5B,
         (*
             chip_pin = "N20",
             altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
         *)
-        input           CLOCK_50_B6A,
+        input           	CLOCK_50_B6A,
 
         // Reset (super obvious)
         (*
             chip_pin = "AB24",
             altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
         *)
-        input           CPU_RESET_n,
+        input           	CPU_RESET_n,
 
         // HDMI-TX via ADV7513
         (*
             chip_pin = "Y25",
             altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
         *)
-        output          HDMI_TX_CLK,
+        output          	HDMI_TX_CLK,
         (*
             chip_pin = "Y26",
             altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
         *)
-        output          HDMI_TX_DE,
+        output          	HDMI_TX_DE,
         (*
             chip_pin = "U26",
             altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
         *)
-        output          HDMI_TX_HS,
+        output          	HDMI_TX_HS,
         (*
             chip_pin = "U25",
             altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
         *)
-        output          HDMI_TX_VS,
+        output          	HDMI_TX_VS,
         (*
             chip_pin = "AD25, AC25, AB25, AA24, AB26, R26, R24, P21, P26, N25, P23, P22, R25, R23, T26, T24, T23, U24, V25, V24, W26, W25, AA26, V23",
             altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
         *)
-        output  [23:0]  HDMI_TX_D,
+        output	reg  [23:0]  HDMI_TX_D,
         (*
             chip_pin = "T12",
             altera_attribute = "-name IO_STANDARD \"1.2 V\""
         *)
-        input           HDMI_TX_INT,
+        input           	HDMI_TX_INT,
 
         // External I2C bus for HDMI-TX
         (*
             chip_pin = "B7",
             altera_attribute = "-name IO_STANDARD \"2.5 V\""
         *)
-        inout           I2C_SCL,
+        inout           	I2C_SCL,
         (*
             chip_pin = "G11",
             altera_attribute = "-name IO_STANDARD \"2.5 V\""
         *)
-        inout           I2C_SDA,
+        inout           	I2C_SDA,
 
         // Status LEDs
         (*
             chip_pin = "J10, H7, K8, K10, J7, J8, G7, G6, F6, F7",
             altera_attribute = "-name IO_STANDARD \"2.5 V\""
         *)
-        output  [9:0]   LEDR,
+        output  	[9:0]   LEDR,
         (*
             chip_pin = "H9, H8, B6, A5, E9, D8, K6, L7",
             altera_attribute = "-name IO_STANDARD \"2.5 V\""
         *)
-        output  [7:0]   LEDG,
+        output  	[7:0]   LEDG,
 
         // Debounced push buttons
         (*
             chip_pin = "Y16, Y15, P12, P11",
             altera_attribute = "-name IO_STANDARD \"1.2 V\""
         *)
-        input   [3:0]   KEY,
+        input   	[3:0]   KEY,
 
 
         // Camera Interfaces
@@ -115,56 +115,56 @@ module img_cap_top #(
             chip_pin = "F26",
             altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
         *)
-        output          CAM_XCLK,   // Cam 1 & 2 XCLK (GPIO 16)
+        output          	CAM_XCLK,   // Cam 1 & 2 XCLK (GPIO 16)
 
         (*
             chip_pin = "W20",
             altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
         *)
-        output          CAM_RESET,  // Cam 1 & 2 RESET (GPIO 28)
+        output          	CAM_RESET,  // Cam 1 & 2 RESET (GPIO 28)
 
         (*
             chip_pin = "G26",
             altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
         *)
-        output          CAM_PWDN,   // Cam 1 & 2 PWDN (GPIO 18)
+        output          	CAM_PWDN,   // Cam 1 & 2 PWDN (GPIO 18)
 
         // CAM 1 Pins
         (*
             chip_pin = "T21",
             altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
         *)
-        input           CAM1_PCLK,  // Cam 1 PCLK (GPIO 0)
+        input           	CAM1_PCLK,  // Cam 1 PCLK (GPIO 0)
 
         (*
             chip_pin = "U19",
             altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
         *)
-        input           CAM1_HREF,  // Cam 1 HREF (GPIO 10)
+        input           	CAM1_HREF,  // Cam 1 HREF (GPIO 10)
 
         (*
             chip_pin = "U22",
             altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
         *)
-        input           CAM1_VSYNC, // Cam 1 VSYNC (GPIO 11)
+        input           	CAM1_VSYNC, // Cam 1 VSYNC (GPIO 11)
 
         (*
             chip_pin = "T19",
             altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
         *)
-        output          CAM1_SDIOC, // Cam 1 SDIOC (GPIO 9)
+        output          	CAM1_SDIOC, // Cam 1 SDIOC (GPIO 9)
 
         (*
             chip_pin = "P8",
             altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
         *)
-        inout           CAM1_SDIOD, // Cam 1 SDIOD (GPIO 12)
+        inout           	CAM1_SDIOD, // Cam 1 SDIOD (GPIO 12)
 
         (*
             chip_pin = "P20, R9, M26, T22, E26, M21, D26, K26",
             altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
         *)
-        input   [7:0]   CAM1_DATA,      // Cam 1 Data (GPIO 7, 14, 5, 8, 3, 6, 1, 4)
+        input   	[7:0]   CAM1_DATA,      // Cam 1 Data (GPIO 7, 14, 5, 8, 3, 6, 1, 4)
 
 
         // CAM 2 Pins
@@ -172,37 +172,37 @@ module img_cap_top #(
             chip_pin = "K25",
             altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
         *)
-        input           CAM2_PCLK,  // Cam 2 PCLK (GPIO 2)
+        input           	CAM2_PCLK,  // Cam 2 PCLK (GPIO 2)
 
         (*
             chip_pin = "V20",
             altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
         *)
-        input           CAM2_HREF,  // Cam 2 HREF (GPIO 26)
+        input           	CAM2_HREF,  // Cam 2 HREF (GPIO 26)
 
         (*
             chip_pin = "R8",
             altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
         *)
-        input           CAM2_VSYNC, // Cam 2 VSYNC (GPIO 13)
+        input           	CAM2_VSYNC, // Cam 2 VSYNC (GPIO 13)
 
         (*
             chip_pin = "R10",
             altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
         *)
-        output          CAM2_SDIOC, // Cam 2 SDIOC (GPIO 15)
+        output          	CAM2_SDIOC, // Cam 2 SDIOC (GPIO 15)
 
         (*
             chip_pin = "W21",
             altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
         *)
-        inout           CAM2_SDIOD, // Cam 2 SDIOD (GPIO 27)
+        inout           	CAM2_SDIOD, // Cam 2 SDIOD (GPIO 27)
 
         (*
             chip_pin = "V22, AA7, AD6, AD7, AA6, U20, Y8, Y9",
             altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
         *)
-        input   [7:0]   CAM2_DATA,  // Cam 2 Data (GPIO 25, 20, 23, 22, 21, 24, 19, 17)
+        input   	[7:0]   CAM2_DATA,  // Cam 2 Data (GPIO 25, 20, 23, 22, 21, 24, 19, 17)
 
 
         // Memory ports
@@ -234,8 +234,8 @@ module img_cap_top #(
     /* Declare the required interconnections */
     wire            reset;
 
-    wire    [31:0]  fb_data_in,
-					fb_data_out,
+	reg		[31:0]	fb_data_in;
+    wire    [31:0]  fb_data_out,
                     rd_data_0,
                     rd_data_1,
                     wr_data_2,
@@ -266,6 +266,8 @@ module img_cap_top #(
 
     wire            full_0,
 					full_1,
+					rd_done_0,
+					rd_done_1,
 					wr_en_0,
 					wr_en_1,
 					rd_en_0,
@@ -276,7 +278,9 @@ module img_cap_top #(
                     pll_locked,
                     us_tck,
                     ms_tck;
-					
+	
+	wire	[23:0]	adv_fifo_q,
+					cam_fifo_q;
 	wire			wrreq_adv,
 					wrreq_cam,
 					rdreq_adv,
@@ -382,10 +386,14 @@ module img_cap_top #(
 		.hs_out(HDMI_TX_HS),
 		.field_out(field)
 	);
-
+	always @(posedge clk_25_2m)
+		if (~reset)
+			HDMI_TX_D <= 24'd0;
+		else if (rdreq_adv)
+			HDMI_TX_D <= adv_fifo_q;
 
 	//=========================================================================
-	// FIFO between frame buffers and ADV7513
+	// FIFO between frame buffers and ADV7513 (25.2MHz above, 50.4MHz below)
 	//=========================================================================
 	reg		[31:0]	valid_rd_data_0,
 					valid_rd_data_1;
@@ -396,7 +404,7 @@ module img_cap_top #(
 		.rdreq(rdreq_adv),
 		.wrclk(clk_50_4m),
 		.wrreq(wrreq_adv),
-		.q(HDMI_TX_D),
+		.q(adv_fifo_q),
 		.rdempty(rdempty_adv),
 		.wrfull(wrfull_adv)
 	);
@@ -422,6 +430,7 @@ module img_cap_top #(
         .avl_write_req(avl_write_req_0),
         .avl_read_req(avl_read_req_0),
         .full(full_0),
+		.rd_done(rd_done_0),
         .wr_addr(),
         .rd_addr(),
         .avl_addr(avl_addr_0)
@@ -438,6 +447,7 @@ module img_cap_top #(
         .avl_write_req(avl_write_req_1),
         .avl_read_req(avl_read_req_1),
         .full(full_1),
+		.rd_done(rd_done_1),
         .wr_addr(),
         .rd_addr(),
         .avl_addr(avl_addr_1)
@@ -487,10 +497,14 @@ module img_cap_top #(
         .mem_dqs_n(mem_dqs_n),
         .oct_rzqin(oct_rzqin)
     );
-
+	always @(posedge clk_50_4m)
+		if (~reset)
+			fb_data_in <= 32'd0;
+		else if (rdreq_cam)
+			fb_data_in <= cam_fifo_q;
 
 	//=========================================================================
-	// FIFO between camera and frame buffers
+	// FIFO between camera and frame buffers (50.4MHz above, 24.2MHz below)
 	//=========================================================================
 	
 	FIFO cam_fifo (
@@ -500,7 +514,7 @@ module img_cap_top #(
 		.rdreq(rdreq_cam),
 		.wrclk(clk_25_2m),
 		.wrreq(wrreq_cam),
-		.q(fb_data_in),
+		.q(cam_fifo_q),
 		.rdempty(rdempty_cam),
 		.wrfull(wrfull_cam)
 	);
@@ -593,6 +607,10 @@ module img_cap_top #(
         .init_done(init_done),
 		.full_0(full_0),
 		.full_1(full_1),
+		.rd_done_0(rd_done_0),
+		.rd_done_1(rd_done_1),
+		.avl_ready_0(avl_ready_0),
+		.avl_ready_1(avl_ready_1),
 		.wrfull_adv(wrfull_adv),
 		.wrfull_cam(wrfull_cam),
 		.rdempty_adv(rdempty_adv),
@@ -653,7 +671,8 @@ module img_cap_top #(
             valid_rd_data <= rd_data0;
             rd_cnt <= rd_cnt + 1;
         end*/
-		
+	
+	
 	/* Simulated camera data */
 	reg		[1:0]	cs,
 					ns;
@@ -675,7 +694,7 @@ module img_cap_top #(
 			
 			case (cs)
 				IDLE: begin
-					if (ram_rdy)
+					if (ram_rdy && HDMI_TX_DE)
 						cs <= ns;
 					else
 						cs <= IDLE;

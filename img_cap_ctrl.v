@@ -24,6 +24,10 @@ module img_cap_ctrl #(
 		output	reg	init_start,
 		input		full_0,
 					full_1,
+					rd_done_0,
+					rd_done_1,
+					avl_ready_0,
+					avl_ready_1,
 					wrfull_adv,
 					wrfull_cam,
 					rdempty_adv,
@@ -113,10 +117,10 @@ module img_cap_ctrl #(
 		if (~reset) begin
 			wr_fb = 1'b0;
 			fb_sel = 1'b1;
-		end else if (full_0) begin
+		end else if (full_0 & rd_done_1) begin
 			wr_fb = 1'b1;
 			fb_sel = 1'b0;
-		end else if (full_1) begin
+		end else if (full_1 & rd_done_0) begin
 			wr_fb = 1'b0;
 			fb_sel = 1'b1;
 		end
@@ -128,11 +132,13 @@ module img_cap_ctrl #(
 			if (wr_fb & ~rdempty_cam) begin
 				wr_en_1 = ASSERT_L;
 				wr_en_0 = DEASSERT_L;
-				rdreq_cam = ASSERT_H;
+				if (avl_ready_1)
+					rdreq_cam = ASSERT_H;
 			end else if (~wr_fb & ~rdempty_cam) begin
 				wr_en_0 = ASSERT_L;
 				wr_en_1 = DEASSERT_L;
-				rdreq_cam = ASSERT_H;
+				if (avl_ready_0)
+					rdreq_cam = ASSERT_H;
 			end else begin
 				wr_en_0 = DEASSERT_L;
 				wr_en_1 = DEASSERT_L;
