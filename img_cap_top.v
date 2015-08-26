@@ -674,6 +674,7 @@ module img_cap_top #(
 	
 	
 	/* Simulated camera data */
+	(* syn_encoding = "safe" *)
 	reg		[1:0]	cs,
 					ns;
 	reg		[23:0]	cam_data_tst;

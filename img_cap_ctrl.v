@@ -132,13 +132,19 @@ module img_cap_ctrl #(
 			if (wr_fb & ~rdempty_cam) begin
 				wr_en_1 = ASSERT_L;
 				wr_en_0 = DEASSERT_L;
+				
 				if (avl_ready_1)
 					rdreq_cam = ASSERT_H;
+				else
+					rdreq_cam = DEASSERT_H;
 			end else if (~wr_fb & ~rdempty_cam) begin
 				wr_en_0 = ASSERT_L;
 				wr_en_1 = DEASSERT_L;
+				
 				if (avl_ready_0)
 					rdreq_cam = ASSERT_H;
+				else
+					rdreq_cam = DEASSERT_H;
 			end else begin
 				wr_en_0 = DEASSERT_L;
 				wr_en_1 = DEASSERT_L;
@@ -158,6 +164,7 @@ module img_cap_ctrl #(
 			if (fb_sel & ~wrfull_adv) begin
 				rd_en_1 = ASSERT_L;
 				rd_en_0 = DEASSERT_L;
+				
 				if (rd_data_valid_1)
 					wrreq_adv = ASSERT_H;
 				else
@@ -165,11 +172,11 @@ module img_cap_ctrl #(
 			end else if (~fb_sel & ~wrfull_adv) begin
 				rd_en_0 = ASSERT_L;
 				rd_en_1 = DEASSERT_L;
+				
 				if (rd_data_valid_0)
 					wrreq_adv = ASSERT_H;
 				else
 					wrreq_adv = DEASSERT_H;
-				wrreq_adv = ASSERT_H;
 			end else begin
 				rd_en_0 = DEASSERT_L;
 				rd_en_1 = DEASSERT_L;
