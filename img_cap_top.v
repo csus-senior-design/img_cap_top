@@ -504,7 +504,7 @@ module img_cap_top #(
 			fb_data_in <= cam_fifo_q;
 
 	//=========================================================================
-	// FIFO between camera and frame buffers (50.4MHz above, 24.2MHz below)
+	// FIFO between camera and frame buffers (50.4MHz above, 25.2MHz below)
 	//=========================================================================
 	
 	FIFO cam_fifo (
@@ -695,7 +695,7 @@ module img_cap_top #(
 			
 			case (cs)
 				IDLE: begin
-					if (ram_rdy && HDMI_TX_DE)
+					if (ram_rdy)
 						cs <= ns;
 					else
 						cs <= IDLE;

@@ -182,6 +182,8 @@ module img_cap_ctrl #(
 				rd_en_1 = DEASSERT_L;
 				wrreq_adv = DEASSERT_H;
 			end
+			
+			// ADV data input
 			if (HDMI_TX_DE & ~rdempty_adv)
 				rdreq_adv = ASSERT_H;
 			else
