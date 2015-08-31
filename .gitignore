@@ -20,8 +20,9 @@ greybox_tmp
 *.qprs
 LPDDR2x32_4p_p0_summary.csv
 cr_ie_info.json
-output_files/*
+output_files
 POF.cdf
 *.pin
 *.sld
 quartus_project/PLLJ_PLLSPE_INFO.txt
+*.dpf
