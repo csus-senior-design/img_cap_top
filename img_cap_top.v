@@ -398,7 +398,7 @@ module img_cap_top #(
 	reg		[31:0]	valid_rd_data_0,
 					valid_rd_data_1;
 	
-	FIFO adv_fifo (
+	ADV_FIFO adv_fifo (
 		.data(fb_data_out),
 		.rdclk(clk_25_2m),
 		.rdreq(rdreq_adv),
