@@ -159,7 +159,7 @@ module sys_init #(
 				end
 				
 				s_init_wait: begin
-					state <= (delay_done) ? s_init_done : s_init_wait;
+					state <= (delay_done & mem_init_done) ? s_init_done : s_init_wait;
 
 				end
 				

@@ -82,7 +82,7 @@ agreement for further details.
 	)
 	(drawing
 		(text "(ack)" (rect 50 115 120 241)(font "Arial" ))
-		(text "24 bits x 128 words" (rect 78 157 235 325)(font "Arial" ))
+		(text "24 bits x 256 words" (rect 78 157 235 325)(font "Arial" ))
 		(line (pt 16 100)(pt 160 100))
 		(line (pt 16 148)(pt 160 148))
 		(line (pt 16 32)(pt 160 32))

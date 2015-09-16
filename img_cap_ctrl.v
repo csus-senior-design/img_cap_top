@@ -88,7 +88,7 @@ module img_cap_ctrl #(
 				
 				// Wait for system components to finish initializing
 				s_init_wait: begin
-					state <= init_done ? s_init_done : s_init_wait;
+					state <= (init_done) ? s_init_done : s_init_wait;
 					init_start <= 1'b0;
 				end
 				
@@ -113,23 +113,58 @@ module img_cap_ctrl #(
 	end
 	
 	// Frame buffer switching logic (50.4MHz domain)
+	reg		[1:0]	rd_cnt = 0,
+					wr_cnt = 0;
+	always @(posedge clk_fst) begin
+		
+		if (~reset) begin
+			wr_fb <= 1'b0;
+			fb_sel <= 1'b1;
+		end else if (wr_cnt == 1 && rd_cnt == 2 && ~wr_fb) begin
+			wr_fb <= 1'b1;
+			fb_sel <= 1'b0;
+			rd_cnt <= 0;
+			wr_cnt <= 0;
+		end else if (wr_cnt == 1 && rd_cnt == 2 && wr_fb) begin
+			wr_fb <= 1'b0;
+			fb_sel <= 1'b1;
+			rd_cnt <= 0;
+			wr_cnt <= 0;
+		end
+		
+		if (~reset)
+			rd_cnt <= 2'd0;
+		else if ((rd_done_0 || rd_done_1) && rd_cnt < 2)
+			rd_cnt <= rd_cnt + 1;
+		
+		if (~reset)
+			wr_cnt <= 2'd0;
+		else if ((full_0 || full_1) && wr_cnt < 1)
+			wr_cnt <= wr_cnt + 1;
+	end
+		
+	// Frame buffer burst logic (50.4MHz domain)
+	reg			wr_brst,
+				rd_brst;
+	reg	[2:0]	cnt;
 	always @(posedge clk_fst)
 		if (~reset) begin
-			wr_fb = 1'b0;
-			fb_sel = 1'b1;
-		end else if (full_0 & rd_done_1) begin
-			wr_fb = 1'b1;
-			fb_sel = 1'b0;
-		end else if (full_1 & rd_done_0) begin
-			wr_fb = 1'b0;
-			fb_sel = 1'b1;
-		end
+			wr_brst <= 1'b1;
+			rd_brst <= 1'b0;
+			cnt <= 3'd0;
+		end else if (cnt == 3'd7) begin
+			wr_brst <= ~wr_brst;
+			rd_brst <= ~rd_brst;
+			cnt <= 3'd0;
+		end else if (avl_ready_0 & avl_ready_1)
+			cnt <= cnt + 1;
+			
 	
 	// Control logic for all clock domains
 	always @(*) begin
 		if (state == s_fb_stream) begin
 			// Cam to frame buffer FIFO
-			if (wr_fb & ~rdempty_cam) begin
+			if (wr_fb & ~rdempty_cam & wr_brst & wr_cnt < 1) begin
 				wr_en_1 = ASSERT_L;
 				wr_en_0 = DEASSERT_L;
 				
@@ -137,7 +172,7 @@ module img_cap_ctrl #(
 					rdreq_cam = ASSERT_H;
 				else
 					rdreq_cam = DEASSERT_H;
-			end else if (~wr_fb & ~rdempty_cam) begin
+			end else if (~wr_fb & ~rdempty_cam & wr_brst & wr_cnt < 1) begin
 				wr_en_0 = ASSERT_L;
 				wr_en_1 = DEASSERT_L;
 				
@@ -161,7 +196,7 @@ module img_cap_ctrl #(
 			end*/
 			
 			// Frame buffer to ADV FIFO
-			if (fb_sel & ~wrfull_adv) begin
+			if (fb_sel & ~wrfull_adv & rd_brst & rd_cnt < 2) begin
 				rd_en_1 = ASSERT_L;
 				rd_en_0 = DEASSERT_L;
 				
@@ -169,7 +204,7 @@ module img_cap_ctrl #(
 					wrreq_adv = ASSERT_H;
 				else
 					wrreq_adv = DEASSERT_H;
-			end else if (~fb_sel & ~wrfull_adv) begin
+			end else if (~fb_sel & ~wrfull_adv & rd_brst & rd_cnt < 2) begin
 				rd_en_0 = ASSERT_L;
 				rd_en_1 = DEASSERT_L;
 				
