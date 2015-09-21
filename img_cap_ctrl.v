@@ -199,24 +199,24 @@ module img_cap_ctrl #(
 			if (fb_sel & ~wrfull_adv & rd_brst & rd_cnt < 2) begin
 				rd_en_1 = ASSERT_L;
 				rd_en_0 = DEASSERT_L;
-				
-				if (rd_data_valid_1)
-					wrreq_adv = ASSERT_H;
-				else
-					wrreq_adv = DEASSERT_H;
 			end else if (~fb_sel & ~wrfull_adv & rd_brst & rd_cnt < 2) begin
 				rd_en_0 = ASSERT_L;
 				rd_en_1 = DEASSERT_L;
-				
-				if (rd_data_valid_0)
-					wrreq_adv = ASSERT_H;
-				else
-					wrreq_adv = DEASSERT_H;
 			end else begin
 				rd_en_0 = DEASSERT_L;
 				rd_en_1 = DEASSERT_L;
 				wrreq_adv = DEASSERT_H;
 			end
+			
+			// ADV FIFO writes
+			if (rd_data_valid_1 || rd_data_valid_0)
+					wrreq_adv = ASSERT_H;
+			else
+					wrreq_adv = DEASSERT_H;
+			//if (rd_data_valid_0)
+			//		wrreq_adv = ASSERT_H;
+			//else
+			//		wrreq_adv = DEASSERT_H;
 			
 			// ADV data input
 			if (HDMI_TX_DE & ~rdempty_adv)
