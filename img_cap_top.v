@@ -454,8 +454,8 @@ module img_cap_top #(
     );
 
     ram_int_4p mem_int (
-        .wr_data_0(fb_data_in),
-        .wr_data_1(fb_data_in),
+        .wr_data_0(cam_fifo_q),
+        .wr_data_1(cam_fifo_q),
         .wr_data_2(),
         .wr_data_3(),
         .clk_50m(CLOCK_50_B5B),
@@ -497,11 +497,11 @@ module img_cap_top #(
         .mem_dqs_n(mem_dqs_n),
         .oct_rzqin(oct_rzqin)
     );
-	always @(posedge clk_50_4m)
+	/*always @(posedge clk_50_4m)
 		if (~reset)
 			fb_data_in <= 32'd0;
 		else if (rdreq_cam)
-			fb_data_in <= cam_fifo_q;
+			fb_data_in <= cam_fifo_q;*/
 
 	//=========================================================================
 	// FIFO between camera and frame buffers (50.4MHz above, 25.2MHz below)
