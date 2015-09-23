@@ -15,7 +15,8 @@ Description:
 	Top-Level Control State Machine and combinational logic
 */
 module img_cap_ctrl #(
-		parameter PLACEHOLDER = 0
+		parameter	WR_BURST_SIZE = 7,
+					RD_BURST_SIZE = 15
 	)(
 		input		clk_fst,
 					clk,
@@ -42,7 +43,9 @@ module img_cap_ctrl #(
 					wrreq_adv = DEASSERT_H,
 					rdreq_adv = DEASSERT_H,
 					rdreq_cam = DEASSERT_H,
-					fb_sel = 1'b1
+					fb_sel = 1'b1,
+		output	reg	[1:0]	wr_cnt,
+							rd_cnt
 	);
 	
 	localparam
@@ -113,8 +116,8 @@ module img_cap_ctrl #(
 	end
 	
 	// Frame buffer switching logic (50.4MHz domain)
-	reg		[1:0]	rd_cnt = 0,
-					wr_cnt = 0;
+	//reg		[1:0]	rd_cnt = 0,
+	//				wr_cnt = 0;
 	always @(posedge clk_fst) begin
 		
 		if (~reset) begin
@@ -144,27 +147,39 @@ module img_cap_ctrl #(
 	end
 		
 	// Frame buffer burst logic (50.4MHz domain)
-	reg			wr_brst,
-				rd_brst;
-	reg	[2:0]	cnt;
-	always @(posedge clk_fst)
+	reg				wr_brst,
+					rd_brst;
+	reg		[4:0]	wr_brst_cnt = 0,
+					rd_brst_cnt = 0;
+	always @(posedge clk_fst) begin
 		if (~reset) begin
-			wr_brst <= 1'b1;
-			rd_brst <= 1'b0;
-			cnt <= 3'd0;
-		end else if (cnt == 3'd7) begin
-			wr_brst <= ~wr_brst;
-			rd_brst <= ~rd_brst;
-			cnt <= 3'd0;
-		end else if (avl_ready_0 & avl_ready_1)
-			cnt <= cnt + 1;
+			wr_brst <= 1'b0;
+			rd_brst <= 1'b1;
+			wr_brst_cnt <= 5'd0;
+			rd_brst_cnt <= 5'd0;
+		end else begin
+			if (wr_cnt == WR_BURST_SIZE) begin
+				wr_brst <= ~wr_brst;
+				wr_brst_cnt <= 0;
+			end
+			if (rd_cnt == RD_BURST_SIZE) begin
+				rd_brst <= ~rd_brst;
+				rd_brst_cnt <= 0;
+			end
+
+			if (wr_en_0 | wr_en_1)
+				wr_brst_cnt <= wr_brst_cnt + 1;
+			if (rd_en_0 | rd_en_1)
+				rd_brst_cnt <= rd_brst_cnt + 1;
+		end
+	end
 			
 	
 	// Control logic for all clock domains
 	always @(*) begin
 		if (state == s_fb_stream) begin
 			// Cam to frame buffer FIFO
-			if (wr_fb & ~rdempty_cam & wr_brst & wr_cnt < 1) begin
+			if (wr_fb & ~rdempty_cam & wr_brst & wr_cnt < 1 & ~full_1) begin
 				wr_en_1 = ASSERT_L;
 				wr_en_0 = DEASSERT_L;
 				
@@ -172,7 +187,8 @@ module img_cap_ctrl #(
 					rdreq_cam = ASSERT_H;
 				else
 					rdreq_cam = DEASSERT_H;
-			end else if (~wr_fb & ~rdempty_cam & wr_brst & wr_cnt < 1) begin
+			end else if (~wr_fb & ~rdempty_cam & wr_brst & wr_cnt < 1 &
+							~full_0) begin
 				wr_en_0 = ASSERT_L;
 				wr_en_1 = DEASSERT_L;
 				
@@ -196,20 +212,20 @@ module img_cap_ctrl #(
 			end*/
 			
 			// Frame buffer to ADV FIFO
-			if (fb_sel & ~wrfull_adv & rd_brst & rd_cnt < 2 & HDMI_TX_DE) begin
+			if (fb_sel & ~wrfull_adv & rd_brst & rd_cnt < 2 & ~rd_done_1) begin
 				rd_en_1 = ASSERT_L;
 				rd_en_0 = DEASSERT_L;
-			end else if (~fb_sel & ~wrfull_adv & rd_brst & rd_cnt < 2 & HDMI_TX_DE) begin
+			end else if (~fb_sel & ~wrfull_adv & rd_brst & rd_cnt < 2 &
+							~rd_done_0) begin
 				rd_en_0 = ASSERT_L;
 				rd_en_1 = DEASSERT_L;
 			end else begin
 				rd_en_0 = DEASSERT_L;
 				rd_en_1 = DEASSERT_L;
-				wrreq_adv = DEASSERT_H;
 			end
 			
 			// ADV FIFO writes
-			if (rd_data_valid_1 || rd_data_valid_0)
+			if ((rd_data_valid_1 | rd_data_valid_0) & ~wrfull_adv)
 					wrreq_adv = ASSERT_H;
 			else
 					wrreq_adv = DEASSERT_H;
@@ -234,4 +250,12 @@ module img_cap_ctrl #(
 		end
 	end
 	
+	// Debugging stuff
+	/*always @(posedge clk) begin
+		if (~reset || pix == 307200)
+			pix <= 19'd1;
+		else if (HDMI_TX_DE)
+			pix <= pix + 1;
+	end*/
+
 endmodule

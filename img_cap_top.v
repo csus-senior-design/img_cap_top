@@ -291,6 +291,8 @@ module img_cap_top #(
 					rdempty_cam,
 					fb_sel;
 	
+	wire	[1:0]	wr_cnt;
+	
 
     /* Instantiate the required subsystems */
     assign reset = KEY[3];
@@ -410,14 +412,14 @@ module img_cap_top #(
 		.wrfull(wrfull_adv),
 		.aclr(~reset)
 	);
-	assign fb_data_out = (fb_sel) ? rd_data_1 : rd_data_0;
+	assign fb_data_out = (fb_sel) ? valid_rd_data_1 : valid_rd_data_0;
 	
-	/*always @(posedge clk_50_4m) begin
+	always @(posedge clk_50_4m) begin
 		if (rd_data_valid_0)
 			valid_rd_data_0 <= rd_data_0;
 		if (rd_data_valid_1)
 			valid_rd_data_1 <= rd_data_1;
-	end*/
+	end
 
 	//=========================================================================
 	// Frame buffers and memory interface logic (50.4MHz domain)
@@ -522,7 +524,7 @@ module img_cap_top #(
 		.aclr(~reset)
 	);
 	//assign wrreq_cam = CAM1_CAP_WRITE_EN;
-	assign wrreq_cam = cam_wr_en_tst;
+	assign wrreq_cam = cam_wr_en_tst & ~wrfull_cam;
 
     //=========================================================================
 	// Camera capture interfaces (25.2MHz domain, pixels come in at 12.6MHz)
@@ -628,7 +630,8 @@ module img_cap_top #(
 		.wrreq_adv(wrreq_adv),
 		.rdreq_adv(rdreq_adv),
 		.rdreq_cam(rdreq_cam),
-		.fb_sel(fb_sel)
+		.fb_sel(fb_sel),
+		.wr_cnt(wr_cnt)
     );
 	
 	
@@ -682,6 +685,7 @@ module img_cap_top #(
 					ns;
 	reg		[23:0]	cam_data_tst;
 	reg				cam_wr_en_tst;
+	reg		[18:0]	tst_pix = 0;
 	localparam	[1:0]
 		IDLE = 0,
 		RED = 1,
@@ -692,13 +696,17 @@ module img_cap_top #(
 			cs <= IDLE;
 			ns <= RED;
 			cam_wr_en_tst <= 1'b0;
+			tst_pix <= 19'd0;
 		end else begin
 			cam_wr_en_tst <= 1'b0;
 			cam_data_tst <= 24'h0;
 			
 			case (cs)
 				IDLE: begin
-					if (init_done & HDMI_TX_DE & ~wrfull_cam)
+					if (tst_pix == 307200)
+						tst_pix <= 19'd0;
+					
+					if (init_done & HDMI_TX_DE & ~wrfull_cam & wr_cnt < 1)
 						cs <= ns;
 					else begin
 						cs <= IDLE;
@@ -708,17 +716,26 @@ module img_cap_top #(
 				end
 				
 				RED: begin
-					cam_data_tst <= 24'hFF0000;
-					cam_wr_en_tst <= 1'b1;
-					cs <= IDLE;
-					ns <= BLUE;
+					if (HDMI_TX_DE & tst_pix < 307200) begin
+						cam_data_tst <= 24'hFF0000;
+						cam_wr_en_tst <= 1'b1;
+						tst_pix <= tst_pix + 1;
+						cs <= IDLE;
+						ns <= BLUE;
+					end else if (wrfull_cam)
+						cs <= RED;
 				end
 				
 				BLUE: begin
-					cam_data_tst <= 24'hFF;
-					cam_wr_en_tst <= 1'b1;
-					cs <= IDLE;
-					ns <= RED;
+					
+					if (HDMI_TX_DE & tst_pix < 307200) begin
+						cam_data_tst <= 24'hFF;
+						cam_wr_en_tst <= 1'b1;
+						tst_pix <= tst_pix + 1;
+						cs <= IDLE;
+						ns <= RED;
+					end else if (wrfull_cam)
+						cs <= BLUE;
 				end
 			endcase
 		end
