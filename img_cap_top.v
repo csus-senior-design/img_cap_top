@@ -69,7 +69,7 @@ module img_cap_top #(
 		chip_pin = "AD25, AC25, AB25, AA24, AB26, R26, R24, P21, P26, N25, P23, P22, R25, R23, T26, T24, T23, U24, V25, V24, W26, W25, AA26, V23",
 		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
 	*)
-	output	reg  [23:0]  HDMI_TX_D,
+	output		[23:0]  HDMI_TX_D,
 	(*
 		chip_pin = "T12",
 		altera_attribute = "-name IO_STANDARD \"1.2 V\""
@@ -386,11 +386,12 @@ module img_cap_top #(
 		.hs_out(HDMI_TX_HS),
 		.field_out(field)
 	);
-	always @(posedge clk_25_2m)
+	/*always @(posedge clk_25_2m)
 		if (~reset)
 			HDMI_TX_D <= 24'd0;
 		else if (rdreq_adv)
-			HDMI_TX_D <= adv_fifo_q;
+			HDMI_TX_D <= adv_fifo_q;*/
+	assign HDMI_TX_D = adv_fifo_q;
 
 	//=========================================================================
 	// FIFO between frame buffers and ADV7513 (25.2MHz above, 50.4MHz below)
@@ -406,16 +407,17 @@ module img_cap_top #(
 		.wrreq(wrreq_adv),
 		.q(adv_fifo_q),
 		.rdempty(rdempty_adv),
-		.wrfull(wrfull_adv)
+		.wrfull(wrfull_adv),
+		.aclr(~reset)
 	);
-	assign fb_data_out = (fb_sel) ? valid_rd_data_1 : valid_rd_data_0;
+	assign fb_data_out = (fb_sel) ? rd_data_1 : rd_data_0;
 	
-	always @(posedge clk_50_4m) begin
+	/*always @(posedge clk_50_4m) begin
 		if (rd_data_valid_0)
 			valid_rd_data_0 <= rd_data_0;
 		if (rd_data_valid_1)
 			valid_rd_data_1 <= rd_data_1;
-	end
+	end*/
 
 	//=========================================================================
 	// Frame buffers and memory interface logic (50.4MHz domain)
@@ -516,7 +518,8 @@ module img_cap_top #(
 		.wrreq(wrreq_cam),
 		.q(cam_fifo_q),
 		.rdempty(rdempty_cam),
-		.wrfull(wrfull_cam)
+		.wrfull(wrfull_cam),
+		.aclr(~reset)
 	);
 	//assign wrreq_cam = CAM1_CAP_WRITE_EN;
 	assign wrreq_cam = cam_wr_en_tst;

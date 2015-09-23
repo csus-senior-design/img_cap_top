@@ -196,10 +196,10 @@ module img_cap_ctrl #(
 			end*/
 			
 			// Frame buffer to ADV FIFO
-			if (fb_sel & ~wrfull_adv & rd_brst & rd_cnt < 2) begin
+			if (fb_sel & ~wrfull_adv & rd_brst & rd_cnt < 2 & HDMI_TX_DE) begin
 				rd_en_1 = ASSERT_L;
 				rd_en_0 = DEASSERT_L;
-			end else if (~fb_sel & ~wrfull_adv & rd_brst & rd_cnt < 2) begin
+			end else if (~fb_sel & ~wrfull_adv & rd_brst & rd_cnt < 2 & HDMI_TX_DE) begin
 				rd_en_0 = ASSERT_L;
 				rd_en_1 = DEASSERT_L;
 			end else begin
