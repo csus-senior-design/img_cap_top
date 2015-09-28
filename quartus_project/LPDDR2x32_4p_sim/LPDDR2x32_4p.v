@@ -99,15 +99,7 @@ module LPDDR2x32_4p (
 		output wire        pll_config_clk,             //                   .pll_config_clk
 		output wire        pll_mem_phy_clk,            //                   .pll_mem_phy_clk
 		output wire        afi_phy_clk,                //                   .afi_phy_clk
-		output wire        pll_avl_phy_clk,            //                   .pll_avl_phy_clk
-		input  wire [19:0] seq_debug_addr,             //          seq_debug.address
-		input  wire        seq_debug_read_req,         //                   .read
-		output wire [31:0] seq_debug_rdata,            //                   .readdata
-		input  wire        seq_debug_write_req,        //                   .write
-		input  wire [31:0] seq_debug_wdata,            //                   .writedata
-		output wire        seq_debug_waitrequest,      //                   .waitrequest
-		input  wire [3:0]  seq_debug_be,               //                   .byteenable
-		output wire        seq_debug_rdata_valid       //                   .readdatavalid
+		output wire        pll_avl_phy_clk             //                   .pll_avl_phy_clk
 	);
 
 	LPDDR2x32_4p_0002 lpddr2x32_4p_inst (
@@ -206,15 +198,7 @@ module LPDDR2x32_4p (
 		.pll_config_clk             (pll_config_clk),             //                   .pll_config_clk
 		.pll_mem_phy_clk            (pll_mem_phy_clk),            //                   .pll_mem_phy_clk
 		.afi_phy_clk                (afi_phy_clk),                //                   .afi_phy_clk
-		.pll_avl_phy_clk            (pll_avl_phy_clk),            //                   .pll_avl_phy_clk
-		.seq_debug_addr             (seq_debug_addr),             //          seq_debug.address
-		.seq_debug_read_req         (seq_debug_read_req),         //                   .read
-		.seq_debug_rdata            (seq_debug_rdata),            //                   .readdata
-		.seq_debug_write_req        (seq_debug_write_req),        //                   .write
-		.seq_debug_wdata            (seq_debug_wdata),            //                   .writedata
-		.seq_debug_waitrequest      (seq_debug_waitrequest),      //                   .waitrequest
-		.seq_debug_be               (seq_debug_be),               //                   .byteenable
-		.seq_debug_rdata_valid      (seq_debug_rdata_valid)       //                   .readdatavalid
+		.pll_avl_phy_clk            (pll_avl_phy_clk)             //                   .pll_avl_phy_clk
 	);
 
 endmodule

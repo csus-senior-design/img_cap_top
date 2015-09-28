@@ -12,7 +12,7 @@
 # or its authorized distributors. Please refer to the applicable 
 # agreement for further details.
 
-# ACDS 15.0 145 win32 2015.08.10.13:22:36
+# ACDS 15.0 145 win32 2015.09.25.14:47:34
 
 # ----------------------------------------
 # ncsim - auto-generated simulation script
@@ -80,7 +80,6 @@ mkdir -p ./libraries/timing_adt/
 mkdir -p ./libraries/jtag_phy_embedded_in_jtag_master/
 mkdir -p ./libraries/rst_controller/
 mkdir -p ./libraries/mm_interconnect_1/
-mkdir -p ./libraries/seq_bridge/
 mkdir -p ./libraries/dll0/
 mkdir -p ./libraries/oct0/
 mkdir -p ./libraries/c0/
@@ -164,7 +163,6 @@ if [ $SKIP_COM -eq 0 ]; then
   ncvlog     "$QSYS_SIMDIR/LPDDR2x32_4p/altera_reset_controller.v"                                              -work rst_controller                   -cdslib ./cds_libs/rst_controller.cds.lib                  
   ncvlog     "$QSYS_SIMDIR/LPDDR2x32_4p/altera_reset_synchronizer.v"                                            -work rst_controller                   -cdslib ./cds_libs/rst_controller.cds.lib                  
   ncvlog     "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_mm_interconnect_1.v"                                       -work mm_interconnect_1                -cdslib ./cds_libs/mm_interconnect_1.cds.lib               
-  ncvlog -sv "$QSYS_SIMDIR/LPDDR2x32_4p/altera_mem_if_simple_avalon_mm_bridge.sv"                               -work seq_bridge                       -cdslib ./cds_libs/seq_bridge.cds.lib                      
   ncvlog -sv "$QSYS_SIMDIR/LPDDR2x32_4p/altera_mem_if_dll_cyclonev.sv"                                          -work dll0                             -cdslib ./cds_libs/dll0.cds.lib                            
   ncvlog -sv "$QSYS_SIMDIR/LPDDR2x32_4p/altera_mem_if_oct_cyclonev.sv"                                          -work oct0                             -cdslib ./cds_libs/oct0.cds.lib                            
   ncvlog -sv "$QSYS_SIMDIR/LPDDR2x32_4p/altera_mem_if_hard_memory_controller_top_cyclonev.sv"                   -work c0                               -cdslib ./cds_libs/c0.cds.lib                              

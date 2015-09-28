@@ -26,7 +26,6 @@ timing_adt:                       ./libraries/timing_adt/
 jtag_phy_embedded_in_jtag_master: ./libraries/jtag_phy_embedded_in_jtag_master/
 rst_controller:                   ./libraries/rst_controller/                  
 mm_interconnect_1:                ./libraries/mm_interconnect_1/               
-seq_bridge:                       ./libraries/seq_bridge/                      
 dll0:                             ./libraries/dll0/                            
 oct0:                             ./libraries/oct0/                            
 c0:                               ./libraries/c0/                              

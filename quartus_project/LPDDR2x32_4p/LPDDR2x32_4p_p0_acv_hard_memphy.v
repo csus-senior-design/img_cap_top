@@ -314,7 +314,7 @@ input    [3:0]  io_intwendout;
 output   [4:0]  io_intafirlat;
 output   [3:0]  io_intafiwlat;
 output          io_intaficalfail;  
-output			io_intaficalsuccess;
+output          io_intaficalsuccess;
 
 
 // PHY-Memory Interface

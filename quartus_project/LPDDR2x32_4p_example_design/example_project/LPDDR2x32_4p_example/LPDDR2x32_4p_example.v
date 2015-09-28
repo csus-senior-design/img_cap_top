@@ -236,15 +236,7 @@ module LPDDR2x32_4p_example (
 		.pll_config_clk             (),                                               //                   .pll_config_clk
 		.pll_mem_phy_clk            (),                                               //                   .pll_mem_phy_clk
 		.afi_phy_clk                (),                                               //                   .afi_phy_clk
-		.pll_avl_phy_clk            (),                                               //                   .pll_avl_phy_clk
-		.seq_debug_addr             (),                                               //          seq_debug.address
-		.seq_debug_read_req         (),                                               //                   .read
-		.seq_debug_rdata            (),                                               //                   .readdata
-		.seq_debug_write_req        (),                                               //                   .write
-		.seq_debug_wdata            (),                                               //                   .writedata
-		.seq_debug_waitrequest      (),                                               //                   .waitrequest
-		.seq_debug_be               (),                                               //                   .byteenable
-		.seq_debug_rdata_valid      ()                                                //                   .readdatavalid
+		.pll_avl_phy_clk            ()                                                //                   .pll_avl_phy_clk
 	);
 
 	altera_mem_if_single_clock_pll #(

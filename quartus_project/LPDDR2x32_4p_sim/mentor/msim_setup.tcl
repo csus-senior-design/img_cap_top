@@ -12,7 +12,7 @@
 # or its authorized distributors. Please refer to the applicable 
 # agreement for further details.
 
-# ACDS 15.0 145 win32 2015.08.10.13:22:36
+# ACDS 15.0 145 win32 2015.09.25.14:47:34
 
 # ----------------------------------------
 # Auto-generated simulation script
@@ -127,8 +127,6 @@ ensure_lib                                  ./libraries/rst_controller/
 vmap       rst_controller                   ./libraries/rst_controller/                  
 ensure_lib                                  ./libraries/mm_interconnect_1/               
 vmap       mm_interconnect_1                ./libraries/mm_interconnect_1/               
-ensure_lib                                  ./libraries/seq_bridge/                      
-vmap       seq_bridge                       ./libraries/seq_bridge/                      
 ensure_lib                                  ./libraries/dll0/                            
 vmap       dll0                             ./libraries/dll0/                            
 ensure_lib                                  ./libraries/oct0/                            
@@ -208,7 +206,6 @@ alias com {
   vlog     "$QSYS_SIMDIR/LPDDR2x32_4p/altera_reset_controller.v"                                              -work rst_controller                  
   vlog     "$QSYS_SIMDIR/LPDDR2x32_4p/altera_reset_synchronizer.v"                                            -work rst_controller                  
   vlog     "$QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_mm_interconnect_1.v"                                       -work mm_interconnect_1               
-  vlog -sv "$QSYS_SIMDIR/LPDDR2x32_4p/altera_mem_if_simple_avalon_mm_bridge.sv"                               -work seq_bridge                      
   vlog -sv "$QSYS_SIMDIR/LPDDR2x32_4p/altera_mem_if_dll_cyclonev.sv"                                          -work dll0                            
   vlog -sv "$QSYS_SIMDIR/LPDDR2x32_4p/altera_mem_if_oct_cyclonev.sv"                                          -work oct0                            
   vlog -sv "$QSYS_SIMDIR/LPDDR2x32_4p/altera_mem_if_hard_memory_controller_top_cyclonev.sv"                   -work c0                              
@@ -283,14 +280,14 @@ alias com {
 # Elaborate top level design
 alias elab {
   echo "\[exec\] elab"
-  eval vsim -t ps $ELAB_OPTIONS -L work -L work_lib -L error_adapter_0 -L avalon_st_adapter -L crosser -L rsp_mux -L rsp_demux -L cmd_mux -L cmd_demux_001 -L cmd_demux -L router_002 -L router -L s0_seq_debug_agent -L dmaster_master_agent -L s0_seq_debug_translator -L dmaster_master_translator -L p2b_adapter -L b2p_adapter -L transacto -L p2b -L b2p -L fifo -L timing_adt -L jtag_phy_embedded_in_jtag_master -L rst_controller -L mm_interconnect_1 -L seq_bridge -L dll0 -L oct0 -L c0 -L dmaster -L s0 -L p0 -L pll0 -L LPDDR2x32_4p -L altera_ver -L lpm_ver -L sgate_ver -L altera_mf_ver -L altera_lnsim_ver -L cyclonev_ver -L cyclonev_hssi_ver -L cyclonev_pcie_hip_ver $TOP_LEVEL_NAME
+  eval vsim -t ps $ELAB_OPTIONS -L work -L work_lib -L error_adapter_0 -L avalon_st_adapter -L crosser -L rsp_mux -L rsp_demux -L cmd_mux -L cmd_demux_001 -L cmd_demux -L router_002 -L router -L s0_seq_debug_agent -L dmaster_master_agent -L s0_seq_debug_translator -L dmaster_master_translator -L p2b_adapter -L b2p_adapter -L transacto -L p2b -L b2p -L fifo -L timing_adt -L jtag_phy_embedded_in_jtag_master -L rst_controller -L mm_interconnect_1 -L dll0 -L oct0 -L c0 -L dmaster -L s0 -L p0 -L pll0 -L LPDDR2x32_4p -L altera_ver -L lpm_ver -L sgate_ver -L altera_mf_ver -L altera_lnsim_ver -L cyclonev_ver -L cyclonev_hssi_ver -L cyclonev_pcie_hip_ver $TOP_LEVEL_NAME
 }
 
 # ----------------------------------------
 # Elaborate the top level design with novopt option
 alias elab_debug {
   echo "\[exec\] elab_debug"
-  eval vsim -novopt -t ps $ELAB_OPTIONS -L work -L work_lib -L error_adapter_0 -L avalon_st_adapter -L crosser -L rsp_mux -L rsp_demux -L cmd_mux -L cmd_demux_001 -L cmd_demux -L router_002 -L router -L s0_seq_debug_agent -L dmaster_master_agent -L s0_seq_debug_translator -L dmaster_master_translator -L p2b_adapter -L b2p_adapter -L transacto -L p2b -L b2p -L fifo -L timing_adt -L jtag_phy_embedded_in_jtag_master -L rst_controller -L mm_interconnect_1 -L seq_bridge -L dll0 -L oct0 -L c0 -L dmaster -L s0 -L p0 -L pll0 -L LPDDR2x32_4p -L altera_ver -L lpm_ver -L sgate_ver -L altera_mf_ver -L altera_lnsim_ver -L cyclonev_ver -L cyclonev_hssi_ver -L cyclonev_pcie_hip_ver $TOP_LEVEL_NAME
+  eval vsim -novopt -t ps $ELAB_OPTIONS -L work -L work_lib -L error_adapter_0 -L avalon_st_adapter -L crosser -L rsp_mux -L rsp_demux -L cmd_mux -L cmd_demux_001 -L cmd_demux -L router_002 -L router -L s0_seq_debug_agent -L dmaster_master_agent -L s0_seq_debug_translator -L dmaster_master_translator -L p2b_adapter -L b2p_adapter -L transacto -L p2b -L b2p -L fifo -L timing_adt -L jtag_phy_embedded_in_jtag_master -L rst_controller -L mm_interconnect_1 -L dll0 -L oct0 -L c0 -L dmaster -L s0 -L p0 -L pll0 -L LPDDR2x32_4p -L altera_ver -L lpm_ver -L sgate_ver -L altera_mf_ver -L altera_lnsim_ver -L cyclonev_ver -L cyclonev_hssi_ver -L cyclonev_pcie_hip_ver $TOP_LEVEL_NAME
 }
 
 # ----------------------------------------

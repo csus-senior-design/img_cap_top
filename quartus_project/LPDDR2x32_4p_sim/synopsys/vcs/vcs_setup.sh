@@ -12,7 +12,7 @@
 # or its authorized distributors. Please refer to the applicable 
 # agreement for further details.
 
-# ACDS 15.0 145 win32 2015.08.10.13:22:36
+# ACDS 15.0 145 win32 2015.09.25.14:47:34
 
 # ----------------------------------------
 # vcs - auto-generated simulation script
@@ -106,7 +106,6 @@ vcs -lca -timescale=1ps/1ps -sverilog +verilog2001ext+.v -ntb_opts dtm $ELAB_OPT
   $QSYS_SIMDIR/LPDDR2x32_4p/altera_reset_controller.v \
   $QSYS_SIMDIR/LPDDR2x32_4p/altera_reset_synchronizer.v \
   $QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_mm_interconnect_1.v \
-  $QSYS_SIMDIR/LPDDR2x32_4p/altera_mem_if_simple_avalon_mm_bridge.sv \
   $QSYS_SIMDIR/LPDDR2x32_4p/altera_mem_if_dll_cyclonev.sv \
   $QSYS_SIMDIR/LPDDR2x32_4p/altera_mem_if_oct_cyclonev.sv \
   $QSYS_SIMDIR/LPDDR2x32_4p/altera_mem_if_hard_memory_controller_top_cyclonev.sv \
@@ -117,6 +116,7 @@ vcs -lca -timescale=1ps/1ps -sverilog +verilog2001ext+.v -ntb_opts dtm $ELAB_OPT
   $QSYS_SIMDIR/LPDDR2x32_4p/altera_mem_if_sequencer_cpu_cv_sim_cpu_inst_test_bench.v \
   $QSYS_SIMDIR/LPDDR2x32_4p/altera_mem_if_sequencer_mem_no_ifdef_params.sv \
   $QSYS_SIMDIR/LPDDR2x32_4p/altera_mem_if_sequencer_rst.sv \
+  $QSYS_SIMDIR/LPDDR2x32_4p/altera_mem_if_simple_avalon_mm_bridge.sv \
   $QSYS_SIMDIR/LPDDR2x32_4p/altera_merlin_reorder_memory.sv \
   $QSYS_SIMDIR/LPDDR2x32_4p/altera_merlin_traffic_limiter.sv \
   $QSYS_SIMDIR/LPDDR2x32_4p/LPDDR2x32_4p_s0_irq_mapper.sv \

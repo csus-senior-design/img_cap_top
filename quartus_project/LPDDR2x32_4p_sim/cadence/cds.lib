@@ -33,7 +33,6 @@ DEFINE timing_adt                       ./libraries/timing_adt/
 DEFINE jtag_phy_embedded_in_jtag_master ./libraries/jtag_phy_embedded_in_jtag_master/
 DEFINE rst_controller                   ./libraries/rst_controller/                  
 DEFINE mm_interconnect_1                ./libraries/mm_interconnect_1/               
-DEFINE seq_bridge                       ./libraries/seq_bridge/                      
 DEFINE dll0                             ./libraries/dll0/                            
 DEFINE oct0                             ./libraries/oct0/                            
 DEFINE c0                               ./libraries/c0/                              

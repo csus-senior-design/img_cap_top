@@ -33,7 +33,7 @@ package require ::quartus::ddr_timing_model
 ###################
 
 # Interface Clock Period
-set t(CK) 3.968
+set t(CK) 3.052
 
 # Reference Clock Period
 set t(refCK) 20.0

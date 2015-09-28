@@ -95,15 +95,7 @@
 			pll_config_clk             : out   std_logic;                                        -- pll_config_clk
 			pll_mem_phy_clk            : out   std_logic;                                        -- pll_mem_phy_clk
 			afi_phy_clk                : out   std_logic;                                        -- afi_phy_clk
-			pll_avl_phy_clk            : out   std_logic;                                        -- pll_avl_phy_clk
-			seq_debug_addr             : in    std_logic_vector(19 downto 0) := (others => 'X'); -- address
-			seq_debug_read_req         : in    std_logic                     := 'X';             -- read
-			seq_debug_rdata            : out   std_logic_vector(31 downto 0);                    -- readdata
-			seq_debug_write_req        : in    std_logic                     := 'X';             -- write
-			seq_debug_wdata            : in    std_logic_vector(31 downto 0) := (others => 'X'); -- writedata
-			seq_debug_waitrequest      : out   std_logic;                                        -- waitrequest
-			seq_debug_be               : in    std_logic_vector(3 downto 0)  := (others => 'X'); -- byteenable
-			seq_debug_rdata_valid      : out   std_logic                                         -- readdatavalid
+			pll_avl_phy_clk            : out   std_logic                                         -- pll_avl_phy_clk
 		);
 	end component LPDDR2x32_4p;
 

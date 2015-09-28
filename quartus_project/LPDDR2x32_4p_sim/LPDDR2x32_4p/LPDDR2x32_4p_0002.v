@@ -102,15 +102,7 @@ module LPDDR2x32_4p_0002 (
 		output wire        pll_config_clk,             //                   .pll_config_clk
 		output wire        pll_mem_phy_clk,            //                   .pll_mem_phy_clk
 		output wire        afi_phy_clk,                //                   .afi_phy_clk
-		output wire        pll_avl_phy_clk,            //                   .pll_avl_phy_clk
-		input  wire [19:0] seq_debug_addr,             //          seq_debug.address
-		input  wire        seq_debug_read_req,         //                   .read
-		output wire [31:0] seq_debug_rdata,            //                   .readdata
-		input  wire        seq_debug_write_req,        //                   .write
-		input  wire [31:0] seq_debug_wdata,            //                   .writedata
-		output wire        seq_debug_waitrequest,      //                   .waitrequest
-		input  wire [3:0]  seq_debug_be,               //                   .byteenable
-		output wire        seq_debug_rdata_valid       //                   .readdatavalid
+		output wire        pll_avl_phy_clk             //                   .pll_avl_phy_clk
 	);
 
 	wire   [4:0] p0_afi_afi_rlat;                              // p0:afi_rlat -> c0:afi_rlat
@@ -189,14 +181,14 @@ module LPDDR2x32_4p_0002 (
 	wire         dmaster_master_readdatavalid;                 // mm_interconnect_1:dmaster_master_readdatavalid -> dmaster:master_readdatavalid
 	wire         dmaster_master_write;                         // dmaster:master_write -> mm_interconnect_1:dmaster_master_write
 	wire  [31:0] dmaster_master_writedata;                     // dmaster:master_writedata -> mm_interconnect_1:dmaster_master_writedata
-	wire  [31:0] seq_bridge_m0_readdata;                       // mm_interconnect_1:seq_bridge_m0_readdata -> seq_bridge:m0_readdata
-	wire         seq_bridge_m0_waitrequest;                    // mm_interconnect_1:seq_bridge_m0_waitrequest -> seq_bridge:m0_waitrequest
-	wire  [31:0] seq_bridge_m0_address;                        // seq_bridge:m0_address -> mm_interconnect_1:seq_bridge_m0_address
-	wire         seq_bridge_m0_read;                           // seq_bridge:m0_read -> mm_interconnect_1:seq_bridge_m0_read
-	wire   [3:0] seq_bridge_m0_byteenable;                     // seq_bridge:m0_byteenable -> mm_interconnect_1:seq_bridge_m0_byteenable
-	wire         seq_bridge_m0_readdatavalid;                  // mm_interconnect_1:seq_bridge_m0_readdatavalid -> seq_bridge:m0_readdatavalid
-	wire         seq_bridge_m0_write;                          // seq_bridge:m0_write -> mm_interconnect_1:seq_bridge_m0_write
-	wire  [31:0] seq_bridge_m0_writedata;                      // seq_bridge:m0_writedata -> mm_interconnect_1:seq_bridge_m0_writedata
+	wire  [31:0] seq_jtag_master_readdata;                     // mm_interconnect_1:seq_jtag_master_readdata -> seq_jtag:master_readdata
+	wire         seq_jtag_master_waitrequest;                  // mm_interconnect_1:seq_jtag_master_waitrequest -> seq_jtag:master_waitrequest
+	wire  [31:0] seq_jtag_master_address;                      // seq_jtag:master_address -> mm_interconnect_1:seq_jtag_master_address
+	wire         seq_jtag_master_read;                         // seq_jtag:master_read -> mm_interconnect_1:seq_jtag_master_read
+	wire   [3:0] seq_jtag_master_byteenable;                   // seq_jtag:master_byteenable -> mm_interconnect_1:seq_jtag_master_byteenable
+	wire         seq_jtag_master_readdatavalid;                // mm_interconnect_1:seq_jtag_master_readdatavalid -> seq_jtag:master_readdatavalid
+	wire         seq_jtag_master_write;                        // seq_jtag:master_write -> mm_interconnect_1:seq_jtag_master_write
+	wire  [31:0] seq_jtag_master_writedata;                    // seq_jtag:master_writedata -> mm_interconnect_1:seq_jtag_master_writedata
 	wire  [31:0] mm_interconnect_1_s0_seq_debug_readdata;      // s0:seq_readdata -> mm_interconnect_1:s0_seq_debug_readdata
 	wire         mm_interconnect_1_s0_seq_debug_waitrequest;   // s0:seq_waitrequest -> mm_interconnect_1:s0_seq_debug_waitrequest
 	wire  [31:0] mm_interconnect_1_s0_seq_debug_address;       // mm_interconnect_1:s0_seq_debug_address -> s0:seq_address
@@ -206,7 +198,7 @@ module LPDDR2x32_4p_0002 (
 	wire         mm_interconnect_1_s0_seq_debug_write;         // mm_interconnect_1:s0_seq_debug_write -> s0:seq_write
 	wire  [31:0] mm_interconnect_1_s0_seq_debug_writedata;     // mm_interconnect_1:s0_seq_debug_writedata -> s0:seq_writedata
 	wire   [0:0] mm_interconnect_1_s0_seq_debug_burstcount;    // mm_interconnect_1:s0_seq_debug_burstcount -> s0:seq_burstcount
-	wire         rst_controller_reset_out_reset;               // rst_controller:reset_out -> [mm_interconnect_1:seq_bridge_reset_reset_bridge_in_reset_reset, seq_bridge:reset_n]
+	wire         rst_controller_reset_out_reset;               // rst_controller:reset_out -> [mm_interconnect_1:seq_jtag_clk_reset_reset_bridge_in_reset_reset, mm_interconnect_1:seq_jtag_master_translator_reset_reset_bridge_in_reset_reset]
 
 	LPDDR2x32_4p_pll0 pll0 (
 		.global_reset_n            (global_reset_n),            // global_reset.reset_n
@@ -548,14 +540,14 @@ module LPDDR2x32_4p_0002 (
 		.ENUM_MEM_IF_TCCD                        ("TCCD_2"),
 		.ENUM_MEM_IF_TCL                         ("TCL_7"),
 		.ENUM_MEM_IF_TCWL                        ("TCWL_4"),
-		.ENUM_MEM_IF_TFAW                        ("TFAW_13"),
-		.ENUM_MEM_IF_TRAS                        ("TRAS_18"),
-		.ENUM_MEM_IF_TRC                         ("TRC_23"),
-		.ENUM_MEM_IF_TRCD                        ("TRCD_5"),
-		.ENUM_MEM_IF_TRP                         ("TRP_5"),
-		.ENUM_MEM_IF_TRRD                        ("TRRD_3"),
-		.ENUM_MEM_IF_TRTP                        ("TRTP_2"),
-		.ENUM_MEM_IF_TWR                         ("TWR_4"),
+		.ENUM_MEM_IF_TFAW                        ("TFAW_17"),
+		.ENUM_MEM_IF_TRAS                        ("TRAS_23"),
+		.ENUM_MEM_IF_TRC                         ("TRC_29"),
+		.ENUM_MEM_IF_TRCD                        ("TRCD_6"),
+		.ENUM_MEM_IF_TRP                         ("TRP_6"),
+		.ENUM_MEM_IF_TRRD                        ("TRRD_4"),
+		.ENUM_MEM_IF_TRTP                        ("TRTP_3"),
+		.ENUM_MEM_IF_TWR                         ("TWR_5"),
 		.ENUM_MEM_IF_TWTR                        ("TWTR_2"),
 		.ENUM_MMR_CFG_MEM_BL                     ("MP_BL_8"),
 		.ENUM_OUTPUT_REGD                        ("DISABLED"),
@@ -747,8 +739,8 @@ module LPDDR2x32_4p_0002 (
 		.INTG_EXTRA_CTL_CLK_WR_TO_RD_DIFF_CHIP   (3),
 		.INTG_EXTRA_CTL_CLK_WR_TO_WR             (0),
 		.INTG_EXTRA_CTL_CLK_WR_TO_WR_DIFF_CHIP   (0),
-		.INTG_MEM_IF_TREFI                       (983),
-		.INTG_MEM_IF_TRFC                        (16),
+		.INTG_MEM_IF_TREFI                       (1278),
+		.INTG_MEM_IF_TRFC                        (20),
 		.INTG_RCFG_SUM_WT_PRIORITY_0             (0),
 		.INTG_RCFG_SUM_WT_PRIORITY_1             (0),
 		.INTG_RCFG_SUM_WT_PRIORITY_2             (0),
@@ -765,7 +757,7 @@ module LPDDR2x32_4p_0002 (
 		.INTG_SUM_WT_PRIORITY_5                  (0),
 		.INTG_SUM_WT_PRIORITY_6                  (0),
 		.INTG_SUM_WT_PRIORITY_7                  (0),
-		.INTG_POWER_SAVING_EXIT_CYCLES           (4),
+		.INTG_POWER_SAVING_EXIT_CYCLES           (5),
 		.INTG_MEM_CLK_ENTRY_CYCLES               (10),
 		.ENUM_ENABLE_BURST_INTERRUPT             ("DISABLED"),
 		.ENUM_ENABLE_BURST_TERMINATE             ("DISABLED"),
@@ -964,80 +956,63 @@ module LPDDR2x32_4p_0002 (
 		.DLL_OFFSET_CTRL_WIDTH      (6),
 		.DELAY_BUFFER_MODE          ("HIGH"),
 		.DELAY_CHAIN_LENGTH         (8),
-		.DLL_INPUT_FREQUENCY_PS_STR ("3968 ps")
+		.DLL_INPUT_FREQUENCY_PS_STR ("3053 ps")
 	) dll0 (
 		.clk            (p0_dll_clk_clk),                 //         clk.clk
 		.dll_pll_locked (p0_dll_sharing_dll_pll_locked),  // dll_sharing.dll_pll_locked
 		.dll_delayctrl  (dll0_dll_sharing_dll_delayctrl)  //            .dll_delayctrl
 	);
 
-	altera_mem_if_simple_avalon_mm_bridge #(
-		.DATA_WIDTH                (32),
-		.SLAVE_DATA_WIDTH          (32),
-		.MASTER_DATA_WIDTH         (32),
-		.SYMBOL_WIDTH              (8),
-		.ADDRESS_WIDTH             (10),
-		.MASTER_ADDRESS_WIDTH      (32),
-		.SLAVE_ADDRESS_WIDTH       (20),
-		.BURSTCOUNT_WIDTH          (3),
-		.WORKAROUND_HARD_PHY_ISSUE (0)
-	) seq_bridge (
-		.clk                   (seq_debug_clk),                   //   clk.clk
-		.reset_n               (~rst_controller_reset_out_reset), // reset.reset_n
-		.s0_address            (seq_debug_addr),                  //    s0.address
-		.s0_read               (seq_debug_read_req),              //      .read
-		.s0_readdata           (seq_debug_rdata),                 //      .readdata
-		.s0_write              (seq_debug_write_req),             //      .write
-		.s0_writedata          (seq_debug_wdata),                 //      .writedata
-		.s0_waitrequest        (seq_debug_waitrequest),           //      .waitrequest
-		.s0_byteenable         (seq_debug_be),                    //      .byteenable
-		.s0_readdatavalid      (seq_debug_rdata_valid),           //      .readdatavalid
-		.m0_address            (seq_bridge_m0_address),           //    m0.address
-		.m0_read               (seq_bridge_m0_read),              //      .read
-		.m0_readdata           (seq_bridge_m0_readdata),          //      .readdata
-		.m0_write              (seq_bridge_m0_write),             //      .write
-		.m0_writedata          (seq_bridge_m0_writedata),         //      .writedata
-		.m0_waitrequest        (seq_bridge_m0_waitrequest),       //      .waitrequest
-		.m0_byteenable         (seq_bridge_m0_byteenable),        //      .byteenable
-		.m0_readdatavalid      (seq_bridge_m0_readdatavalid),     //      .readdatavalid
-		.s0_waitrequest_n      (),                                // (terminated)
-		.s0_beginbursttransfer (1'b0),                            // (terminated)
-		.s0_burstcount         (3'b000),                          // (terminated)
-		.m0_beginbursttransfer (),                                // (terminated)
-		.m0_burstcount         ()                                 // (terminated)
+	LPDDR2x32_4p_dmaster #(
+		.USE_PLI     (0),
+		.PLI_PORT    (50000),
+		.FIFO_DEPTHS (2)
+	) seq_jtag (
+		.clk_clk              (seq_debug_clk),                 //          clk.clk
+		.clk_reset_reset      (~global_reset_n),               //    clk_reset.reset
+		.master_address       (seq_jtag_master_address),       //       master.address
+		.master_readdata      (seq_jtag_master_readdata),      //             .readdata
+		.master_read          (seq_jtag_master_read),          //             .read
+		.master_write         (seq_jtag_master_write),         //             .write
+		.master_writedata     (seq_jtag_master_writedata),     //             .writedata
+		.master_waitrequest   (seq_jtag_master_waitrequest),   //             .waitrequest
+		.master_readdatavalid (seq_jtag_master_readdatavalid), //             .readdatavalid
+		.master_byteenable    (seq_jtag_master_byteenable),    //             .byteenable
+		.master_reset_reset   ()                               // master_reset.reset
 	);
 
 	LPDDR2x32_4p_mm_interconnect_1 mm_interconnect_1 (
-		.p0_avl_clk_clk                                              (p0_avl_clk_clk),                               //                                            p0_avl_clk.clk
-		.seq_debug_clk_out_clk_clk                                   (seq_debug_clk),                                //                                 seq_debug_clk_out_clk.clk
-		.dmaster_clk_reset_reset_bridge_in_reset_reset               (~p0_avl_reset_reset),                          //               dmaster_clk_reset_reset_bridge_in_reset.reset
-		.dmaster_master_translator_reset_reset_bridge_in_reset_reset (~p0_avl_reset_reset),                          // dmaster_master_translator_reset_reset_bridge_in_reset.reset
-		.seq_bridge_reset_reset_bridge_in_reset_reset                (rst_controller_reset_out_reset),               //                seq_bridge_reset_reset_bridge_in_reset.reset
-		.dmaster_master_address                                      (dmaster_master_address),                       //                                        dmaster_master.address
-		.dmaster_master_waitrequest                                  (dmaster_master_waitrequest),                   //                                                      .waitrequest
-		.dmaster_master_byteenable                                   (dmaster_master_byteenable),                    //                                                      .byteenable
-		.dmaster_master_read                                         (dmaster_master_read),                          //                                                      .read
-		.dmaster_master_readdata                                     (dmaster_master_readdata),                      //                                                      .readdata
-		.dmaster_master_readdatavalid                                (dmaster_master_readdatavalid),                 //                                                      .readdatavalid
-		.dmaster_master_write                                        (dmaster_master_write),                         //                                                      .write
-		.dmaster_master_writedata                                    (dmaster_master_writedata),                     //                                                      .writedata
-		.seq_bridge_m0_address                                       (seq_bridge_m0_address),                        //                                         seq_bridge_m0.address
-		.seq_bridge_m0_waitrequest                                   (seq_bridge_m0_waitrequest),                    //                                                      .waitrequest
-		.seq_bridge_m0_byteenable                                    (seq_bridge_m0_byteenable),                     //                                                      .byteenable
-		.seq_bridge_m0_read                                          (seq_bridge_m0_read),                           //                                                      .read
-		.seq_bridge_m0_readdata                                      (seq_bridge_m0_readdata),                       //                                                      .readdata
-		.seq_bridge_m0_readdatavalid                                 (seq_bridge_m0_readdatavalid),                  //                                                      .readdatavalid
-		.seq_bridge_m0_write                                         (seq_bridge_m0_write),                          //                                                      .write
-		.seq_bridge_m0_writedata                                     (seq_bridge_m0_writedata),                      //                                                      .writedata
-		.s0_seq_debug_address                                        (mm_interconnect_1_s0_seq_debug_address),       //                                          s0_seq_debug.address
-		.s0_seq_debug_write                                          (mm_interconnect_1_s0_seq_debug_write),         //                                                      .write
-		.s0_seq_debug_read                                           (mm_interconnect_1_s0_seq_debug_read),          //                                                      .read
-		.s0_seq_debug_readdata                                       (mm_interconnect_1_s0_seq_debug_readdata),      //                                                      .readdata
-		.s0_seq_debug_writedata                                      (mm_interconnect_1_s0_seq_debug_writedata),     //                                                      .writedata
-		.s0_seq_debug_burstcount                                     (mm_interconnect_1_s0_seq_debug_burstcount),    //                                                      .burstcount
-		.s0_seq_debug_byteenable                                     (mm_interconnect_1_s0_seq_debug_byteenable),    //                                                      .byteenable
-		.s0_seq_debug_readdatavalid                                  (mm_interconnect_1_s0_seq_debug_readdatavalid), //                                                      .readdatavalid
-		.s0_seq_debug_waitrequest                                    (mm_interconnect_1_s0_seq_debug_waitrequest)    //                                                      .waitrequest
+		.p0_avl_clk_clk                                               (p0_avl_clk_clk),                               //                                             p0_avl_clk.clk
+		.seq_debug_clk_out_clk_clk                                    (seq_debug_clk),                                //                                  seq_debug_clk_out_clk.clk
+		.dmaster_clk_reset_reset_bridge_in_reset_reset                (~p0_avl_reset_reset),                          //                dmaster_clk_reset_reset_bridge_in_reset.reset
+		.dmaster_master_translator_reset_reset_bridge_in_reset_reset  (~p0_avl_reset_reset),                          //  dmaster_master_translator_reset_reset_bridge_in_reset.reset
+		.seq_jtag_clk_reset_reset_bridge_in_reset_reset               (rst_controller_reset_out_reset),               //               seq_jtag_clk_reset_reset_bridge_in_reset.reset
+		.seq_jtag_master_translator_reset_reset_bridge_in_reset_reset (rst_controller_reset_out_reset),               // seq_jtag_master_translator_reset_reset_bridge_in_reset.reset
+		.dmaster_master_address                                       (dmaster_master_address),                       //                                         dmaster_master.address
+		.dmaster_master_waitrequest                                   (dmaster_master_waitrequest),                   //                                                       .waitrequest
+		.dmaster_master_byteenable                                    (dmaster_master_byteenable),                    //                                                       .byteenable
+		.dmaster_master_read                                          (dmaster_master_read),                          //                                                       .read
+		.dmaster_master_readdata                                      (dmaster_master_readdata),                      //                                                       .readdata
+		.dmaster_master_readdatavalid                                 (dmaster_master_readdatavalid),                 //                                                       .readdatavalid
+		.dmaster_master_write                                         (dmaster_master_write),                         //                                                       .write
+		.dmaster_master_writedata                                     (dmaster_master_writedata),                     //                                                       .writedata
+		.seq_jtag_master_address                                      (seq_jtag_master_address),                      //                                        seq_jtag_master.address
+		.seq_jtag_master_waitrequest                                  (seq_jtag_master_waitrequest),                  //                                                       .waitrequest
+		.seq_jtag_master_byteenable                                   (seq_jtag_master_byteenable),                   //                                                       .byteenable
+		.seq_jtag_master_read                                         (seq_jtag_master_read),                         //                                                       .read
+		.seq_jtag_master_readdata                                     (seq_jtag_master_readdata),                     //                                                       .readdata
+		.seq_jtag_master_readdatavalid                                (seq_jtag_master_readdatavalid),                //                                                       .readdatavalid
+		.seq_jtag_master_write                                        (seq_jtag_master_write),                        //                                                       .write
+		.seq_jtag_master_writedata                                    (seq_jtag_master_writedata),                    //                                                       .writedata
+		.s0_seq_debug_address                                         (mm_interconnect_1_s0_seq_debug_address),       //                                           s0_seq_debug.address
+		.s0_seq_debug_write                                           (mm_interconnect_1_s0_seq_debug_write),         //                                                       .write
+		.s0_seq_debug_read                                            (mm_interconnect_1_s0_seq_debug_read),          //                                                       .read
+		.s0_seq_debug_readdata                                        (mm_interconnect_1_s0_seq_debug_readdata),      //                                                       .readdata
+		.s0_seq_debug_writedata                                       (mm_interconnect_1_s0_seq_debug_writedata),     //                                                       .writedata
+		.s0_seq_debug_burstcount                                      (mm_interconnect_1_s0_seq_debug_burstcount),    //                                                       .burstcount
+		.s0_seq_debug_byteenable                                      (mm_interconnect_1_s0_seq_debug_byteenable),    //                                                       .byteenable
+		.s0_seq_debug_readdatavalid                                   (mm_interconnect_1_s0_seq_debug_readdatavalid), //                                                       .readdatavalid
+		.s0_seq_debug_waitrequest                                     (mm_interconnect_1_s0_seq_debug_waitrequest)    //                                                       .waitrequest
 	);
 
 	altera_reset_controller #(
@@ -1066,7 +1041,7 @@ module LPDDR2x32_4p_0002 (
 		.USE_RESET_REQUEST_IN15    (0),
 		.ADAPT_RESET_REQUEST       (0)
 	) rst_controller (
-		.reset_in0      (~seq_debug_reset_n),             // reset_in0.reset
+		.reset_in0      (~global_reset_n),                // reset_in0.reset
 		.clk            (seq_debug_clk),                  //       clk.clk
 		.reset_out      (rst_controller_reset_out_reset), // reset_out.reset
 		.reset_req      (),                               // (terminated)

@@ -161,10 +161,6 @@
    type="VERILOG"
    library="mm_interconnect_1" />
  <file
-   path="LPDDR2x32_4p_sim/LPDDR2x32_4p/altera_mem_if_simple_avalon_mm_bridge.sv"
-   type="SYSTEM_VERILOG"
-   library="seq_bridge" />
- <file
    path="LPDDR2x32_4p_sim/LPDDR2x32_4p/altera_mem_if_dll_cyclonev.sv"
    type="SYSTEM_VERILOG"
    library="dll0" />

@@ -101,13 +101,5 @@
   <pin name="pll_mem_phy_clk" direction="output" scope="external" />
   <pin name="afi_phy_clk" direction="output" scope="external" />
   <pin name="pll_avl_phy_clk" direction="output" scope="external" />
-  <pin name="seq_debug_addr[19..0]" direction="input" scope="external" />
-  <pin name="seq_debug_read_req" direction="input" scope="external" />
-  <pin name="seq_debug_rdata[31..0]" direction="output" scope="external" />
-  <pin name="seq_debug_write_req" direction="input" scope="external" />
-  <pin name="seq_debug_wdata[31..0]" direction="input" scope="external" />
-  <pin name="seq_debug_waitrequest" direction="output" scope="external" />
-  <pin name="seq_debug_be[3..0]" direction="input" scope="external" />
-  <pin name="seq_debug_rdata_valid" direction="output" scope="external" />
  </global>
 </pinplan>
