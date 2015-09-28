@@ -15,8 +15,8 @@ Description:
 	Top-Level Control State Machine and combinational logic
 */
 module img_cap_ctrl #(
-		parameter	WR_BURST_SIZE = 7,
-					RD_BURST_SIZE = 15
+		parameter	WR_BURST_SIZE = 8,
+					RD_BURST_SIZE = 8
 	)(
 		input		clk_fst,
 					clk,
@@ -45,7 +45,9 @@ module img_cap_ctrl #(
 					rdreq_cam = DEASSERT_H,
 					fb_sel = 1'b1,
 		output	reg	[1:0]	wr_cnt,
-							rd_cnt
+							rd_cnt,
+		output	reg	[8:0]	row_cnt,
+		output	reg	[31:0]	frame_num
 	);
 	
 	localparam
@@ -158,11 +160,11 @@ module img_cap_ctrl #(
 			wr_brst_cnt <= 5'd0;
 			rd_brst_cnt <= 5'd0;
 		end else begin
-			if (wr_cnt == WR_BURST_SIZE) begin
+			if (wr_brst_cnt == WR_BURST_SIZE - 1) begin
 				wr_brst <= ~wr_brst;
 				wr_brst_cnt <= 0;
 			end
-			if (rd_cnt == RD_BURST_SIZE) begin
+			if (rd_brst_cnt == RD_BURST_SIZE - 1) begin
 				rd_brst <= ~rd_brst;
 				rd_brst_cnt <= 0;
 			end
@@ -171,6 +173,50 @@ module img_cap_ctrl #(
 				wr_brst_cnt <= wr_brst_cnt + 1;
 			if (rd_en_0 | rd_en_1)
 				rd_brst_cnt <= rd_brst_cnt + 1;
+		/*end else begin
+			rd_brst <= 1'b1;
+			wr_brst <= 1'b0;
+			wr_brst_cnt <= 5'd0;
+			rd_brst_cnt <= 5'd0;*/
+		end
+	end
+	
+	// Frame buffer read counter
+	reg		[9:0]	rd_pix_cnt = 0;
+	always @(posedge clk_fst) begin
+		if (~reset) begin
+			rd_pix_cnt <= 10'd0;
+		end else begin
+			if (~rd_en_0 | ~rd_en_1 & rd_pix_cnt < 640)
+				rd_pix_cnt <= rd_pix_cnt + 1;
+			
+			if (hdmi_pix_cnt == 640) begin
+				rd_pix_cnt <= 0;
+			end
+		end
+	end
+	
+	// Video timing counters (25.2MHz domain)
+	reg		[9:0]	hdmi_pix_cnt = 0;
+	//reg		[8:0]	row_cnt = 0;
+	always @(posedge clk) begin
+		if (~reset) begin
+			hdmi_pix_cnt <= 10'd0;
+			row_cnt <= 9'd0;
+			frame_num <= 32'd0;
+		end else begin
+			if (HDMI_TX_DE)
+				hdmi_pix_cnt <= hdmi_pix_cnt + 1;
+			
+			if (hdmi_pix_cnt == 640) begin
+				row_cnt <= row_cnt + 1;
+				hdmi_pix_cnt <= 0;
+			end
+			
+			if (row_cnt == 480) begin
+				row_cnt <= 0;
+				frame_num <= frame_num + 1;
+			end
 		end
 	end
 			
@@ -213,12 +259,22 @@ module img_cap_ctrl #(
 			
 			// Frame buffer to ADV FIFO
 			if (fb_sel & ~wrfull_adv & rd_brst & rd_cnt < 2 & ~rd_done_1) begin
-				rd_en_1 = ASSERT_L;
-				rd_en_0 = DEASSERT_L;
+				if ((rd_pix_cnt < 640 & ~HDMI_TX_DE) | HDMI_TX_DE) begin
+					rd_en_1 = ASSERT_L;
+					rd_en_0 = DEASSERT_L;
+				end else begin
+					rd_en_1 = DEASSERT_L;
+					rd_en_0 = DEASSERT_L;
+				end
 			end else if (~fb_sel & ~wrfull_adv & rd_brst & rd_cnt < 2 &
 							~rd_done_0) begin
-				rd_en_0 = ASSERT_L;
-				rd_en_1 = DEASSERT_L;
+				if ((rd_pix_cnt < 640 & ~HDMI_TX_DE) | HDMI_TX_DE) begin
+					rd_en_0 = ASSERT_L;
+					rd_en_1 = DEASSERT_L;
+				end else begin
+					rd_en_1 = DEASSERT_L;
+					rd_en_0 = DEASSERT_L;
+				end
 			end else begin
 				rd_en_0 = DEASSERT_L;
 				rd_en_1 = DEASSERT_L;

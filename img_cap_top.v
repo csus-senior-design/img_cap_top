@@ -362,7 +362,7 @@ module img_cap_top #(
 
 	sync_vg #(.X_BITS(12), .Y_BITS(12)) sync_vg (
 		.clk(clk_25_2m),
-		.reset(reset),
+		.reset(init_done),
 		.interlaced(INTERLACED),
 		.clk_out(), // inverted output clock - unconnected
 		.v_total_0(V_TOTAL_0),
