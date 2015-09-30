@@ -16,7 +16,18 @@ Description:
 */
 module img_cap_ctrl #(
 		parameter	WR_BURST_SIZE = 8,
-					RD_BURST_SIZE = 8
+					RD_BURST_SIZE = 8,
+					LINE_PIX = 640,			// 640 pixels per line
+					
+					NUM_LINE = 480,			// Number of lines
+					
+					ADV_PREFILL_WAIT = 1,	// Number of lines to wait in
+											// between ADV FIFO prefills
+											// (divide by two for actual number
+											//	of times)
+					
+					NUM_WR = 1,
+					NUM_RD = 2
 	)(
 		input		clk_fst,
 					clk,
@@ -125,12 +136,12 @@ module img_cap_ctrl #(
 		if (~reset) begin
 			wr_fb <= 1'b0;
 			fb_sel <= 1'b1;
-		end else if (wr_cnt == 1 && rd_cnt == 2 && ~wr_fb) begin
+		end else if (wr_cnt == NUM_WR && rd_cnt == NUM_RD && ~wr_fb) begin
 			wr_fb <= 1'b1;
 			fb_sel <= 1'b0;
 			rd_cnt <= 0;
 			wr_cnt <= 0;
-		end else if (wr_cnt == 1 && rd_cnt == 2 && wr_fb) begin
+		end else if (wr_cnt == NUM_WR && rd_cnt == NUM_RD && wr_fb) begin
 			wr_fb <= 1'b0;
 			fb_sel <= 1'b1;
 			rd_cnt <= 0;
@@ -139,12 +150,12 @@ module img_cap_ctrl #(
 		
 		if (~reset)
 			rd_cnt <= 2'd0;
-		else if ((rd_done_0 || rd_done_1) && rd_cnt < 2)
+		else if ((rd_done_0 || rd_done_1) && rd_cnt < NUM_RD)
 			rd_cnt <= rd_cnt + 1;
 		
 		if (~reset)
 			wr_cnt <= 2'd0;
-		else if ((full_0 || full_1) && wr_cnt < 1)
+		else if ((full_0 || full_1) && wr_cnt < NUM_WR)
 			wr_cnt <= wr_cnt + 1;
 	end
 		
@@ -183,15 +194,28 @@ module img_cap_ctrl #(
 	
 	// Frame buffer read counter
 	reg		[9:0]	rd_pix_cnt = 0;
+	reg		[8:0]	row_cnt_fst = 0;
+	reg				prep_row_cnt_fst = 0;
 	always @(posedge clk_fst) begin
 		if (~reset) begin
 			rd_pix_cnt <= 10'd0;
+			row_cnt_fst <= 9'd0;
+			prep_row_cnt_fst <= 1'b0;
 		end else begin
-			if (~rd_en_0 | ~rd_en_1 & rd_pix_cnt < 640)
+			if (~rd_en_0 | ~rd_en_1 & rd_pix_cnt < LINE_PIX)
 				rd_pix_cnt <= rd_pix_cnt + 1;
 			
-			if (hdmi_pix_cnt == 640) begin
-				rd_pix_cnt <= 0;
+			if (hdmi_pix_cnt == LINE_PIX)
+				prep_row_cnt_fst <= 1'b1;
+			else
+				prep_row_cnt_fst <= 1'b0;
+			
+			if (row_cnt == NUM_LINE | row_cnt_fst >= ADV_PREFILL_WAIT) begin
+				rd_pix_cnt <= 10'd0;
+				row_cnt_fst <= 9'd0;
+			end else if (row_cnt_fst < ADV_PREFILL_WAIT &
+							hdmi_pix_cnt == LINE_PIX & prep_row_cnt_fst) begin
+				row_cnt_fst <= row_cnt_fst + 1;
 			end
 		end
 	end
@@ -208,12 +232,12 @@ module img_cap_ctrl #(
 			if (HDMI_TX_DE)
 				hdmi_pix_cnt <= hdmi_pix_cnt + 1;
 			
-			if (hdmi_pix_cnt == 640) begin
+			if (hdmi_pix_cnt == LINE_PIX) begin
 				row_cnt <= row_cnt + 1;
 				hdmi_pix_cnt <= 0;
 			end
 			
-			if (row_cnt == 480) begin
+			if (row_cnt == NUM_LINE) begin
 				row_cnt <= 0;
 				frame_num <= frame_num + 1;
 			end
@@ -225,7 +249,8 @@ module img_cap_ctrl #(
 	always @(*) begin
 		if (state == s_fb_stream) begin
 			// Cam to frame buffer FIFO
-			if (wr_fb & ~rdempty_cam & wr_brst & wr_cnt < 1 & ~full_1) begin
+			if (wr_fb & ~rdempty_cam & wr_brst & wr_cnt < NUM_WR &
+					~full_1) begin
 				wr_en_1 = ASSERT_L;
 				wr_en_0 = DEASSERT_L;
 				
@@ -233,7 +258,7 @@ module img_cap_ctrl #(
 					rdreq_cam = ASSERT_H;
 				else
 					rdreq_cam = DEASSERT_H;
-			end else if (~wr_fb & ~rdempty_cam & wr_brst & wr_cnt < 1 &
+			end else if (~wr_fb & ~rdempty_cam & wr_brst & wr_cnt < NUM_WR &
 							~full_0) begin
 				wr_en_0 = ASSERT_L;
 				wr_en_1 = DEASSERT_L;
@@ -258,17 +283,18 @@ module img_cap_ctrl #(
 			end*/
 			
 			// Frame buffer to ADV FIFO
-			if (fb_sel & ~wrfull_adv & rd_brst & rd_cnt < 2 & ~rd_done_1) begin
-				if ((rd_pix_cnt < 640 & ~HDMI_TX_DE) | HDMI_TX_DE) begin
+			if (fb_sel & ~wrfull_adv & rd_brst & rd_cnt < NUM_RD &
+					~rd_done_1) begin
+				if ((rd_pix_cnt < LINE_PIX & ~HDMI_TX_DE) | HDMI_TX_DE) begin
 					rd_en_1 = ASSERT_L;
 					rd_en_0 = DEASSERT_L;
 				end else begin
 					rd_en_1 = DEASSERT_L;
 					rd_en_0 = DEASSERT_L;
 				end
-			end else if (~fb_sel & ~wrfull_adv & rd_brst & rd_cnt < 2 &
+			end else if (~fb_sel & ~wrfull_adv & rd_brst & rd_cnt < NUM_RD &
 							~rd_done_0) begin
-				if ((rd_pix_cnt < 640 & ~HDMI_TX_DE) | HDMI_TX_DE) begin
+				if ((rd_pix_cnt < LINE_PIX & ~HDMI_TX_DE) | HDMI_TX_DE) begin
 					rd_en_0 = ASSERT_L;
 					rd_en_1 = DEASSERT_L;
 				end else begin
