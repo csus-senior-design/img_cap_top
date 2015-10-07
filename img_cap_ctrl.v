@@ -27,7 +27,9 @@ module img_cap_ctrl #(
 											//	of times)
 					
 					NUM_WR = 1,
-					NUM_RD = 2
+					NUM_RD = 1				// Should be 2 for the camera
+											// system, and 1 when the pattern
+											// generator is connected
 	)(
 		input		clk_fst,
 					clk,
@@ -47,6 +49,8 @@ module img_cap_ctrl #(
 					HDMI_TX_DE,
 					rd_data_valid_0,
 					rd_data_valid_1,
+					avl_read_req_0,
+					avl_read_req_1,
 		output	reg	wr_en_0 = DEASSERT_L,
 					wr_en_1 = DEASSERT_L,
 					rd_en_0 = DEASSERT_L,
@@ -58,6 +62,8 @@ module img_cap_ctrl #(
 		output	reg	[1:0]	wr_cnt,
 							rd_cnt,
 		output	reg	[8:0]	row_cnt,
+		output	reg	[8:0]	valid_line_cnt,
+		output	reg	[9:0]	valid_rd_cnt,
 		output	reg	[31:0]	frame_num
 	);
 	
@@ -171,19 +177,28 @@ module img_cap_ctrl #(
 			wr_brst_cnt <= 5'd0;
 			rd_brst_cnt <= 5'd0;
 		end else begin
-			if (wr_brst_cnt == WR_BURST_SIZE - 1) begin
-				wr_brst <= ~wr_brst;
+			if ((~wr_en_0 | ~wr_en_1 | rdempty_cam) & 
+					wr_brst_cnt < WR_BURST_SIZE - 1 & wr_brst)
+				wr_brst_cnt <= wr_brst_cnt + 1;
+			else if (wr_brst_cnt == WR_BURST_SIZE - 1 | full_0 | full_1) begin
+				if (rd_cnt < NUM_RD) begin
+					wr_brst <= ~wr_brst;
+					rd_brst <= ~rd_brst;
+				end
 				wr_brst_cnt <= 0;
 			end
-			if (rd_brst_cnt == RD_BURST_SIZE - 1) begin
-				rd_brst <= ~rd_brst;
+
+			if ((~rd_en_0 | ~rd_en_1) & rd_brst_cnt < RD_BURST_SIZE - 1
+					& rd_brst)
+				rd_brst_cnt <= rd_brst_cnt + 1;
+			else if (rd_brst_cnt == RD_BURST_SIZE - 1 | rd_done_0 |
+						rd_done_1) begin
+				if (wr_cnt < NUM_WR & ~rdempty_cam) begin
+					rd_brst <= ~rd_brst;
+					wr_brst <= ~wr_brst;
+				end
 				rd_brst_cnt <= 0;
 			end
-
-			if (wr_en_0 | wr_en_1)
-				wr_brst_cnt <= wr_brst_cnt + 1;
-			if (rd_en_0 | rd_en_1)
-				rd_brst_cnt <= rd_brst_cnt + 1;
 		/*end else begin
 			rd_brst <= 1'b1;
 			wr_brst <= 1'b0;
@@ -201,8 +216,10 @@ module img_cap_ctrl #(
 			rd_pix_cnt <= 10'd0;
 			row_cnt_fst <= 9'd0;
 			prep_row_cnt_fst <= 1'b0;
+			valid_rd_cnt <= 10'd0;
+			valid_line_cnt <= 9'd0;
 		end else begin
-			if (~rd_en_0 | ~rd_en_1 & rd_pix_cnt < LINE_PIX)
+			if ((avl_read_req_0 | avl_read_req_1) & rd_pix_cnt < LINE_PIX)
 				rd_pix_cnt <= rd_pix_cnt + 1;
 			
 			if (hdmi_pix_cnt == LINE_PIX)
@@ -216,6 +233,17 @@ module img_cap_ctrl #(
 			end else if (row_cnt_fst < ADV_PREFILL_WAIT &
 							hdmi_pix_cnt == LINE_PIX & prep_row_cnt_fst) begin
 				row_cnt_fst <= row_cnt_fst + 1;
+			end
+			
+			if ((rd_data_valid_0 | rd_data_valid_1) & valid_rd_cnt < LINE_PIX)
+				valid_rd_cnt <= valid_rd_cnt + 1;
+			else if (hdmi_pix_cnt == LINE_PIX &
+						valid_line_cnt < NUM_LINE) begin
+				valid_rd_cnt <= 10'd0;
+				valid_line_cnt <= valid_line_cnt + 1;
+			end else if (valid_line_cnt == NUM_LINE) begin
+				valid_rd_cnt <= 10'd0;
+				valid_line_cnt <= 9'd0;
 			end
 		end
 	end

@@ -379,13 +379,13 @@ module img_cap_top #(
 		.h_sync(H_SYNC),
 		.hv_offset_0(HV_OFFSET_0),
 		.hv_offset_1(HV_OFFSET_1),
-		.de_out(HDMI_TX_DE),
-		.vs_out(HDMI_TX_VS),
+		.de_out(de),
+		.vs_out(vs),
 		.v_count_out(),
 		.h_count_out(),
 		.x_out(x_out),
 		.y_out(y_out),
-		.hs_out(HDMI_TX_HS),
+		.hs_out(hs),
 		.field_out(field)
 	);
 	/*always @(posedge clk_25_2m)
@@ -524,7 +524,8 @@ module img_cap_top #(
 		.aclr(~reset)
 	);
 	//assign wrreq_cam = CAM1_CAP_WRITE_EN;
-	assign wrreq_cam = cam_wr_en_tst & ~wrfull_cam;
+	//assign wrreq_cam = cam_wr_en_tst & ~wrfull_cam;
+	assign wrreq_cam = HDMI_TX_DE & ~wrfull_cam;
 
     //=========================================================================
 	// Camera capture interfaces (25.2MHz domain, pixels come in at 12.6MHz)
@@ -623,6 +624,8 @@ module img_cap_top #(
 		.HDMI_TX_DE(HDMI_TX_DE),
 		.rd_data_valid_0(rd_data_valid_0),
 		.rd_data_valid_1(rd_data_valid_1),
+		.avl_read_req_0(avl_read_req_0),
+		.avl_read_req_1(avl_read_req_1),
 		.wr_en_0(wr_en_0),
 		.wr_en_1(wr_en_1),
 		.rd_en_0(rd_en_0),
@@ -680,7 +683,7 @@ module img_cap_top #(
 	
 	
 	/* Simulated camera data */
-	(* syn_encoding = "safe" *)
+	/*(* syn_encoding = "safe" *)
 	reg		[1:0]	cs,
 					ns;
 	reg		[23:0]	cam_data_tst;
@@ -739,6 +742,51 @@ module img_cap_top #(
 				end
 			endcase
 		end
-	end
+	end*/
+	
+	wire	[23:0]	cam_data_tst;
+    wire	[7:0]	r_out;
+    wire	[7:0]	g_out;
+    wire	[7:0]	b_out;
+	wire			de;
+    wire			vs;
+    wire			hs;
+    wire			vs_out;
+    wire			hs_out;
+    wire			de_out;
+	
+	pattern_vg #(
+        .B(8), // Bits per channel
+        .X_BITS(12),
+        .Y_BITS(12),
+        .FRACTIONAL_BITS(12)) // Number of fractional bits for ramp pattern
+    pattern_vg (
+        .reset(reset),
+        .clk_in(HDMI_TX_CLK),
+        .x(x_out),
+        .y(y_out[11:0]),
+        .vn_in(vs),
+        .hn_in(hs),
+        .dn_in(de),
+        .r_in(8'h0), // default red channel value
+        .g_in(8'h0), // default green channel value
+        .b_in(8'h0), // default blue channel value
+        .vn_out(vs_out),
+        .hn_out(hs_out),
+        .den_out(de_out),
+        .r_out(r_out),
+        .g_out(g_out),
+        .b_out(b_out),
+        .total_active_pix(H_TOTAL - (H_FP + H_BP + H_SYNC)), // (1920) // h_total - (h_fp+h_bp+h_sync)
+        .total_active_lines(INTERLACED ?
+            (V_TOTAL_0 - (V_FP_0 + V_BP_0 + V_SYNC_0)) + (V_TOTAL_1 - (V_FP_1 + V_BP_1 + V_SYNC_1)) :
+            (V_TOTAL_0 - (V_FP_0 + V_BP_0 + V_SYNC_0)) - 1), // originally: 13'd480
+        .pattern(8'd6),
+        .ramp_step(PATTERN_RAMP_STEP)
+    );
+	assign cam_data_tst = {r_out, g_out, b_out};
+	assign HDMI_TX_DE = de_out;
+    assign HDMI_TX_HS = hs_out;
+    assign HDMI_TX_VS = vs_out;
 	
 endmodule
