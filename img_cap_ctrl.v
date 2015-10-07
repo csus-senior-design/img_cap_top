@@ -180,7 +180,8 @@ module img_cap_ctrl #(
 			if ((~wr_en_0 | ~wr_en_1 | rdempty_cam) & 
 					wr_brst_cnt < WR_BURST_SIZE - 1 & wr_brst)
 				wr_brst_cnt <= wr_brst_cnt + 1;
-			else if (wr_brst_cnt == WR_BURST_SIZE - 1 | full_0 | full_1) begin
+			else if (wr_brst_cnt == WR_BURST_SIZE - 1 | full_0 | full_1 |
+						wr_cnt == NUM_WR) begin
 				if (rd_cnt < NUM_RD) begin
 					wr_brst <= ~wr_brst;
 					rd_brst <= ~rd_brst;
@@ -192,7 +193,7 @@ module img_cap_ctrl #(
 					& rd_brst)
 				rd_brst_cnt <= rd_brst_cnt + 1;
 			else if (rd_brst_cnt == RD_BURST_SIZE - 1 | rd_done_0 |
-						rd_done_1) begin
+						rd_done_1 | rd_cnt == NUM_RD) begin
 				if (wr_cnt < NUM_WR & ~rdempty_cam) begin
 					rd_brst <= ~rd_brst;
 					wr_brst <= ~wr_brst;
