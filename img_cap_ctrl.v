@@ -15,8 +15,8 @@ Description:
 	Top-Level Control State Machine and combinational logic
 */
 module img_cap_ctrl #(
-		parameter	WR_BURST_SIZE = 8,
-					RD_BURST_SIZE = 8,
+		parameter	WR_BURST_SIZE = 16,
+					RD_BURST_SIZE = 16,
 					LINE_PIX = 640,			// 640 pixels per line
 					
 					NUM_LINE = 480,			// Number of lines
@@ -169,15 +169,17 @@ module img_cap_ctrl #(
 	reg				wr_brst,
 					rd_brst;
 	reg		[4:0]	wr_brst_cnt = 0,
-					rd_brst_cnt = 0;
+					rd_brst_cnt = 0,
+					brst_cnt;
 	always @(posedge clk_fst) begin
 		if (~reset) begin
 			wr_brst <= 1'b0;
 			rd_brst <= 1'b1;
-			wr_brst_cnt <= 5'd0;
-			rd_brst_cnt <= 5'd0;
+			brst_cnt <= 5'd0;
+			//wr_brst_cnt <= 5'd0;
+			//rd_brst_cnt <= 5'd0;
 		end else begin
-			if ((~wr_en_0 | ~wr_en_1 | rdempty_cam) & 
+			/*if ((~wr_en_0 | ~wr_en_1 | rdempty_cam)&
 					wr_brst_cnt < WR_BURST_SIZE - 1 & wr_brst)
 				wr_brst_cnt <= wr_brst_cnt + 1;
 			else if (wr_brst_cnt == WR_BURST_SIZE - 1 | full_0 | full_1 |
@@ -199,12 +201,21 @@ module img_cap_ctrl #(
 					wr_brst <= ~wr_brst;
 				end
 				rd_brst_cnt <= 0;
+			end*/
+			
+			brst_cnt <= brst_cnt + 1;
+			
+			if (wr_brst & brst_cnt == WR_BURST_SIZE - 1) begin
+				brst_cnt <= 5'd0;
+				wr_brst <= ~wr_brst;
+				rd_brst <= ~rd_brst;
+			end else if (rd_brst & brst_cnt == RD_BURST_SIZE - 1) begin
+				brst_cnt <= 5'd0;
+				if (~rdempty_cam) begin
+					wr_brst <= ~wr_brst;
+					rd_brst <= ~rd_brst;
+				end
 			end
-		/*end else begin
-			rd_brst <= 1'b1;
-			wr_brst <= 1'b0;
-			wr_brst_cnt <= 5'd0;
-			rd_brst_cnt <= 5'd0;*/
 		end
 	end
 	
