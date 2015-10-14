@@ -10,6 +10,7 @@ Image Capture Controller
 System Initialization
 
 Authors:  Greg M. Crist, Jr. (gmcrist@gmail.com)
+	  Padraic Hagerty (guitarisrockin@hotmail.com)
 
 Description:
 	Performs initialization of all of the components
