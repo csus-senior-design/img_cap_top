@@ -289,7 +289,8 @@ module img_cap_top #(
 					wrfull_cam,
 					rdempty_adv,
 					rdempty_cam,
-					fb_sel;
+					fb_sel,
+					fb_rst;
 	
 	wire	[1:0]	wr_cnt;
 	
@@ -410,7 +411,7 @@ module img_cap_top #(
 		.q(adv_fifo_q),
 		.rdempty(rdempty_adv),
 		.wrfull(wrfull_adv),
-		.aclr(~reset)
+		.aclr(~reset | ~fb_rst)
 	);
 	assign fb_data_out = (fb_sel) ? valid_rd_data_1 : valid_rd_data_0;
 	
@@ -426,7 +427,7 @@ module img_cap_top #(
 	//=========================================================================
     frame_buf_alt frame_buf_0 (
         .clk(clk_50_4m),
-        .reset(reset),
+        .reset(reset & fb_rst),
         .wr_en(wr_en_0),
         .rd_en(rd_en_0),
         .ram_rdy(ram_rdy),
@@ -443,7 +444,7 @@ module img_cap_top #(
 		.BASE_ADDR(308000)
 	) frame_buf_1 (
         .clk(clk_50_4m),
-        .reset(reset),
+        .reset(reset & fb_rst),
         .wr_en(wr_en_1),
         .rd_en(rd_en_1),
         .ram_rdy(ram_rdy),
@@ -521,7 +522,7 @@ module img_cap_top #(
 		.q(cam_fifo_q),
 		.rdempty(rdempty_cam),
 		.wrfull(wrfull_cam),
-		.aclr(~reset)
+		.aclr(~reset | ~fb_rst)
 	);
 	//assign wrreq_cam = CAM1_CAP_WRITE_EN;
 	//assign wrreq_cam = cam_wr_en_tst & ~wrfull_cam;
@@ -626,6 +627,8 @@ module img_cap_top #(
 		.rd_data_valid_1(rd_data_valid_1),
 		.avl_read_req_0(avl_read_req_0),
 		.avl_read_req_1(avl_read_req_1),
+		.avl_write_req_0(avl_write_req_0),
+		.avl_write_req_1(avl_write_req_1),
 		.wr_en_0(wr_en_0),
 		.wr_en_1(wr_en_1),
 		.rd_en_0(rd_en_0),
@@ -634,7 +637,8 @@ module img_cap_top #(
 		.rdreq_adv(rdreq_adv),
 		.rdreq_cam(rdreq_cam),
 		.fb_sel(fb_sel),
-		.wr_cnt(wr_cnt)
+		.wr_cnt(wr_cnt),
+		.fb_rst(fb_rst)
     );
 	
 	

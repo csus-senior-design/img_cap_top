@@ -16,20 +16,27 @@ Description:
 */
 module img_cap_ctrl #(
 		parameter	WR_BURST_SIZE = 16,
-					RD_BURST_SIZE = 16,
+					RD_BURST_SIZE = 10,
 					LINE_PIX = 640,			// 640 pixels per line
 					
 					NUM_LINE = 480,			// Number of lines
 					
-					ADV_PREFILL_WAIT = 1,	// Number of lines to wait in
+					//ADV_PREFILL_WAIT = 1,	// Number of lines to wait in
 											// between ADV FIFO prefills
 											// (divide by two for actual number
 											//	of times)
 					
+					ADV_LINE_PREFILL = 45,	// Number of lines to prefill the
+											// ADV FIFO before a frame starts
 					NUM_WR = 1,
-					NUM_RD = 1				// Should be 2 for the camera
+					NUM_RD = 1,				// Should be 2 for the camera
 											// system, and 1 when the pattern
 											// generator is connected
+											
+					CLR_TIME = 256			// Number of clock cycles that the
+											// system will wait after a frame
+											// is done before resetting the
+											// frame buffers and FIFOs
 	)(
 		input		clk_fst,
 					clk,
@@ -51,6 +58,8 @@ module img_cap_ctrl #(
 					rd_data_valid_1,
 					avl_read_req_0,
 					avl_read_req_1,
+					avl_write_req_0,
+					avl_write_req_1,
 		output	reg	wr_en_0 = DEASSERT_L,
 					wr_en_1 = DEASSERT_L,
 					rd_en_0 = DEASSERT_L,
@@ -61,10 +70,15 @@ module img_cap_ctrl #(
 					fb_sel = 1'b1,
 		output	reg	[1:0]	wr_cnt,
 							rd_cnt,
+		output	reg			fb_rst = 1'b1,
 		output	reg	[8:0]	row_cnt,
 		output	reg	[8:0]	valid_line_cnt,
 		output	reg	[9:0]	valid_rd_cnt,
-		output	reg	[31:0]	frame_num
+		output	reg	[9:0]	wr_pix_cnt = 0,
+		output	reg	[8:0]	wr_row_cnt_fst = 0,
+							rd_row_cnt_fst = 0,
+		output	reg	[31:0]	frame_num,
+							wr_frame_num = 0
 	);
 	
 	localparam
@@ -135,23 +149,64 @@ module img_cap_ctrl #(
 	end
 	
 	// Frame buffer switching logic (50.4MHz domain)
+	reg				sw_en = 1'b0;	// Used to prevent double switching due to
+									// a signal from a half-speed clock domain
+	reg		[7:0]	rst_cnt = 8'd0;
+	(* syn_encoding = "safe" *)
+	reg				curr_state;
+	localparam
+		IDLE = 0,
+		CNT = 1;
 	//reg		[1:0]	rd_cnt = 0,
 	//				wr_cnt = 0;
 	always @(posedge clk_fst) begin
+		// Default to deasserted frame buffer reset
+		fb_rst <= 1'b1;
 		
+		// Logic for determining when the frame buffers should switch
 		if (~reset) begin
 			wr_fb <= 1'b0;
 			fb_sel <= 1'b1;
-		end else if (wr_cnt == NUM_WR && rd_cnt == NUM_RD && ~wr_fb) begin
+		end else if (((wr_cnt == NUM_WR && rd_cnt == NUM_RD) || sw_en) && ~wr_fb) begin
 			wr_fb <= 1'b1;
 			fb_sel <= 1'b0;
 			rd_cnt <= 0;
 			wr_cnt <= 0;
-		end else if (wr_cnt == NUM_WR && rd_cnt == NUM_RD && wr_fb) begin
+			fb_rst <= 1'b0;
+		end else if (((wr_cnt == NUM_WR && rd_cnt == NUM_RD) || sw_en) && wr_fb) begin
 			wr_fb <= 1'b0;
 			fb_sel <= 1'b1;
 			rd_cnt <= 0;
 			wr_cnt <= 0;
+			fb_rst <= 1'b0;
+		end
+		
+		// State machine for frame buffer and FIFO resets
+		if (~reset) begin
+			curr_state <= IDLE;
+			rst_cnt <= 0;
+			sw_en <= 1'b0;
+		end else begin
+			case (curr_state)
+				IDLE: begin
+					sw_en <= 1'b0;
+					rst_cnt <= 0;
+					if (row_cnt == NUM_LINE)
+						curr_state <= CNT;
+					else
+						curr_state <= IDLE;
+				end
+				
+				CNT: begin
+					rst_cnt <= rst_cnt + 1;
+					curr_state <= CNT;
+					if (rst_cnt == CLR_TIME) begin
+						curr_state <= IDLE;
+						sw_en <= 1'b1;
+					end else if (~fb_rst)
+						curr_state <= IDLE;
+				end
+			endcase
 		end
 		
 		if (~reset)
@@ -207,8 +262,10 @@ module img_cap_ctrl #(
 			
 			if (wr_brst & brst_cnt == WR_BURST_SIZE - 1) begin
 				brst_cnt <= 5'd0;
-				wr_brst <= ~wr_brst;
-				rd_brst <= ~rd_brst;
+				if (rd_cnt < NUM_RD) begin
+					wr_brst <= ~wr_brst;
+					rd_brst <= ~rd_brst;
+				end
 			end else if (rd_brst & brst_cnt == RD_BURST_SIZE - 1) begin
 				brst_cnt <= 5'd0;
 				if (~rdempty_cam) begin
@@ -219,35 +276,72 @@ module img_cap_ctrl #(
 		end
 	end
 	
-	// Frame buffer read counter
+	// Frame buffer write and read counters (50.4MHz domain)
 	reg		[9:0]	rd_pix_cnt = 0;
-	reg		[8:0]	row_cnt_fst = 0;
+	//reg		[8:0]	rd_row_cnt_fst = 0;
 	reg				prep_row_cnt_fst = 0;
 	always @(posedge clk_fst) begin
 		if (~reset) begin
 			rd_pix_cnt <= 10'd0;
-			row_cnt_fst <= 9'd0;
+			rd_row_cnt_fst <= 9'd0;
+			
 			prep_row_cnt_fst <= 1'b0;
+			
+			wr_pix_cnt <= 10'd0;
+			wr_row_cnt_fst <= 9'd0;
+			wr_frame_num <= 32'd0;
+			
 			valid_rd_cnt <= 10'd0;
 			valid_line_cnt <= 9'd0;
 		end else begin
+			// Note: row_cnt is a signal from the 25.2MHz clock domain. It's_fb_prefill
+			// It's used to reset all of the counters in the 50.4MHz domain
 			if ((avl_read_req_0 | avl_read_req_1) & rd_pix_cnt < LINE_PIX)
 				rd_pix_cnt <= rd_pix_cnt + 1;
+			else if (rd_pix_cnt == LINE_PIX | row_cnt == NUM_LINE)
+				rd_pix_cnt <= 10'd0;
 			
-			if (hdmi_pix_cnt == LINE_PIX)
+			if ((avl_write_req_0 | avl_write_req_1) & wr_pix_cnt < LINE_PIX)
+				wr_pix_cnt <= wr_pix_cnt + 1;
+			else if (wr_pix_cnt == LINE_PIX | row_cnt == NUM_LINE)
+				wr_pix_cnt <= 10'd0;
+			
+			/*if (hdmi_pix_cnt == LINE_PIX)
 				prep_row_cnt_fst <= 1'b1;
 			else
-				prep_row_cnt_fst <= 1'b0;
+				prep_row_cnt_fst <= 1'b0;*/
 			
-			if (row_cnt == NUM_LINE | row_cnt_fst >= ADV_PREFILL_WAIT) begin
-				rd_pix_cnt <= 10'd0;
-				row_cnt_fst <= 9'd0;
-			end else if (row_cnt_fst < ADV_PREFILL_WAIT &
-							hdmi_pix_cnt == LINE_PIX & prep_row_cnt_fst) begin
-				row_cnt_fst <= row_cnt_fst + 1;
+			
+			if (rd_row_cnt_fst == NUM_LINE | row_cnt == NUM_LINE) begin
+				rd_row_cnt_fst <= 9'd0;
+			end else if (rd_pix_cnt == LINE_PIX) begin
+				rd_row_cnt_fst <= rd_row_cnt_fst + 1;
 			end
 			
-			if ((rd_data_valid_0 | rd_data_valid_1) & valid_rd_cnt < LINE_PIX)
+			if (wr_row_cnt_fst == NUM_LINE) begin
+				wr_row_cnt_fst <= 9'd0;
+				wr_frame_num <= wr_frame_num + 1;
+			end else if (wr_pix_cnt == LINE_PIX) begin
+				wr_row_cnt_fst <= wr_row_cnt_fst + 1;
+			end
+			
+			/*if (row_cnt == NUM_LINE & rd_row_cnt_fst >= ADV_PREFILL_WAIT) begin
+				rd_pix_cnt <= 10'd0;
+				rd_row_cnt_fst <= 9'd0;
+			end else if (rd_row_cnt_fst < ADV_PREFILL_WAIT |
+							hdmi_pix_cnt == LINE_PIX & prep_row_cnt_fst) begin
+				rd_row_cnt_fst <= rd_row_cnt_fst + 1;
+			end
+			
+			if (row_cnt == NUM_LINE & wr_row_cnt_fst >= ADV_PREFILL_WAIT) begin
+				wr_pix_cnt <= 10'd0;
+				wr_row_cnt_fst <= 9'd0;
+			end else if (wr_row_cnt_fst < ADV_PREFILL_WAIT |
+							hdmi_pix_cnt == LINE_PIX & prep_row_cnt_fst) begin
+				wr_row_cnt_fst <= wr_row_cnt_fst + 1;
+			end*/
+			
+			/*if ((rd_data_valid_0 | rd_data_valid_1) & valid_rd_cnt < LINE_PIX)
 				valid_rd_cnt <= valid_rd_cnt + 1;
 			else if (hdmi_pix_cnt == LINE_PIX &
 						valid_line_cnt < NUM_LINE) begin
@@ -256,7 +350,7 @@ module img_cap_ctrl #(
 			end else if (valid_line_cnt == NUM_LINE) begin
 				valid_rd_cnt <= 10'd0;
 				valid_line_cnt <= 9'd0;
-			end
+			end*/
 		end
 	end
 	
@@ -325,7 +419,7 @@ module img_cap_ctrl #(
 			// Frame buffer to ADV FIFO
 			if (fb_sel & ~wrfull_adv & rd_brst & rd_cnt < NUM_RD &
 					~rd_done_1) begin
-				if ((rd_pix_cnt < LINE_PIX & ~HDMI_TX_DE) | HDMI_TX_DE) begin
+				if ((rd_row_cnt_fst < ADV_LINE_PREFILL & ~HDMI_TX_DE) | HDMI_TX_DE | (row_cnt > 0 & ~HDMI_TX_DE)) begin
 					rd_en_1 = ASSERT_L;
 					rd_en_0 = DEASSERT_L;
 				end else begin
@@ -334,7 +428,7 @@ module img_cap_ctrl #(
 				end
 			end else if (~fb_sel & ~wrfull_adv & rd_brst & rd_cnt < NUM_RD &
 							~rd_done_0) begin
-				if ((rd_pix_cnt < LINE_PIX & ~HDMI_TX_DE) | HDMI_TX_DE) begin
+				if ((rd_row_cnt_fst < ADV_LINE_PREFILL & ~HDMI_TX_DE) | HDMI_TX_DE | (row_cnt > 0 & ~HDMI_TX_DE)) begin
 					rd_en_0 = ASSERT_L;
 					rd_en_1 = DEASSERT_L;
 				end else begin
