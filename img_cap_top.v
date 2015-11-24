@@ -18,12 +18,11 @@ Description:
 `timescale 1 ns / 1 ns
 
 module img_cap_top #(
-	parameter  CAM1_CHIP_ADDR = 8'hCD,
-			   CAM2_CHIP_ADDR = 8'hCD,
-			   ADV7513_CHIP_ADDR = 7'h39,
-			   //ADV7513_I2C_CLKDIV = 12'd125
-			   ADV7513_I2C_CLKDIV = 12'd63		// Gives a 100kHz clock
-												// based on a 25.2MHz clock
+    parameter   CAM1_CHIP_ADDR = 8'hCD,
+                CAM2_CHIP_ADDR = 8'hCD,
+                ADV7513_CHIP_ADDR = 7'h39,
+                ADV7513_I2C_CLKDIV = 12'd63     // Gives a 100kHz clock
+                                                // based on a 25.2MHz clock
 )(
 	// Clocks (obviously)
 	(*
@@ -108,101 +107,117 @@ module img_cap_top #(
 	input   	[3:0]   KEY,
 
 
-	// Camera Interfaces
+    // Camera Interfaces
+    // Camera 1
+    (*
+        chip_pin = "P8",
+        altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
+    *)
+    output              CAM1_SIOC,   // Cam 1 SIOC (GPIO 12)
 
-	// Shared Pins
-	(*
-		chip_pin = "F26",
-		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
-	*)
-	output          	CAM_XCLK,   // Cam 1 & 2 XCLK (GPIO 16)
+    (*
+        chip_pin = "U19",
+        altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
+    *)
+    inout               CAM1_SIOD,   // Cam 1 SIOD (GPIO 10)
 
-	(*
-		chip_pin = "W20",
-		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
-	*)
-	output          	CAM_RESET,  // Cam 1 & 2 RESET (GPIO 28)
+    (*
+        chip_pin = "R8",
+        altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
+    *)
+    input               CAM1_VSYNC,  // Cam 1 VSYNC (GPIO 13)
 
-	(*
-		chip_pin = "G26",
-		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
-	*)
-	output          	CAM_PWDN,   // Cam 1 & 2 PWDN (GPIO 18)
+    (*
+        chip_pin = "U22",
+        altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
+    *)
+    input               CAM1_HREF,   // Cam 1 HREF (GPIO 11)
 
-	// CAM 1 Pins
-	(*
-		chip_pin = "T21",
-		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
-	*)
-	input           	CAM1_PCLK,  // Cam 1 PCLK (GPIO 0)
+    (*
+        chip_pin = "T21",
+        altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
+    *)
+    input               CAM1_PCLK,   // Cam 1 PCLK (GPIO 0)
 
-	(*
-		chip_pin = "U19",
-		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
-	*)
-	input           	CAM1_HREF,  // Cam 1 HREF (GPIO 10)
+    (*
+        chip_pin = "F26",
+        altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
+    *)
+    output              CAM1_XCLK,   // Cam 1 XCLK (GPIO 16)
 
-	(*
-		chip_pin = "U22",
-		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
-	*)
-	input           	CAM1_VSYNC, // Cam 1 VSYNC (GPIO 11)
+    (*
+        chip_pin = "R9",
+        altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
+    *)
+    output              CAM1_RESET,  // Cam 1 RESET (GPIO 14)
 
-	(*
-		chip_pin = "T19",
-		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
-	*)
-	output          	CAM1_SDIOC, // Cam 1 SDIOC (GPIO 9)
+    (*
+        chip_pin = "R10",
+        altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
+    *)
+    output              CAM1_PWDN,   // Cam 1 PWDN (GPIO 15)
 
-	(*
-		chip_pin = "P8",
-		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
-	*)
-	inout           	CAM1_SDIOD, // Cam 1 SDIOD (GPIO 12)
-
-	(*
-		chip_pin = "P20, R9, M26, T22, E26, M21, D26, K26",
-		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
-	*)
-	input   	[7:0]   CAM1_DATA,      // Cam 1 Data (GPIO 7, 14, 5, 8, 3, 6, 1, 4)
+    (*
+        chip_pin = "T19, P20, T22, M26, M21, E26, K26, D26",
+        altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
+    *)
+    input       [7:0]   CAM1_DATA,   // Cam 1 Data (GPIO 9, 7, 8, 6, 5, 4, 3, 2, 1)
 
 
-	// CAM 2 Pins
-	(*
-		chip_pin = "K25",
-		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
-	*)
-	input           	CAM2_PCLK,  // Cam 2 PCLK (GPIO 2)
+    // Camera 2
+    (*
+        chip_pin = "AD7",
+        altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
+    *)
+    output              CAM2_SIOC,   // Cam 2 SIOC (GPIO 22)
 
-	(*
-		chip_pin = "V20",
-		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
-	*)
-	input           	CAM2_HREF,  // Cam 2 HREF (GPIO 26)
+    (*
+        chip_pin = "AA7",
+        altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
+    *)
+    inout               CAM2_SIOD,   // Cam 2 SIOD (GPIO 20)
 
-	(*
-		chip_pin = "R8",
-		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
-	*)
-	input           	CAM2_VSYNC, // Cam 2 VSYNC (GPIO 13)
+    (*
+        chip_pin = "AD6",
+        altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
+    *)
+    input               CAM2_VSYNC,  // Cam 2 VSYNC (GPIO 23)
 
-	(*
-		chip_pin = "R10",
-		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
-	*)
-	output          	CAM2_SDIOC, // Cam 2 SDIOC (GPIO 15)
+    (*
+        chip_pin = "V22",
+        altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
+    *)
+    input               CAM2_HREF,   // Cam 2 HREF (GPIO 25)
 
-	(*
-		chip_pin = "W21",
-		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
-	*)
-	inout           	CAM2_SDIOD, // Cam 2 SDIOD (GPIO 27)
+    (*
+        chip_pin = "K25",
+        altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
+    *)
+    input               CAM2_PCLK,   // Cam 2 PCLK (GPIO 2)
 
-	(*
-		chip_pin = "V22, AA7, AD6, AD7, AA6, U20, Y8, Y9",
-		altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
-	*)
-	input   	[7:0]   CAM2_DATA,  // Cam 2 Data (GPIO 25, 20, 23, 22, 21, 24, 19, 17)
+    (*
+        chip_pin = "G26",
+        altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
+    *)
+    output              CAM2_XCLK,   // Cam 2 XCLK (GPIO 18)
+
+    (*
+        chip_pin = "U20",
+        altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
+    *)
+    output              CAM2_RESET,  // Cam 2 RESET (GPIO 24)
+
+    (*
+        chip_pin = "AA6",
+        altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
+    *)
+    output              CAM2_PWDN,   // Cam 2 PWDN (GPIO 21)
+
+    (*
+        chip_pin = "AC22, AC24, Y23, AA23, W20, V20, W21",
+        altera_attribute = "-name IO_STANDARD \"3.3-V LVTTL\""
+    *)
+    input       [7:0]   CAM2_DATA,   // Cam 2 Data (GPIO 35, 33, 30, 31, 28, 29, 26, 27)
 
 
 	// Memory ports
@@ -221,8 +236,6 @@ module img_cap_top #(
     /* Pull down the LEDs for now (will use in control later) */
     assign LEDR[9:0] = 10'h0;
     assign LEDG[7:0] = 8'h0;
-    //assign LEDG[0] = pass;
-    //assign LEDR[0] = fail;
 
     /* Declare assertion parameters */
     localparam
@@ -293,7 +306,7 @@ module img_cap_top #(
 					fb_rst;
 	
 	wire	[1:0]	wr_cnt;
-	
+
 
     /* Instantiate the required subsystems */
     assign reset = KEY[3];
@@ -531,8 +544,11 @@ module img_cap_top #(
     //=========================================================================
 	// Camera capture interfaces (25.2MHz domain, pixels come in at 12.6MHz)
 	//=========================================================================
-    assign CAM_XCLK = clk_25_2m;
-    assign CAM_RESET = reset;
+    assign CAM1_XCLK = clk_25_2m;
+    assign CAM2_XCLK = clk_25_2m;
+
+    assign CAM1_RESET = reset;
+    assign CAM2_RESET = reset;
 
     wire [18:0] CAM1_CAP_ADDRESS;
     wire [23:0] CAM1_CAP_DATA;
@@ -562,19 +578,12 @@ module img_cap_top #(
         .write_en(CAM2_CAP_WRITE_EN)
     );
 
-
     // Top-level Control Modules
-    wire cam1_pwdn;
-    wire cam2_pwdn;
-
     wire init_start;
     wire init_done;
 
     // To do: generate a 100kHz clock signal for this
     wire clk_sccb;
-
-    // To do: should we change this to AND?
-    assign CAM_PWDN = cam1_pwdn || cam2_pwdn;
 
     sys_init #(
         .CAM1_CHIP_ADDR(CAM1_CHIP_ADDR),
@@ -589,14 +598,14 @@ module img_cap_top #(
         .done(init_done),
 
         // SCCB for Camera 1 Initialization
-        .cam1_pwdn(cam1_pwdn),
-        .cam1_sio_d(CAM1_SDIOD),
-        .cam1_sio_c(CAM1_SDIOC),
+        .cam1_pwdn(CAM1_PWDN),
+        .cam1_sio_d(CAM1_SIOD),
+        .cam1_sio_c(CAM1_SIOC),
 
         // SCCB for Camera 2 Initialization
-        .cam2_pwdn(cam2_pwdn),
-        .cam2_sio_c(CAM2_SDIOD),
-        .cam2_sio_d(CAM2_SDIOC),
+        .cam2_pwdn(CAM2_PWDN),
+        .cam2_sio_c(CAM2_SIOD),
+        .cam2_sio_d(CAM2_SIOC),
 
         // I2C for ADV7513 Initialization
         .i2c_scl(I2C_SCL),
@@ -641,125 +650,8 @@ module img_cap_top #(
 		.fb_rst(fb_rst)
     );
 	
-	
-	//=========================================================================
-	// Debug stuff
-	//=========================================================================
-	
-	/* Declare the required test signals */
-	/*localparam       TST_PATT = 24'hFFFFFF;
-    reg             pass,
-                    fail;
-    reg     [31:0]  valid_rd_data,
-                    rd_cnt;
-    wire    [28:0]  wr_addr_0,
-                    rd_addr_0;*/
-					
-	/* Instantiate In-System Sources and Probes */
-    /*ISSP ISSP_inst(
-        .source_clk(clk_25_2m),
-        .source({wr_en_in0, rd_en_in0, reset}),
-        .probe({pass, fail})
-    );*/
 
-    /* Test block for determining pass or failure */
-    /*always @(posedge clk_25_2m)
-        if (~reset) begin
-            fail <= DEASSERT_H;
-            pass <= DEASSERT_H;
-        end else if ((valid_rd_data[23:0] != TST_PATT && rd_cnt != 0) || rd_cnt > 307200) begin
-            fail <= ASSERT_H;
-            pass <= DEASSERT_H;
-        end else if (rd_addr0 == 29'd2 && rd_cnt == 307200)
-            pass <= ASSERT_H;*/
-
-    /* Assign the test pattern to the write data signal */
-    //assign wr_data0 = TST_PATT;
-
-    /* Latch the read data when it's valid */
-    /*always @(posedge clk_25_2m)
-        if (~reset || pass || fail)
-            rd_cnt <= 32'h0;
-        else if (rd_data_valid_0) begin
-            valid_rd_data <= rd_data0;
-            rd_cnt <= rd_cnt + 1;
-        end*/
-	
-	
-	/* Simulated camera data */
-	/*(* syn_encoding = "safe" *)
-	reg		[1:0]	cs,
-					ns;
-	reg		[23:0]	cam_data_tst;
-	reg				cam_wr_en_tst;
-	reg		[18:0]	tst_pix = 0;
-	localparam	[1:0]
-		IDLE = 0,
-		RED = 1,
-		BLUE = 2;
-		
-	always @(posedge clk_25_2m) begin
-		if (~reset) begin
-			cs <= IDLE;
-			ns <= RED;
-			cam_wr_en_tst <= 1'b0;
-			tst_pix <= 19'd0;
-		end else begin
-			cam_wr_en_tst <= 1'b0;
-			cam_data_tst <= 24'h0;
-			
-			case (cs)
-				IDLE: begin
-					if (tst_pix == 307200)
-						tst_pix <= 19'd0;
-					
-					if (init_done & HDMI_TX_DE & ~wrfull_cam & wr_cnt < 1)
-						cs <= ns;
-					else begin
-						cs <= IDLE;
-						if (!HDMI_TX_DE)
-							ns <= RED;
-					end
-				end
-				
-				RED: begin
-					if (HDMI_TX_DE & tst_pix < 307200) begin
-						cam_data_tst <= 24'hFF0000;
-						cam_wr_en_tst <= 1'b1;
-						tst_pix <= tst_pix + 1;
-						cs <= IDLE;
-						ns <= BLUE;
-					end else if (wrfull_cam)
-						cs <= RED;
-				end
-				
-				BLUE: begin
-					
-					if (HDMI_TX_DE & tst_pix < 307200) begin
-						cam_data_tst <= 24'hFF;
-						cam_wr_en_tst <= 1'b1;
-						tst_pix <= tst_pix + 1;
-						cs <= IDLE;
-						ns <= RED;
-					end else if (wrfull_cam)
-						cs <= BLUE;
-				end
-			endcase
-		end
-	end*/
-	
-	wire	[23:0]	cam_data_tst;
-    wire	[7:0]	r_out;
-    wire	[7:0]	g_out;
-    wire	[7:0]	b_out;
-	wire			de;
-    wire			vs;
-    wire			hs;
-    wire			vs_out;
-    wire			hs_out;
-    wire			de_out;
-	
-	pattern_vg #(
+    pattern_vg #(
         .B(8), // Bits per channel
         .X_BITS(12),
         .Y_BITS(12),
@@ -788,9 +680,21 @@ module img_cap_top #(
         .pattern(8'd6),
         .ramp_step(PATTERN_RAMP_STEP)
     );
-	assign cam_data_tst = {r_out, g_out, b_out};
-	assign HDMI_TX_DE = de_out;
+
+
+    wire	[23:0]	cam_data_tst;
+    wire	[7:0]	r_out;
+    wire	[7:0]	g_out;
+    wire	[7:0]	b_out;
+    wire			de;
+    wire			vs;
+    wire			hs;
+    wire			vs_out;
+    wire			hs_out;
+    wire			de_out;
+
+    assign cam_data_tst = {r_out, g_out, b_out};
+    assign HDMI_TX_DE = de_out;
     assign HDMI_TX_HS = hs_out;
     assign HDMI_TX_VS = vs_out;
-	
 endmodule
