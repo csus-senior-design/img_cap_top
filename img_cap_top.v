@@ -106,6 +106,12 @@ module img_cap_top #(
 	*)
 	input   	[3:0]   KEY,
 
+    // Switches
+    (*
+        chip_pin = "AE19, Y11, AC10, V10, AB10, W11, AC8, AD13, AE10, AC9",
+        altera_attribute = "-name IO_STANDARD \"1.2V\""
+    *)
+    input       [9:0]   SW,
 
     // Camera Interfaces
     // Camera 1
@@ -526,8 +532,7 @@ module img_cap_top #(
 	//=========================================================================
 	
 	CAM_FIFO cam_fifo (
-		//.data(CAM1_CAP_DATA),
-		.data(cam_data_tst),
+		.data(SW[0] ? CAM1_CAP_DATA : cam_data_tst),
 		.rdclk(clk_50_4m),
 		.rdreq(rdreq_cam),
 		.wrclk(clk_25_2m),
@@ -539,7 +544,7 @@ module img_cap_top #(
 	);
 	//assign wrreq_cam = CAM1_CAP_WRITE_EN;
 	//assign wrreq_cam = cam_wr_en_tst & ~wrfull_cam;
-	assign wrreq_cam = HDMI_TX_DE & ~wrfull_cam;
+	assign wrreq_cam = SW[0] ? CAM1_CAP_WRITE_EN : (HDMI_TX_DE & ~wrfull_cam);
 
     //=========================================================================
 	// Camera capture interfaces (25.2MHz domain, pixels come in at 12.6MHz)
