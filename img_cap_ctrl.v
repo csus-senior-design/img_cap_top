@@ -29,7 +29,7 @@ module img_cap_ctrl #(
 					ADV_LINE_PREFILL = 45,	// Number of lines to prefill the
 											// ADV FIFO before a frame starts
 					NUM_WR = 1,
-					NUM_RD = 1,				// Should be 2 for the camera
+					NUM_RD = 2,				// Should be 2 for the camera
 											// system, and 1 when the pattern
 											// generator is connected
 											
